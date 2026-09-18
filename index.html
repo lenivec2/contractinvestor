@@ -1752,6 +1752,56 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
+
+<style id="fundledger-report-date-no-overlap-v2">
+/* Definitive iPhone/iPad landscape fix: contain Safari date controls inside two equal columns. */
+@media (orientation:landscape) and (max-height:900px){
+  #reportsPanel .report-date-row,
+  #reportsPanel .payment-date-row{
+    display:grid!important;
+    grid-template-columns:calc((100% - 12px)/2) calc((100% - 12px)/2)!important;
+    column-gap:12px!important;
+    row-gap:10px!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+  #reportsPanel .report-date-row>.field:not(.report-run-field),
+  #reportsPanel .payment-date-row>.field:not(.report-run-field){
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    overflow:hidden!important;
+  }
+  #reportsPanel #paymentFrom,#reportsPanel #paymentTo,
+  #reportsPanel #reportFrom,#reportsPanel #reportTo{
+    display:block!important;
+    inline-size:100%!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    overflow:hidden!important;
+  }
+  #reportsPanel #paymentFrom::-webkit-date-and-time-value,
+  #reportsPanel #paymentTo::-webkit-date-and-time-value,
+  #reportsPanel #reportFrom::-webkit-date-and-time-value,
+  #reportsPanel #reportTo::-webkit-date-and-time-value{
+    min-width:0!important;
+    width:100%!important;
+  }
+  #reportsPanel .report-date-row>.report-run-field,
+  #reportsPanel .payment-date-row>.report-run-field{
+    grid-column:1/-1!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -1808,7 +1858,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <aside class="sidebar">
 <a class="nav-item active" href="#dashboard"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
 <a class="nav-item" href="#checkPanel"><span class="nav-icon">✓</span><span>Add Payment / Check</span></a>
-<a class="nav-item" href="#newContractPanel"><span class="nav-icon">▣</span><span>New Contract</span></a>
+<a class="nav-item" href="#newContractPanel"><span class="nav-icon">▣</span><span>Active Contracts</span></a>
 <a class="nav-item" href="#newContractPanel"><span class="nav-icon">＋</span><span>Add Contract</span></a>
 <a class="nav-item" href="#completedPanel"><span class="nav-icon">✓</span><span>Completed Contracts</span></a>
 <a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Check History</span></a>
