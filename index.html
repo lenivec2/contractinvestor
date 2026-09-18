@@ -1920,7 +1920,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   </div>
   <div style="margin-top:20px">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
-    <h3 style="margin:0">Your Messages</h3>
+    <h3 style="margin:0" id="contactThreadTitle">Your Messages</h3>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="primary-btn" id="refreshContactMessagesBtn" onclick="refreshContactMessages()">↻ Refresh Messages</button><button type="button" class="secondary" id="deleteAllContactMessagesBtn" onclick="deleteAllContactMessages()">Delete All Messages</button></div>
   </div>
   <div id="contactThread" class="muted">Loading messages…</div>
@@ -2327,50 +2327,63 @@ async function submitContactMessage(){
 }
 async function loadMyContactMessages(){
   const box=$("contactThread");
+  const title=$("contactThreadTitle");
+  const deleteAllBtn=$("deleteAllContactMessagesBtn");
   if(!box||!currentUser||!supabaseClient)return;
+  if(title)title.textContent=isAdmin?"Admin Inbox":"Your Messages";
+  if(deleteAllBtn)deleteAllBtn.style.display=isAdmin?"none":"";
   try{
-    // Prefer the Contact Us RPC. If PostgREST has not refreshed the RPC correctly,
-    // fall back to the RLS-protected table query so users can still load their messages.
-    let rows=null;
-    let loadError=null;
-    const rpcResult=await supabaseClient.rpc("contact_list_my_messages");
-    rows=rpcResult.data;
-    loadError=rpcResult.error;
-    if(loadError){
-      console.warn("contact_list_my_messages RPC failed; trying direct RLS query",loadError);
-      const directResult=await supabaseClient
-        .from("contact_messages")
-        .select("id,email,message,admin_reply,created_at,replied_at")
-        .eq("user_id",currentUser.id)
-        .order("created_at",{ascending:false});
-      rows=directResult.data;
-      loadError=directResult.error;
+    let rows=null, loadError=null;
+    if(isAdmin){
+      const result=await supabaseClient.rpc("contact_admin_list_messages");
+      rows=result.data; loadError=result.error;
+    }else{
+      const rpcResult=await supabaseClient.rpc("contact_list_my_messages");
+      rows=rpcResult.data; loadError=rpcResult.error;
+      if(loadError){
+        console.warn("contact_list_my_messages RPC failed; trying direct RLS query",loadError);
+        const directResult=await supabaseClient.from("contact_messages")
+          .select("id,email,message,admin_reply,created_at,replied_at")
+          .eq("user_id",currentUser.id).order("created_at",{ascending:false});
+        rows=directResult.data; loadError=directResult.error;
+      }
     }
     if(loadError)throw loadError;
     const list=Array.isArray(rows)?rows:[];
-    if(!list.length){box.innerHTML='<div class="muted">No messages yet.</div>';setContactNewMessage(false);return}
+    if(!list.length){box.innerHTML=`<div class="muted">${isAdmin?"No user messages yet.":"No messages yet."}</div>`;setContactNewMessage(false);return}
     box.innerHTML=list.map(r=>{
+      const safeId=String(r.id).replace(/'/g,"\\'");
       const reply=r.admin_reply
-        ? `<div style="margin-top:10px;padding:10px;background:#f3f8fd;border-radius:8px"><strong>Admin Reply:</strong><div style="margin-top:5px">${escape(r.admin_reply)}</div></div>`
-        : `<div class="muted" style="margin-top:8px">Waiting for a reply.</div>`;
+        ? `<div style="margin-top:10px;padding:10px;background:#f3f8fd;border-radius:8px"><strong>Admin Reply:</strong><div style="margin-top:5px">${escape(r.admin_reply)}</div>${r.replied_at?`<div class="muted" style="margin-top:5px;font-size:12px">Replied: ${escape(formatContactDate(r.replied_at))}</div>`:""}</div>`
+        : (!isAdmin?`<div class="muted" style="margin-top:8px">Waiting for a reply.</div>`:"");
+      const adminReply=isAdmin?`<div style="margin-top:12px"><textarea id="adminReply_${safeId}" rows="3" maxlength="2000" placeholder="Reply to this user...">${escape(r.admin_reply||"")}</textarea><button type="button" class="primary-btn" style="margin-top:8px" onclick="sendAdminContactReply('${safeId}')">${r.admin_reply?"Update Reply":"Send Reply"}</button></div>`:"";
       return `<div style="border:1px solid #dce8f5;border-radius:10px;padding:14px;margin:10px 0;background:#fff">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
           <div style="min-width:0;flex:1">
-            <div style="font-weight:800;margin-bottom:6px">From: ${escape(r.email||currentUser?.email||"Unknown sender")}</div>
+            <div style="font-weight:800;margin-bottom:6px">From: ${escape(r.email||"Unknown sender")}</div>
             <div class="muted" style="margin-bottom:8px">Sent: ${escape(formatContactDate(r.created_at)||r.created_at||"")}</div>
             <div><strong>${escape(r.message||"")}</strong></div>
           </div>
-          <button type="button" class="secondary" style="flex:0 0 auto" onclick="deleteContactMessage('${String(r.id).replace(/'/g,"\\'")}')">Delete</button>
-        </div>
-        ${reply}
+          <button type="button" class="secondary" style="flex:0 0 auto" onclick="deleteContactMessage('${safeId}')">Delete</button>
+        </div>${reply}${adminReply}
       </div>`;
     }).join("");
-    setContactNewMessage(list.some(r=>!!r.admin_reply));
+    setContactNewMessage(isAdmin?list.length>0:list.some(r=>!!r.admin_reply));
   }catch(e){
     console.error(e);
     const detail=escape(e?.message||e?.details||"Unknown Supabase error");
     box.innerHTML=`<div class="muted">Unable to load messages.</div><div class="muted" style="margin-top:6px;font-size:12px">${detail}</div>`;
   }
+}
+async function sendAdminContactReply(id){
+  if(!isAdmin||!currentUser||!supabaseClient||!id)return;
+  const input=$("adminReply_"+id); const reply=input?.value.trim()||"";
+  if(!reply){toast("Enter a reply first");return}
+  try{
+    const {error}=await supabaseClient.rpc("contact_admin_reply_message",{p_id:id,p_reply:reply});
+    if(error)throw error;
+    toast("Reply sent"); await loadMyContactMessages();
+  }catch(e){console.error(e);toast("Could not send reply. Run the updated Contact Us SQL in Supabase.")}
 }
 async function refreshContactMessages(){
   const btn=$("refreshContactMessagesBtn");
@@ -2386,7 +2399,7 @@ async function deleteContactMessage(id){
   if(!currentUser||!supabaseClient||!id)return;
   if(!confirm("Delete this message? This cannot be undone."))return;
   try{
-    const {error}=await supabaseClient.rpc("contact_delete_message",{p_id:id});
+    const {error}=await supabaseClient.rpc(isAdmin?"contact_admin_delete_message":"contact_delete_message",{p_id:id});
     if(error)throw error;
     toast("Message deleted");
     await loadMyContactMessages();
