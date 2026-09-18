@@ -1702,15 +1702,11 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 
 <style id="fundledger-primary-action-colors">
 /* FundLedger brand blue for account creation and password reset actions. */
-#authScreen #signUpBtn,
-#authScreen #createAccountBtn,
 #resetPanel #sendResetBtn{
   background:#1688ed!important;
   border-color:#1688ed!important;
   color:#fff!important;
 }
-#authScreen #signUpBtn:hover,
-#authScreen #createAccountBtn:hover,
 #resetPanel #sendResetBtn:hover{background:#0f78d8!important}
 </style>
 </head>
@@ -1726,7 +1722,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
         <div class="field" style="margin-top:10px"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Password"></div>
         <div class="row" style="margin-top:12px">
           <button id="signInBtn" type="submit">Sign In</button>
-          <button id="signUpBtn" class="secondary" type="button">Create Your FundLedger Account</button>
+          <button id="signUpBtn" class="secondary" type="button">Create Account</button>
         </div>
         <div style="text-align:center;margin-top:12px"><button id="forgotPasswordBtn" class="link-button" type="button">Reset your password</button></div>
       </div>
@@ -1735,7 +1731,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
         <div class="field" style="margin-top:10px"><label for="signUpPassword">Password</label><input id="signUpPassword" type="password" autocomplete="new-password" placeholder="Create a password"></div>
         <div class="field" style="margin-top:10px"><label for="signUpConfirmPassword">Confirm Password</label><input id="signUpConfirmPassword" type="password" autocomplete="new-password" placeholder="Re-enter your password"></div>
         <div class="row" style="margin-top:12px">
-          <button id="createAccountBtn" type="button">Create Your FundLedger Account</button>
+          <button id="createAccountBtn" type="button">Create Account</button>
           <button id="backToSignInBtn" class="secondary" type="button">Back to Sign In</button>
         </div>
       </div>
