@@ -1676,7 +1676,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 
 <style id="contact-new-message-flash-final">
 #contactNewMessage{
-  display:block;
+  display:none;
   margin:2px 0 6px 42px;
   width:max-content;
   padding:2px 7px;
@@ -1699,20 +1699,34 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 @media(max-width:700px){.auth-card .fl-wordmark{font-size:34px}.auth-card .fl-tagline{font-size:13px}.brand .fl-tagline{display:none}.brand .fl-wordmark{font-size:20px}.brand .fl-logo{height:25px}}
 </style>
 
+
+<style id="fundledger-primary-action-colors">
+/* FundLedger brand blue for account creation and password reset actions. */
+#authScreen #signUpBtn,
+#authScreen #createAccountBtn,
+#resetPanel #sendResetBtn{
+  background:#1688ed!important;
+  border-color:#1688ed!important;
+  color:#fff!important;
+}
+#authScreen #signUpBtn:hover,
+#authScreen #createAccountBtn:hover,
+#resetPanel #sendResetBtn:hover{background:#0f78d8!important}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
   <div class="auth-card">
     <h2>Contract Checks</h2>
     <div class="auth-brand"><div class="fl-brand-lockup"><div class="fl-brand-row"><span class="fl-logo" aria-hidden="true"><i></i><i></i><i></i></span><span class="fl-wordmark">Fund<span class="ledger">Ledger</span></span></div><div class="fl-tagline">Contract Investments Made Simple</div></div></div>
-    <p id="authSubtitle" class="muted">Sign in to keep your contracts and check history in the cloud.</p>
+    <p id="authSubtitle" class="muted"></p>
     <form id="authForm" autocomplete="on">
       <div id="signInFields">
         <div class="field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
         <div class="field" style="margin-top:10px"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Password"></div>
         <div class="row" style="margin-top:12px">
           <button id="signInBtn" type="submit">Sign In</button>
-          <button id="signUpBtn" class="secondary" type="button">Create Account</button>
+          <button id="signUpBtn" class="secondary" type="button">Create Your FundLedger Account</button>
         </div>
         <div style="text-align:center;margin-top:12px"><button id="forgotPasswordBtn" class="link-button" type="button">Reset your password</button></div>
       </div>
@@ -1721,7 +1735,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
         <div class="field" style="margin-top:10px"><label for="signUpPassword">Password</label><input id="signUpPassword" type="password" autocomplete="new-password" placeholder="Create a password"></div>
         <div class="field" style="margin-top:10px"><label for="signUpConfirmPassword">Confirm Password</label><input id="signUpConfirmPassword" type="password" autocomplete="new-password" placeholder="Re-enter your password"></div>
         <div class="row" style="margin-top:12px">
-          <button id="createAccountBtn" type="button">Create Account</button>
+          <button id="createAccountBtn" type="button">Create Your FundLedger Account</button>
           <button id="backToSignInBtn" class="secondary" type="button">Back to Sign In</button>
         </div>
       </div>
@@ -1761,7 +1775,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Check History</span></a>
 <a class="nav-item" href="#reportsPanel"><span class="nav-icon">▥</span><span>Reports</span></a>
 <a class="nav-item" href="#contactPanel"><span class="nav-icon">✉</span><span>Contact Us</span></a>
-<div id="contactNewMessage" class="contact-new-message">NEW MESSAGE</div>
+<div id="contactNewMessage" class="contact-new-message" style="display:none" aria-hidden="true">NEW MESSAGE</div>
 </aside>
 <main class="content" id="dashboard"><div class="content-inner">
 <div id="adminPanel" class="panel hidden"><h2>Admin Dashboard</h2><p class="muted">Master account view. Regular users only see their own data.</p><div class="row"><div class="field"><label>User</label><select id="adminUserSelect"><option value="">Select a user</option></select></div><div class="field" style="max-width:180px"><label>&nbsp;</label><button id="adminRefreshBtn" class="primary-btn" type="button">Refresh Users</button></div></div><div id="adminUserSummary" class="muted" style="margin-top:12px">Select a user to view their dashboard.</div><div id="adminUserData" class="hidden" style="margin-top:14px"></div></div>
@@ -1819,7 +1833,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   <div style="margin-top:20px">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
     <h3 style="margin:0">Your Messages</h3>
-    <button type="button" class="secondary" id="deleteAllContactMessagesBtn" onclick="deleteAllContactMessages()">Delete All Messages</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="primary-btn" id="refreshContactMessagesBtn" onclick="refreshContactMessages()">↻ Refresh Messages</button><button type="button" class="secondary" id="deleteAllContactMessagesBtn" onclick="deleteAllContactMessages()">Delete All Messages</button></div>
   </div>
   <div id="contactThread" class="muted">Loading messages…</div>
 </div>
@@ -2095,7 +2109,7 @@ function showSignUpForm(){
  setTimeout(()=>$("signUpEmail").focus(),0);
 }
 function showSignInForm(){
- $("authSubtitle").textContent="Sign in to keep your contracts and check history in the cloud.";
+ $("authSubtitle").textContent="";
  $("signUpFields").classList.add("hidden");
  $("signInFields").classList.remove("hidden");
  setAuthError("");
@@ -2268,6 +2282,16 @@ async function loadMyContactMessages(){
     console.error(e);
     const detail=escape(e?.message||e?.details||"Unknown Supabase error");
     box.innerHTML=`<div class="muted">Unable to load messages.</div><div class="muted" style="margin-top:6px;font-size:12px">${detail}</div>`;
+  }
+}
+async function refreshContactMessages(){
+  const btn=$("refreshContactMessagesBtn");
+  if(btn){btn.disabled=true;btn.textContent="Refreshing…"}
+  try{
+    await loadMyContactMessages();
+    toast("Messages refreshed");
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent="↻ Refresh Messages"}
   }
 }
 async function deleteContactMessage(id){
@@ -2635,7 +2659,7 @@ initCloud();
 (function () {
   function setContactNewMessage(show) {
     var badge = document.getElementById('contactNewMessage');
-    if (badge) badge.style.display = show ? 'block' : 'none';
+    if (badge) { badge.style.display = show ? 'block' : 'none'; badge.setAttribute('aria-hidden', show ? 'false' : 'true'); }
   }
   window.setContactNewMessage = setContactNewMessage;
 })();
