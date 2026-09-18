@@ -11,7 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="this.onerror=null;var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2';document.head.appendChild(s)"></script>
 <style>
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f8fc;color:#102d57}button,input,select,textarea{font:inherit;box-sizing:border-box}button{cursor:pointer}
-.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at 10% 30%,#ff425622 0 70px,transparent 72px),radial-gradient(circle at 92% 18%,#ff425622 0 90px,transparent 92px),linear-gradient(135deg,#eef4fb,#fdf6f7)}.auth-card{width:min(620px,100%);background:#fff;border-radius:20px;padding:42px 46px;box-shadow:0 12px 40px #12345a22}.auth-card h2{margin:0 0 8px;font-size:0}.auth-brand{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#17365f;margin-bottom:30px}.auth-brand-love-row{display:flex;align-items:center;justify-content:center;gap:18px;width:100%}.auth-brand-love{color:#e31b23;font-size:54px;font-weight:850;line-height:1;font-family:cursive;font-style:italic;letter-spacing:-2px}.auth-brand-heart{font-size:48px;line-height:1;color:#ff4256}.auth-brand-contracts{margin-top:8px;font-size:20px;font-weight:850;letter-spacing:6px;color:#17365f}.auth-card>p.muted{text-align:center;margin:-12px 0 24px}.auth-card #authForm{margin-top:0}.auth-card #authEmail,.auth-card #authPassword{padding:14px 15px;font-size:16px}.auth-card #authForm>.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.auth-card #signInBtn,.auth-card #signUpBtn{min-height:50px;border-radius:9px;font-weight:800}.auth-card #signInBtn{background:#147be8;color:#fff;border:0}.auth-card #signUpBtn{background:#fff;color:#17365f;border:1px solid #b9cde2}.muted{color:#718096;font-size:13px}.auth-error{color:#b00020;font-size:13px;margin-top:10px;display:none}.auth-card .row{margin-top:12px}.auth-card input{width:100%;box-sizing:border-box}.auth-card #createAccountBtn,.auth-card #backToSignInBtn{min-height:50px;border-radius:9px;font-weight:800}.auth-card #createAccountBtn{background:#147be8;color:#fff;border:0}.auth-card #backToSignInBtn{background:#fff;color:#17365f;border:1px solid #b9cde2}
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden;background-color:#f4f9ff;background-image:linear-gradient(rgba(20,123,232,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(20,123,232,.075) 1px,transparent 1px),linear-gradient(135deg,#f8fbff,#eaf5ff);background-size:64px 64px,64px 64px,100% 100%}.auth-card{width:min(620px,100%);background:#fff;border-radius:20px;padding:42px 46px;box-shadow:0 12px 40px #12345a22}.auth-card h2{margin:0 0 8px;font-size:0}.auth-brand{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#17365f;margin-bottom:30px}.auth-brand-love-row{display:flex;align-items:center;justify-content:center;gap:18px;width:100%}.auth-brand-love{color:#e31b23;font-size:54px;font-weight:850;line-height:1;font-family:cursive;font-style:italic;letter-spacing:-2px}.auth-brand-heart{font-size:48px;line-height:1;color:#ff4256}.auth-brand-contracts{margin-top:8px;font-size:20px;font-weight:850;letter-spacing:6px;color:#17365f}.auth-card>p.muted{text-align:center;margin:-12px 0 24px}.auth-card #authForm{margin-top:0}.auth-card #authEmail,.auth-card #authPassword{padding:14px 15px;font-size:16px}.auth-card #authForm>.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.auth-card #signInBtn,.auth-card #signUpBtn{min-height:50px;border-radius:9px;font-weight:800}.auth-card #signInBtn{background:#147be8;color:#fff;border:0}.auth-card #signUpBtn{background:#fff;color:#17365f;border:1px solid #b9cde2}.muted{color:#718096;font-size:13px}.auth-error{color:#b00020;font-size:13px;margin-top:10px;display:none}.auth-card .row{margin-top:12px}.auth-card input{width:100%;box-sizing:border-box}.auth-card #createAccountBtn,.auth-card #backToSignInBtn{min-height:50px;border-radius:9px;font-weight:800}.auth-card #createAccountBtn{background:#147be8;color:#fff;border:0}.auth-card #backToSignInBtn{background:#fff;color:#17365f;border:1px solid #b9cde2}
 #appScreen{height:100vh;min-height:0;background:#f5f8fc;overflow:hidden}.app-header{height:72px;background:#17365f;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 22px;box-shadow:0 2px 10px #0b244210;position:sticky;top:0;z-index:10}.brand{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:800}.brand-heart{font-size:37px;line-height:1;color:#ff4256}.header-actions{display:flex;gap:10px}.header-actions button{background:transparent;border:1px solid #ffffffaa;color:#fff;border-radius:9px;padding:9px 14px;font-weight:700}.header-actions #refreshBtn{border-color:transparent}.header-actions button:hover{background:#ffffff14}
 .app-shell{display:flex;height:calc(100vh - 72px);min-height:0}.sidebar{width:238px;background:#102f55;color:#fff;padding:14px 10px;overflow-y:auto;flex:0 0 238px}.nav-item{display:flex;align-items:center;gap:14px;padding:13px 14px;margin:4px 0;border-radius:8px;color:#fff;text-decoration:none;font-weight:650}.nav-item.active{background:#1976d2}.nav-item:hover{background:#ffffff12}.nav-icon{width:26px;text-align:center;font-size:21px}.content{flex:1;min-width:0;min-height:0;height:100%;overflow-y:auto;padding:24px 20px 36px;overscroll-behavior:contain}.content-inner{max-width:1280px;margin:auto}.sync{font-size:11px;color:#7b8da5}.hidden{display:none!important}
 .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.summary-card{background:#fff;border:1px solid #dce8f5;border-radius:8px;padding:12px 14px;min-height:92px;box-shadow:0 2px 8px #12345a0a}.summary-label{font-size:12px;font-weight:700;margin-bottom:9px}.summary-value{font-size:19px;font-weight:800;color:#12345a}.summary-card.received .summary-value{color:#008a45}.summary-card.profit .summary-value{color:#12345a}.summary-card.profit.positive .summary-value{color:#008a45}.summary-card.profit.negative .summary-value{color:#d32f2f}.summary-card.active .summary-value{color:#12345a}.summary-card.default .summary-value,.summary-card.default-loss .summary-value{color:#d32f2f}.summary-top{display:flex;align-items:center;gap:9px}.summary-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:23px;background:#e6f1ff}
@@ -112,6 +112,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 .reset-panel #sendResetBtn:hover{background:#0f6fd3;transform:translateY(-1px);box-shadow:0 7px 16px rgba(20,123,232,.25)}
 .reset-panel #cancelResetBtn{background:#fff;color:#17365f;border:1px solid #bfd0e3}
 .reset-panel #cancelResetBtn:hover{background:#eef5fc;border-color:#a9bfd8;transform:translateY(-1px)}
+.reset-panel .reset-cooldown-status{margin:12px 0 0;text-align:center;color:#496a96;font-size:13px;font-weight:700}
 @media(max-width:600px){.reset-panel .reset-actions{grid-template-columns:1fr}.reset-panel #cancelResetBtn{order:2}}
 
 
@@ -1256,6 +1257,21 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
+<style id="fundledger-financial-login-bg">
+#authScreen .auth-card{position:relative;z-index:3}
+#authScreen .auth-chart-bg{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+#authScreen .auth-chart-bg svg{position:absolute;left:0;right:0;bottom:7%;width:100%;height:62%;overflow:visible}
+#authScreen .auth-chart-bg polyline{fill:none;stroke:#75b9f5;stroke-width:5;opacity:.46}
+#authScreen .auth-chart-bg circle{fill:#8cc8fa;opacity:.62}
+#authScreen .auth-chart-bars{position:absolute;left:0;right:0;bottom:7%;height:55%;display:flex;align-items:flex-end;justify-content:space-around;padding:0 4%;opacity:.28}
+#authScreen .auth-chart-bars i{display:block;width:7%;max-width:92px;background:linear-gradient(180deg,#8cc8fa,#d7ebff);border-radius:10px 10px 0 0}
+#authScreen .auth-chart-bars i:nth-child(1){height:22%} #authScreen .auth-chart-bars i:nth-child(2){height:35%} #authScreen .auth-chart-bars i:nth-child(3){height:48%} #authScreen .auth-chart-bars i:nth-child(4){height:58%} #authScreen .auth-chart-bars i:nth-child(5){height:43%} #authScreen .auth-chart-bars i:nth-child(6){height:62%} #authScreen .auth-chart-bars i:nth-child(7){height:76%} #authScreen .auth-chart-bars i:nth-child(8){height:92%}
+#authScreen .auth-copy{position:absolute;z-index:2;color:#496a96;letter-spacing:6px;line-height:1.65;font-weight:650;pointer-events:none}
+#authScreen .auth-copy-top{top:8%;left:5%;font-size:16px}
+#authScreen .auth-copy-bottom{left:5%;bottom:8%;font-size:15px;letter-spacing:4px;line-height:1.65;font-weight:650}
+#authScreen .auth-copy-right{right:5%;bottom:9%;font-size:15px}
+@media(max-width:900px){#authScreen .auth-copy{display:none}#authScreen .auth-chart-bg{opacity:.75}}
+</style>
 <style id="desktop-login-button-center-fix">
 /* Desktop login: center the Sign In / Create Account buttons. */
 @media (min-width:701px){
@@ -1804,9 +1820,13 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
+  <div class="auth-chart-bg" aria-hidden="true"><div class="auth-chart-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><svg viewBox="0 0 1000 420" preserveAspectRatio="none"><polyline points="0,380 115,330 230,270 350,215 470,190 585,145 710,115 825,70 1000,15"/><g><circle cx="115" cy="330" r="8"/><circle cx="230" cy="270" r="8"/><circle cx="350" cy="215" r="8"/><circle cx="470" cy="190" r="8"/><circle cx="585" cy="145" r="8"/><circle cx="710" cy="115" r="8"/><circle cx="825" cy="70" r="8"/><circle cx="1000" cy="15" r="8"/></g></svg></div>
+  <div class="auth-copy auth-copy-top">TRACK<br>MANAGE<br>GROW<br>SUCCEED</div>
+  <div class="auth-copy auth-copy-bottom">YOUR CONTRACTS.<br>YOUR INVESTMENTS.<br>A BRIGHTER TOMORROW.</div>
+  <div class="auth-copy auth-copy-right">INVEST<br>WITH<br>CLARITY</div>
   <div class="auth-card">
     <h2>Contract Checks</h2>
-    <div class="auth-brand"><div class="fl-brand-lockup"><div class="fl-brand-row"><span class="fl-logo" aria-hidden="true"><i></i><i></i><i></i></span><span class="fl-wordmark">Fund<span class="ledger">Ledger</span></span></div><div class="fl-tagline">Contract Investments Made Simple</div></div></div>
+    <div class="auth-brand"><div class="fl-brand-lockup"><div class="fl-brand-row"><span class="fl-logo" aria-hidden="true"><i></i><i></i><i></i></span><span class="fl-wordmark">Fund<span class="ledger">Ledger</span></span></div><div class="fl-tagline">Contact Investing Made Easy</div></div></div>
     <p id="authSubtitle" class="muted"></p>
     <form id="authForm" autocomplete="on">
       <div id="signInFields">
@@ -1837,6 +1857,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
         <button id="sendResetBtn" type="button">✉ &nbsp; Send Reset Link</button>
         <button id="cancelResetBtn" type="button">Cancel</button>
       </div>
+      <div id="resetCooldownStatus" class="reset-cooldown-status hidden" role="status" aria-live="polite"></div>
     </div>
   </div>
 </div>
@@ -1879,7 +1900,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </div>
 <section class="panel" id="checkPanel"><h2>Add Payment / Check</h2><div class="row"><div class="field"><label>Check Amount</label><input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="$0.00" oninput="updateBreakdown()"></div><div class="field"><label>Date Issued</label><input id="date" type="date"></div><div class="field"><label>Date Received <span class="muted">(optional)</span></label><input id="dateReceived" type="date"></div><div class="field"><label>Check #</label><input id="checkno" inputmode="numeric" placeholder="Optional"></div></div><h3>Select contracts for this check</h3><div class="choices" id="contractChoices"></div><h3>Manual Payment Breakdown</h3><div class="manual-box" id="manualBreakdown"></div><p class="muted" id="splitPreview">Select a contract above to open it here, then enter the amount for that contract.</p><button class="primary-btn save-check" onclick="addCheck()">Save Check</button></section>
 <section class="panel" id="newContractPanel"><h2>Add Contract</h2><div class="row"><div class="field"><label>Contract name</label><input id="cname" placeholder="Contract #1"></div><div class="field"><label>Investment</label><input id="cinvest" type="number" inputmode="decimal" step="0.01" placeholder="5300"></div><div class="field"><label>Amount per check</label><input id="cpreset" type="number" inputmode="decimal" step="0.01"></div><div class="field"><label>Expected payments</label><input id="cpayments" type="number" inputmode="numeric" min="0" step="1" placeholder="34"></div><div class="field"><label>Contract date</label><input id="cdate" type="date"></div><div class="field"><label>Check #</label><input id="ccheckno" inputmode="numeric" placeholder="Optional"></div></div><button class="primary-btn" style="margin-top:14px" onclick="addContract()">＋ Add Contract</button></section>
-<section class="panel" id="contractsPanel" style="width:100%;max-width:100%;"><div class="section-head"><h2>Active Contracts</h2></div><div class="scroll"><table><thead><tr><th>Name</th><th>Invested</th><th>Paid</th><th>Remaining</th><th>Amount / Check</th><th>Expected Payments</th><th>Payments Left</th><th>Status</th><th>Actions</th></tr></thead><tbody id="contracts"></tbody></table></div></section>
+<section class="panel" id="contractsPanel" style="width:100%;max-width:100%;"><div class="section-head"><h2>Active Contracts</h2></div><div class="scroll"><table><thead><tr><th>Name</th><th>Day Opened</th><th>Invested</th><th>Paid</th><th>Remaining</th><th>Amount / Check</th><th>Expected Payments</th><th>Payments Left</th><th>Status</th><th>Actions</th></tr></thead><tbody id="contracts"></tbody></table></div></section>
 <section class="panel side-card" id="completedPanel"><h2>Completed Contracts</h2><div class="completed-count" id="completedCount">0 contracts completed</div><button class="primary-btn" style="width:100%" onclick="document.getElementById('completedPanel').scrollIntoView({behavior:'smooth'})">View Completed</button><div class="scroll" style="margin-top:12px"><table><thead><tr><th>Contract</th><th>Day Opened</th><th>Day Closed</th><th>Invested</th><th>Received</th><th>Remaining Payment</th><th>Gain / Loss</th><th>Status</th><th>Action</th></tr></thead><tbody id="completedContracts"></tbody></table></div></section>
 <div class="dashboard-grid">
 
@@ -2159,22 +2180,64 @@ async function initAdmin(){
  setUserStatus(currentUser);
 }
 
+const PASSWORD_RESET_COOLDOWN_MS=60000;
+const PASSWORD_RESET_COOLDOWN_KEY="fundledgerPasswordResetCooldownUntil";
+let passwordResetCooldownUntil=0;
+let passwordResetCooldownTimer=null;
+function loadPasswordResetCooldown(){
+ try{passwordResetCooldownUntil=parseInt(localStorage.getItem(PASSWORD_RESET_COOLDOWN_KEY)||"0",10)||0}
+ catch(e){passwordResetCooldownUntil=0}
+}
+function updatePasswordResetCooldown(){
+ const btn=$("sendResetBtn"),status=$("resetCooldownStatus");
+ if(!btn||!status)return;
+ const seconds=Math.max(0,Math.ceil((passwordResetCooldownUntil-Date.now())/1000));
+ if(passwordResetCooldownTimer){clearTimeout(passwordResetCooldownTimer);passwordResetCooldownTimer=null}
+ if(seconds>0){
+  btn.disabled=true;
+  btn.textContent=`Resend in ${seconds}s`;
+  status.textContent=`You can request another reset link in ${seconds} second${seconds===1?"":"s"}.`;
+  status.classList.remove("hidden");
+  passwordResetCooldownTimer=setTimeout(updatePasswordResetCooldown,250);
+ }else{
+  passwordResetCooldownUntil=0;
+  try{localStorage.removeItem(PASSWORD_RESET_COOLDOWN_KEY)}catch(e){}
+  btn.disabled=false;
+  btn.innerHTML="✉ &nbsp; Send Reset Link";
+  status.textContent="";
+  status.classList.add("hidden");
+ }
+}
+function startPasswordResetCooldown(){
+ passwordResetCooldownUntil=Date.now()+PASSWORD_RESET_COOLDOWN_MS;
+ try{localStorage.setItem(PASSWORD_RESET_COOLDOWN_KEY,String(passwordResetCooldownUntil))}catch(e){}
+ updatePasswordResetCooldown();
+}
 async function sendPasswordReset(){
  setAuthError("");
  if(!supabaseClient&&!initSupabaseClient())return;
+ updatePasswordResetCooldown();
+ if(passwordResetCooldownUntil>Date.now())return;
  const email=$("resetEmail").value.trim();
  if(!email){setAuthError("Enter your email to reset your password.");$("resetEmail").focus();return}
+ const resetBtn=$("sendResetBtn");
+ resetBtn.disabled=true;resetBtn.textContent="Sending…";
  setAuthBusy(true);
  try{
   const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+window.location.pathname});
-  if(error){setAuthError(error.message);return}
+  if(error){
+   if(error.status===429||/rate limit|too many|seconds/i.test(error.message||""))startPasswordResetCooldown();
+   setAuthError(error.status===429?"Please wait 60 seconds before requesting another reset link.":error.message);
+   return;
+  }
+  startPasswordResetCooldown();
   setAuthError("Password reset link sent. Check your email and open the link to choose a new password.");
   const panel=$("resetPanel");
   if(panel)panel.classList.add("hidden");
   const resetEmail=$("resetEmail");
   if(resetEmail)resetEmail.value="";
  }catch(e){console.error(e);setAuthError("Unable to send the reset email right now. Check your connection and try again.");}
- finally{setAuthBusy(false)}
+ finally{setAuthBusy(false);updatePasswordResetCooldown()}
 }
 async function updatePassword(){
  setRecoveryError("");
@@ -2767,8 +2830,8 @@ function render(){
    let remainingByPayments=expected ? left*(parseFloat(c.defaultAllocation)||0) : remaining;
    let paid=Number.isFinite(parseFloat(c.paidOverride))?parseFloat(c.paidOverride):rec;
    let remainingDisplay=Number.isFinite(parseFloat(c.remainingOverride))?parseFloat(c.remainingOverride):remainingByPayments;
-   return `<tr class="contract-row"><td>${escape(c.name)}</td><td>${money(c.invested)}</td><td>${money(paid)}</td><td>${money(remainingDisplay)}</td><td>${c.defaultAllocation>0?money(c.defaultAllocation):'—'}</td><td>${expected||'—'}</td><td>${expected?left:'—'}</td><td><span class="status">Active</span></td><td><div class="actions"><button class="table-action" type="button" onclick="editContract(${c.id})">Edit</button><button class="warning" type="button" onclick="closeContract(${c.id})">Close / Default</button><button class="danger" type="button" onclick="removeContract(${c.id})">Delete</button></div></td></tr>`;
- }).join('')||'<tr><td colspan="9" class="empty">No active contracts yet.</td></tr>';
+   return `<tr class="contract-row"><td>${escape(c.name)}</td><td>${escape(c.openedDate||c.date||'—')}</td><td>${money(c.invested)}</td><td>${money(paid)}</td><td>${money(remainingDisplay)}</td><td>${c.defaultAllocation>0?money(c.defaultAllocation):'—'}</td><td>${expected||'—'}</td><td>${expected?left:'—'}</td><td><span class="status">Active</span></td><td><div class="actions"><button class="table-action" type="button" onclick="editContract(${c.id})">Edit</button><button class="warning" type="button" onclick="closeContract(${c.id})">Close / Default</button><button class="danger" type="button" onclick="removeContract(${c.id})">Delete</button></div></td></tr>`;
+ }).join('')||'<tr><td colspan="10" class="empty">No active contracts yet.</td></tr>';
  $("contracts").innerHTML=contractRows;
  let received=data.checks.reduce((a,x)=>a+x.amount,0), invested=data.contracts.reduce((a,c)=>a+c.invested,0);
  const overallProfit=received-invested;$("invested").textContent=money(invested);$("received").textContent=money(received);$("profit").textContent=money(overallProfit);const profitCard=$("profit")?.closest(".summary-card.profit");if(profitCard){profitCard.classList.toggle("positive",overallProfit>0);profitCard.classList.toggle("negative",overallProfit<0);}$("openContracts").textContent=open.length;
@@ -2816,6 +2879,7 @@ $("forgotPasswordBtn").addEventListener("click",()=>{
   panel.classList.remove("hidden");
   const loginEmail=$("authEmail")?.value.trim()||"";
   if(loginEmail&&!$("resetEmail").value)$("resetEmail").value=loginEmail;
+  updatePasswordResetCooldown();
   setTimeout(()=>$("resetEmail").focus(),0);
 });
 $("sendResetBtn").addEventListener("click",sendPasswordReset);
@@ -2825,6 +2889,8 @@ $("adminUserSelect").addEventListener("change",e=>renderAdminUser(e.target.value
 $("adminRefreshBtn").addEventListener("click",loadAdminUsers);
 setupNavScrolling();
 updateHistorySearchInput();
+loadPasswordResetCooldown();
+updatePasswordResetCooldown();
 render();
 initCloud();
 </script>
@@ -2915,4 +2981,3 @@ initCloud();
 </script>
 
 </body></html>
-
