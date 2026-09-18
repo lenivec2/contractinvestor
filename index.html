@@ -22,6 +22,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 @media(max-width:950px){.sidebar{width:190px;flex-basis:190px}.summary-grid{grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr}}
 
 .admin-summary-wrap{margin-top:18px}.admin-summary-title{font-size:18px;font-weight:800;color:#17365f;margin:0 0 10px}.admin-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 20px}.admin-summary-grid .summary-card{min-height:92px}.admin-summary-grid .summary-label{font-size:12px;font-weight:700;margin-bottom:9px}.admin-summary-grid .summary-value{font-size:19px;font-weight:800;color:#12345a}.admin-summary-grid .summary-card.received .summary-value{color:#008a45}.admin-summary-grid .summary-card.profit .summary-value{color:#12345a}.admin-summary-grid .summary-card.profit.positive .summary-value{color:#008a45}.admin-summary-grid .summary-card.profit.negative .summary-value{color:#d32f2f}.admin-summary-grid .summary-card.active .summary-value{color:#12345a}.admin-summary-grid .summary-card.default .summary-value,.admin-summary-grid .summary-card.default-loss .summary-value{color:#d32f2f}
+.admin-user-controls{margin-top:14px;padding:16px;border:1px solid #d7e4f2;border-radius:10px;background:#f8fbff}.admin-control-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.admin-control-status{display:flex;gap:8px;flex-wrap:wrap}.access-badge{display:inline-flex;align-items:center;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}.access-badge.allowed{background:#e8f7ef;color:#08733d}.access-badge.blocked{background:#fdebed;color:#b4232f}.access-badge.muted{background:#fff2d8;color:#8a5700}.admin-control-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.admin-ban-btn{background:#d92d20;color:#fff;border:0;border-radius:7px;padding:10px 14px;font-weight:800}.admin-unban-btn{background:#0b8a4b;color:#fff;border:0;border-radius:7px;padding:10px 14px;font-weight:800}.admin-mute-btn{background:#f4a100;color:#3f2a00;border:0;border-radius:7px;padding:10px 14px;font-weight:800}.admin-allow-btn{background:#147be8;color:#fff;border:0;border-radius:7px;padding:10px 14px;font-weight:800}.admin-control-note{margin:10px 0 0;font-size:12px;color:#64748b}
 @media(max-width:950px){.admin-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.admin-summary-grid{grid-template-columns:1fr 1fr;gap:10px}.admin-summary-grid .summary-card{min-height:94px;padding:12px}.admin-summary-grid .summary-value{font-size:18px;line-height:1.15;word-break:break-word}.admin-summary-grid .summary-icon{width:34px;height:34px;font-size:18px}}
 
@@ -67,14 +68,15 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   #contractsPanel td,#historyPanel td{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border:0;text-align:right;white-space:normal;word-break:break-word}
   #contractsPanel td:before,#historyPanel td:before{font-weight:700;text-align:left;color:#64748b;flex:0 0 auto}
   #contractsPanel td:nth-child(1):before{content:'Name'}
-  #contractsPanel td:nth-child(2):before{content:'Invested'}
-  #contractsPanel td:nth-child(3):before{content:'Paid'}
-  #contractsPanel td:nth-child(4):before{content:'Remaining'}
-  #contractsPanel td:nth-child(5):before{content:'Amount / Check'}
-  #contractsPanel td:nth-child(6):before{content:'Expected Payments'}
-  #contractsPanel td:nth-child(7):before{content:'Payments Left'}
-  #contractsPanel td:nth-child(8):before{content:'Status'}
-  #contractsPanel td:nth-child(9):before{content:'Actions'}
+  #contractsPanel td:nth-child(2):before{content:'Day Opened'}
+  #contractsPanel td:nth-child(3):before{content:'Invested'}
+  #contractsPanel td:nth-child(4):before{content:'Paid'}
+  #contractsPanel td:nth-child(5):before{content:'Remaining'}
+  #contractsPanel td:nth-child(6):before{content:'Amount / Check'}
+  #contractsPanel td:nth-child(7):before{content:'Expected Payments'}
+  #contractsPanel td:nth-child(8):before{content:'Payments Left'}
+  #contractsPanel td:nth-child(9):before{content:'Status'}
+  #contractsPanel td:nth-child(10):before{content:'Actions'}
   #historyPanel td:nth-child(1):before{content:'Date Issued'}
   #historyPanel td:nth-child(2):before{content:'Date Received'}
   #historyPanel td:nth-child(3):before{content:'Check Amount'}
@@ -116,8 +118,8 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 @media(max-width:600px){.reset-panel .reset-actions{grid-template-columns:1fr}.reset-panel #cancelResetBtn{order:2}}
 
 
-.history-search-box{display:grid;grid-template-columns:minmax(180px,.8fr) minmax(220px,1.4fr) auto;gap:12px;align-items:end;padding:14px 16px;margin:0 0 14px;background:#f7faff;border:1px solid #dbe7f3;border-radius:12px}
-.history-search-box .field{margin:0}.history-search-input input,.history-search-box select{width:100%}.history-clear-field button{white-space:nowrap;height:42px}
+.history-search-box{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end;padding:14px 16px;margin:0 0 14px;background:#f7faff;border:1px solid #dbe7f3;border-radius:12px}
+.history-search-box .field{margin:0}.history-search-input input,.history-search-box select{display:block;width:100%;height:42px;min-height:42px;max-height:42px;margin:0;padding:9px 10px;line-height:normal}.history-clear-field button{white-space:nowrap;height:42px}
 @media(max-width:700px){.history-search-box{grid-template-columns:1fr}.history-clear-field button{width:100%}}
 </style>
 
@@ -1887,7 +1889,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <div id="contactNewMessage" class="contact-new-message" style="display:none" aria-hidden="true">NEW MESSAGE</div>
 </aside>
 <main class="content" id="dashboard"><div class="content-inner">
-<div id="adminPanel" class="panel hidden"><h2>Admin Dashboard</h2><p class="muted">Master account view. Regular users only see their own data.</p><div class="row"><div class="field"><label>User</label><select id="adminUserSelect"><option value="">Select a user</option></select></div><div class="field" style="max-width:180px"><label>&nbsp;</label><button id="adminRefreshBtn" class="primary-btn" type="button">Refresh Users</button></div></div><div id="adminUserSummary" class="muted" style="margin-top:12px">Select a user to view their dashboard.</div><div id="adminUserData" class="hidden" style="margin-top:14px"></div></div>
+<div id="adminPanel" class="panel hidden"><h2>Admin Dashboard</h2><p class="muted">Master account view. Regular users only see their own data.</p><div class="row"><div class="field"><label>User</label><select id="adminUserSelect"><option value="">Select a user</option></select></div><div class="field" style="max-width:180px"><label>&nbsp;</label><button id="adminRefreshBtn" class="primary-btn" type="button">Refresh Users</button></div></div><div id="adminUserSummary" class="muted" style="margin-top:12px">Select a user to view their dashboard.</div><div id="adminUserControls" class="admin-user-controls hidden"><div class="admin-control-head"><strong>Account Permissions</strong><div class="admin-control-status"><span id="adminLoginStatus" class="access-badge allowed">Login Allowed</span><span id="adminMessageStatus" class="access-badge allowed">Messaging Allowed</span></div></div><div class="admin-control-actions"><button id="adminToggleBanBtn" class="admin-ban-btn" type="button">Ban Login</button><button id="adminToggleMuteBtn" class="admin-mute-btn" type="button">Block Messaging</button></div><p class="admin-control-note">Ban Login signs the user out on their next app check and blocks access to their FundLedger data. Block Messaging keeps the account active but prevents new Contact Us messages.</p></div><div id="adminUserData" class="hidden" style="margin-top:14px"></div></div>
 <div class="summary-grid">
 <div class="summary-card"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Invested</div><div class="summary-value" id="invested">$0.00</div></div></div></div>
 <div class="summary-card received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Money Received</div><div class="summary-value" id="received">$0.00</div></div></div></div>
@@ -1986,6 +1988,9 @@ let currentUser=null;
 let isAdmin=false;
 let adminUsers=[];
 let adminRows=[];
+let currentUserRestrictions={login_banned:false,messages_blocked:false};
+let selectedAdminUserId="";
+let selectedAdminRestrictions={login_banned:false,messages_blocked:false};
 let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
@@ -2051,6 +2056,7 @@ function setupNavScrolling(){
 
 async function refreshCloudData(){
  if(!currentUser||!supabaseClient){toast("Please sign in first");return}
+ if(!(await enforceAccountAccess()))return;
  const userId=currentUser.id;
  const btn=$("refreshBtn");
  if(btn){btn.disabled=true;btn.textContent="Refreshing…"}
@@ -2104,10 +2110,80 @@ function setAuthBusy(busy){
  if(forgotBtn){forgotBtn.disabled=busy;}
 }
 function setRecoveryError(s){const el=$("recoveryError");el.textContent=s||"";el.style.display=s?"block":"none"}
+function applyMessagingRestriction(){
+ const blocked=!!currentUserRestrictions.messages_blocked&&!isAdmin;
+ const input=$("contactMessage"),btn=$("sendContactMessageBtn"),status=$("contactMessageStatus");
+ if(input){input.disabled=blocked;input.placeholder=blocked?"Messaging has been disabled by an administrator.":"Type your message..."}
+ if(btn){btn.disabled=blocked;btn.textContent=blocked?"Messaging Disabled":"Send Message"}
+ if(status&&blocked)status.textContent="Messaging has been disabled by an administrator.";
+}
+async function getMyAccountRestrictions(){
+ const fallback={login_banned:false,messages_blocked:false};
+ if(!currentUser||!supabaseClient)return fallback;
+ try{
+  const {data:row,error}=await supabaseClient.rpc("get_my_account_restrictions");
+  if(error)throw error;
+  const r=Array.isArray(row)?(row[0]||{}):(row||{});
+  return {login_banned:!!r.login_banned,messages_blocked:!!r.messages_blocked};
+ }catch(e){console.warn("Account restrictions could not be loaded",e);return fallback}
+}
+async function enforceAccountAccess(){
+ if(!currentUser)return false;
+ currentUserRestrictions=await getMyAccountRestrictions();
+ if(currentUserRestrictions.login_banned){
+  const bannedEmail=currentUser.email||"This account";
+  try{await supabaseClient.auth.signOut()}catch(e){console.warn(e)}
+  currentUser=null;isAdmin=false;cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));
+  showAuth();setUserStatus(null);render();
+  setAuthError(`${bannedEmail} has been disabled by an administrator.`);
+  return false;
+ }
+ applyMessagingRestriction();
+ return true;
+}
+function renderAdminRestrictionControls(userId,restrictions){
+ selectedAdminUserId=userId||"";
+ selectedAdminRestrictions={login_banned:!!restrictions?.login_banned,messages_blocked:!!restrictions?.messages_blocked};
+ const controls=$("adminUserControls"),login=$("adminLoginStatus"),messages=$("adminMessageStatus"),banBtn=$("adminToggleBanBtn"),muteBtn=$("adminToggleMuteBtn");
+ if(!controls)return;
+ controls.classList.toggle("hidden",!userId);
+ if(!userId)return;
+ if(login){login.textContent=selectedAdminRestrictions.login_banned?"Login Banned":"Login Allowed";login.className="access-badge "+(selectedAdminRestrictions.login_banned?"blocked":"allowed")}
+ if(messages){messages.textContent=selectedAdminRestrictions.messages_blocked?"Messaging Blocked":"Messaging Allowed";messages.className="access-badge "+(selectedAdminRestrictions.messages_blocked?"muted":"allowed")}
+ if(banBtn){banBtn.textContent=selectedAdminRestrictions.login_banned?"Restore Login":"Ban Login";banBtn.className=selectedAdminRestrictions.login_banned?"admin-unban-btn":"admin-ban-btn";banBtn.disabled=userId===currentUser?.id;banBtn.title=banBtn.disabled?"You cannot ban your own admin account":""}
+ if(muteBtn){muteBtn.textContent=selectedAdminRestrictions.messages_blocked?"Allow Messaging":"Block Messaging";muteBtn.className=selectedAdminRestrictions.messages_blocked?"admin-allow-btn":"admin-mute-btn"}
+}
+async function loadAdminUserRestrictions(userId){
+ if(!userId||!isAdmin||!supabaseClient)return {login_banned:false,messages_blocked:false};
+ const {data:row,error}=await supabaseClient.rpc("admin_get_user_restrictions",{p_user_id:userId});
+ if(error)throw error;
+ const r=Array.isArray(row)?(row[0]||{}):(row||{});
+ return {login_banned:!!r.login_banned,messages_blocked:!!r.messages_blocked};
+}
+async function updateSelectedUserRestriction(kind){
+ if(!selectedAdminUserId||!isAdmin||!supabaseClient)return;
+ const isBan=kind==="login";
+ const next=isBan?!selectedAdminRestrictions.login_banned:!selectedAdminRestrictions.messages_blocked;
+ const label=adminUsers.find(u=>u.id===selectedAdminUserId)?.email||"this user";
+ const action=isBan?(next?"ban login for":"restore login for"):(next?"block messaging for":"allow messaging for");
+ if(!confirm(`Are you sure you want to ${action} ${label}?`))return;
+ const btn=isBan?$("adminToggleBanBtn"):$("adminToggleMuteBtn");
+ if(btn)btn.disabled=true;
+ try{
+  const functionName=isBan?"admin_set_user_login_banned":"admin_set_user_messages_blocked";
+  const args=isBan?{p_user_id:selectedAdminUserId,p_banned:next}:{p_user_id:selectedAdminUserId,p_blocked:next};
+  const {error}=await supabaseClient.rpc(functionName,args);
+  if(error)throw error;
+  const restrictions=await loadAdminUserRestrictions(selectedAdminUserId);
+  renderAdminRestrictionControls(selectedAdminUserId,restrictions);
+  toast(isBan?(next?"User login banned":"User login restored"):(next?"User messaging blocked":"User messaging restored"));
+ }catch(e){console.error(e);toast("Permission update failed. Run the updated Supabase SQL setup.")}
+ finally{if(btn)btn.disabled=false}
+}
 async function loadAdminUsers(){
  if(!currentUser||!isAdmin||!supabaseClient)return;
  const select=$("adminUserSelect"),summary=$("adminUserSummary"),box=$("adminUserData");
- select.innerHTML='<option value="">Loading users…</option>'; box.classList.add("hidden");
+ select.innerHTML='<option value="">Loading users…</option>'; box.classList.add("hidden");renderAdminRestrictionControls("",{});
  try{
   const {data:users,error:userError}=await supabaseClient.rpc("admin_list_users");
   if(userError){
@@ -2122,11 +2198,13 @@ async function loadAdminUsers(){
 }
 async function renderAdminUser(userId){
  const box=$("adminUserData"),summary=$("adminUserSummary");
- if(!userId){box.classList.add("hidden");summary.textContent=adminUsers.length+" user"+(adminUsers.length===1?"":"s")+" found. Select a user to load their dashboard.";return}
+ if(!userId){box.classList.add("hidden");renderAdminRestrictionControls("",{});summary.textContent=adminUsers.length+" user"+(adminUsers.length===1?"":"s")+" found. Select a user to load their dashboard.";return}
  const user=adminUsers.find(u=>u.id===userId);
  summary.textContent="Loading dashboard for "+(user?.email||userId)+"…";
  box.classList.remove("hidden");box.innerHTML='<div class="muted">Loading selected user dashboard…</div>';
  try{
+  const restrictions=await loadAdminUserRestrictions(userId);
+  renderAdminRestrictionControls(userId,restrictions);
   const {data:row,error}=await supabaseClient.rpc("admin_get_user_data",{target_user_id:userId});
   if(error){console.error("admin_get_user_data failed",error);throw error}
   // Support both a single JSON object and a one-row RPC array response.
@@ -2177,6 +2255,7 @@ async function initAdmin(){
  const panel=$("adminPanel");
  if(panel)panel.classList.toggle("hidden",!isAdmin);
  if(isAdmin)await loadAdminUsers();
+ applyMessagingRestriction();
  setUserStatus(currentUser);
 }
 
@@ -2308,7 +2387,7 @@ async function signOut(){
  cloudDataReady=false;
  data=JSON.parse(JSON.stringify(EMPTY_DATA));
  if(supabaseClient)await supabaseClient.auth.signOut();
- currentUser=null;isAdmin=false;showAuth();setUserStatus(null);setSyncStatus("Not signed in");
+ currentUser=null;isAdmin=false;currentUserRestrictions={login_banned:false,messages_blocked:false};showAuth();setUserStatus(null);setSyncStatus("Not signed in");
  render();
 }
 async function loadCloudData(expectedUserId=null){
@@ -2373,6 +2452,7 @@ function formatContactDate(value){
 }
 async function submitContactMessage(){
   if(!currentUser||!supabaseClient){toast("Please sign in first");return}
+  if(currentUserRestrictions.messages_blocked&&!isAdmin){const status=$("contactMessageStatus");if(status)status.textContent="Messaging has been disabled by an administrator.";toast("Messaging is disabled");return}
   const email=$("contactEmail")?.value.trim()||currentUser.email||"";
   const message=$("contactMessage")?.value.trim()||"";
   const status=$("contactMessageStatus");
@@ -2390,8 +2470,10 @@ async function submitContactMessage(){
     await loadMyContactMessages();
   }catch(e){
     console.error(e);
-    if(status)status.textContent="Could not send your message. Make sure the Contact Us SQL setup has been run in Supabase.";
-  }finally{if(btn){btn.disabled=false;btn.textContent="Send Message"}}
+    const blocked=/messaging has been disabled|account access has been disabled/i.test(e?.message||"");
+    if(blocked){currentUserRestrictions.messages_blocked=true;applyMessagingRestriction()}
+    if(status)status.textContent=blocked?(e.message||"Messaging has been disabled by an administrator."):"Could not send your message. Make sure the Contact Us SQL setup has been run in Supabase.";
+  }finally{if(btn&&!currentUserRestrictions.messages_blocked){btn.disabled=false;btn.textContent="Send Message"}}
 }
 let adminContactMessagesCache=[];
 function renderAdminContactMessages(){
@@ -2574,7 +2656,7 @@ async function initCloud(){
   sessionData={session:null};
  }
  currentUser=sessionData.session?.user||null;
- if(currentUser){if($("contactEmail"))$("contactEmail").value=currentUser.email||"";cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showApp();setUserStatus(currentUser);setSyncStatus("Loading cloud data…");await loadCloudData(currentUser?.id);await initAdmin();$("date").value=new Date().toISOString().slice(0,10);render()}else{cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showAuth();render()}
+ if(currentUser){const accessAllowed=await enforceAccountAccess();if(accessAllowed){if($("contactEmail"))$("contactEmail").value=currentUser.email||"";cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showApp();setUserStatus(currentUser);setSyncStatus("Loading cloud data…");await loadCloudData(currentUser?.id);await initAdmin();$("date").value=new Date().toISOString().slice(0,10);render()}}else{cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showAuth();render()}
  supabaseClient.auth.onAuthStateChange(async (_event,session)=>{
    if(_event==="PASSWORD_RECOVERY"){
     showPasswordRecovery();
@@ -2583,6 +2665,7 @@ async function initCloud(){
    if(session?.user){
     const effectiveUser=session.user;
     currentUser=effectiveUser;
+    if(!(await enforceAccountAccess()))return;
     if($("contactEmail"))$("contactEmail").value=effectiveUser.email||"";
     cloudDataReady=false;
     data=JSON.parse(JSON.stringify(EMPTY_DATA));
@@ -2590,7 +2673,7 @@ async function initCloud(){
     setUserStatus(currentUser);
     setSyncStatus("Loading cloud data…");
     loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;await initAdmin();$("date").value=new Date().toISOString().slice(0,10);render()});
-   }else{currentUser=null;cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));setUserStatus(null);showAuth();render()}
+   }else{currentUser=null;currentUserRestrictions={login_banned:false,messages_blocked:false};cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));setUserStatus(null);showAuth();render()}
  });
 }
 function updateContractNumberPlaceholder(){let n=data.contracts.length+1;$("cname").placeholder=`Contract #${n}`}
@@ -2887,6 +2970,9 @@ $("cancelResetBtn").addEventListener("click",()=>{$("resetPanel").classList.add(
 $("updatePasswordBtn").addEventListener("click",updatePassword);
 $("adminUserSelect").addEventListener("change",e=>renderAdminUser(e.target.value));
 $("adminRefreshBtn").addEventListener("click",loadAdminUsers);
+$("adminToggleBanBtn").addEventListener("click",()=>updateSelectedUserRestriction("login"));
+$("adminToggleMuteBtn").addEventListener("click",()=>updateSelectedUserRestriction("messages"));
+window.addEventListener("focus",()=>{if(currentUser&&!isAdmin)enforceAccountAccess()});
 setupNavScrolling();
 updateHistorySearchInput();
 loadPasswordResetCooldown();
