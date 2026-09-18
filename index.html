@@ -1921,7 +1921,12 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   <div style="margin-top:20px">
   <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
     <h3 style="margin:0" id="contactThreadTitle">Your Messages</h3>
-    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="primary-btn" id="refreshContactMessagesBtn" onclick="refreshContactMessages()">↻ Refresh Messages</button><button type="button" class="secondary" id="deleteAllContactMessagesBtn" onclick="deleteAllContactMessages()">Delete All Messages</button></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">
+      <div class="field" id="adminMessageUserFilterWrap" style="display:none;min-width:220px;margin:0"><label for="adminMessageUserFilter">View messages from</label><select id="adminMessageUserFilter" onchange="filterAdminContactMessages()"><option value="all">All Users</option></select></div>
+      <button type="button" class="primary-btn" id="refreshContactMessagesBtn" onclick="refreshContactMessages()">↻ Refresh Messages</button>
+      <button type="button" class="secondary" id="deleteSelectedUserMessagesBtn" style="display:none" onclick="deleteSelectedUserContactMessages()">Delete This User's Messages</button>
+      <button type="button" class="secondary" id="deleteAllContactMessagesBtn" onclick="deleteAllContactMessages()">Delete All Messages</button>
+    </div>
   </div>
   <div id="contactThread" class="muted">Loading messages…</div>
 </div>
@@ -2325,13 +2330,39 @@ async function submitContactMessage(){
     if(status)status.textContent="Could not send your message. Make sure the Contact Us SQL setup has been run in Supabase.";
   }finally{if(btn){btn.disabled=false;btn.textContent="Send Message"}}
 }
+let adminContactMessagesCache=[];
+function renderAdminContactMessages(){
+  const box=$("contactThread");
+  const filter=$("adminMessageUserFilter");
+  const deleteUserBtn=$("deleteSelectedUserMessagesBtn");
+  if(!box||!isAdmin)return;
+  const selected=filter?.value||"all";
+  if(deleteUserBtn)deleteUserBtn.style.display=selected==="all"?"none":"";
+  const list=selected==="all"?adminContactMessagesCache:adminContactMessagesCache.filter(r=>String(r.user_id)===selected);
+  renderContactMessageList(list);
+}
+function filterAdminContactMessages(){ renderAdminContactMessages(); }
+function renderContactMessageList(list){
+  const box=$("contactThread");
+  if(!box)return;
+  if(!list.length){box.innerHTML=`<div class="muted">${isAdmin?"No messages for this selection.":"No messages yet."}</div>`;setContactNewMessage(false);return}
+  box.innerHTML=list.map(r=>{
+    const safeId=String(r.id).replace(/'/g,"\\'");
+    const reply=r.admin_reply
+      ? `<div style="margin-top:10px;padding:10px;background:#f3f8fd;border-radius:8px"><strong>Admin Reply:</strong><div style="margin-top:5px">${escape(r.admin_reply)}</div>${r.replied_at?`<div class="muted" style="margin-top:5px;font-size:12px">Replied: ${escape(formatContactDate(r.replied_at))}</div>`:""}</div>`
+      : (!isAdmin?`<div class="muted" style="margin-top:8px">Waiting for a reply.</div>`:"");
+    const adminReply=isAdmin?`<div style="margin-top:12px"><textarea id="adminReply_${safeId}" rows="3" maxlength="2000" placeholder="Reply to this user...">${escape(r.admin_reply||"")}</textarea><button type="button" class="primary-btn" style="margin-top:8px" onclick="sendAdminContactReply('${safeId}')">${r.admin_reply?"Update Reply":"Send Reply"}</button></div>`:"";
+    return `<div style="border:1px solid #dce8f5;border-radius:10px;padding:14px;margin:10px 0;background:#fff"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><div style="min-width:0;flex:1"><div style="font-weight:800;margin-bottom:6px">From: ${escape(r.email||"Unknown sender")}</div><div class="muted" style="margin-bottom:8px">Sent: ${escape(formatContactDate(r.created_at)||r.created_at||"")}</div><div><strong>${escape(r.message||"")}</strong></div></div><button type="button" class="secondary" style="flex:0 0 auto" onclick="deleteContactMessage('${safeId}')">Delete</button></div>${reply}${adminReply}</div>`;
+  }).join("");
+  setContactNewMessage(isAdmin?adminContactMessagesCache.length>0:list.some(r=>!!r.admin_reply));
+}
 async function loadMyContactMessages(){
   const box=$("contactThread");
   const title=$("contactThreadTitle");
   const deleteAllBtn=$("deleteAllContactMessagesBtn");
   if(!box||!currentUser||!supabaseClient)return;
   if(title)title.textContent=isAdmin?"Admin Inbox":"Your Messages";
-  if(deleteAllBtn)deleteAllBtn.style.display=isAdmin?"none":"";
+  if(deleteAllBtn)deleteAllBtn.style.display="";
   try{
     let rows=null, loadError=null;
     if(isAdmin){
@@ -2350,25 +2381,22 @@ async function loadMyContactMessages(){
     }
     if(loadError)throw loadError;
     const list=Array.isArray(rows)?rows:[];
-    if(!list.length){box.innerHTML=`<div class="muted">${isAdmin?"No user messages yet.":"No messages yet."}</div>`;setContactNewMessage(false);return}
-    box.innerHTML=list.map(r=>{
-      const safeId=String(r.id).replace(/'/g,"\\'");
-      const reply=r.admin_reply
-        ? `<div style="margin-top:10px;padding:10px;background:#f3f8fd;border-radius:8px"><strong>Admin Reply:</strong><div style="margin-top:5px">${escape(r.admin_reply)}</div>${r.replied_at?`<div class="muted" style="margin-top:5px;font-size:12px">Replied: ${escape(formatContactDate(r.replied_at))}</div>`:""}</div>`
-        : (!isAdmin?`<div class="muted" style="margin-top:8px">Waiting for a reply.</div>`:"");
-      const adminReply=isAdmin?`<div style="margin-top:12px"><textarea id="adminReply_${safeId}" rows="3" maxlength="2000" placeholder="Reply to this user...">${escape(r.admin_reply||"")}</textarea><button type="button" class="primary-btn" style="margin-top:8px" onclick="sendAdminContactReply('${safeId}')">${r.admin_reply?"Update Reply":"Send Reply"}</button></div>`:"";
-      return `<div style="border:1px solid #dce8f5;border-radius:10px;padding:14px;margin:10px 0;background:#fff">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
-          <div style="min-width:0;flex:1">
-            <div style="font-weight:800;margin-bottom:6px">From: ${escape(r.email||"Unknown sender")}</div>
-            <div class="muted" style="margin-bottom:8px">Sent: ${escape(formatContactDate(r.created_at)||r.created_at||"")}</div>
-            <div><strong>${escape(r.message||"")}</strong></div>
-          </div>
-          <button type="button" class="secondary" style="flex:0 0 auto" onclick="deleteContactMessage('${safeId}')">Delete</button>
-        </div>${reply}${adminReply}
-      </div>`;
-    }).join("");
-    setContactNewMessage(isAdmin?list.length>0:list.some(r=>!!r.admin_reply));
+    const filterWrap=$("adminMessageUserFilterWrap");
+    const filter=$("adminMessageUserFilter");
+    if(filterWrap)filterWrap.style.display=isAdmin?"":"none";
+    if(isAdmin){
+      adminContactMessagesCache=list;
+      if(filter){
+        const previous=filter.value||"all";
+        const users=new Map();
+        list.forEach(r=>{if(r.user_id&&!users.has(String(r.user_id)))users.set(String(r.user_id),r.email||"Unknown sender")});
+        filter.innerHTML='<option value="all">All Users</option>'+Array.from(users.entries()).sort((a,b)=>String(a[1]).localeCompare(String(b[1]))).map(([id,email])=>`<option value="${escape(id)}">${escape(email)}</option>`).join('');
+        filter.value=users.has(previous)?previous:"all";
+      }
+      renderAdminContactMessages();
+    }else{
+      renderContactMessageList(list);
+    }
   }catch(e){
     console.error(e);
     const detail=escape(e?.message||e?.details||"Unknown Supabase error");
@@ -2408,13 +2436,30 @@ async function deleteContactMessage(id){
     toast("Could not delete the message. Make sure the updated Contact Us SQL has been run in Supabase.");
   }
 }
+async function deleteSelectedUserContactMessages(){
+  if(!isAdmin||!currentUser||!supabaseClient)return;
+  const filter=$("adminMessageUserFilter");
+  const userId=filter?.value||"all";
+  if(userId==="all"){toast("Select one user first");return}
+  const label=filter?.options[filter.selectedIndex]?.text||"this user";
+  if(!confirm(`Delete ALL messages from ${label}? Other users' messages will not be deleted.`))return;
+  const btn=$("deleteSelectedUserMessagesBtn");
+  if(btn){btn.disabled=true;btn.textContent="Deleting…"}
+  try{
+    const {error}=await supabaseClient.rpc("contact_admin_delete_user_messages",{p_user_id:userId});
+    if(error)throw error;
+    toast("User messages deleted");
+    await loadMyContactMessages();
+  }catch(e){console.error(e);toast("Could not delete this user's messages. Run the updated SQL in Supabase.")}
+  finally{if(btn){btn.disabled=false;btn.textContent="Delete This User's Messages"}}
+}
 async function deleteAllContactMessages(){
   if(!currentUser||!supabaseClient)return;
-  if(!confirm("Delete ALL of your Contact Us messages? This cannot be undone."))return;
+  if(!confirm(isAdmin?"Delete ALL messages from the Admin Inbox? This will delete messages from every user and cannot be undone.":"Delete ALL of your Contact Us messages? This cannot be undone."))return;
   const btn=$("deleteAllContactMessagesBtn");
   if(btn){btn.disabled=true;btn.textContent="Deleting…"}
   try{
-    const {error}=await supabaseClient.rpc("contact_delete_all_my_messages");
+    const {error}=await supabaseClient.rpc(isAdmin?"contact_admin_delete_all_messages":"contact_delete_all_my_messages");
     if(error)throw error;
     toast("All messages deleted");
     await loadMyContactMessages();
@@ -2758,11 +2803,24 @@ initCloud();
 
 <script id="contact-new-message-badge-script">
 (function () {
+  function isContactUsOpen() {
+    return window.location.hash === '#contactPanel' || !!document.querySelector('#contactPanel.active, #contactPanel:not(.hidden):not([hidden])');
+  }
   function setContactNewMessage(show) {
+    // Never flash NEW MESSAGE while Contact Us is currently being viewed.
+    if (isContactUsOpen()) show = false;
     var badge = document.getElementById('contactNewMessage');
     if (badge) { badge.style.display = show ? 'block' : 'none'; badge.setAttribute('aria-hidden', show ? 'false' : 'true'); }
   }
+  function clearContactBadgeIfOpen() {
+    if (window.location.hash === '#contactPanel') setContactNewMessage(false);
+  }
   window.setContactNewMessage = setContactNewMessage;
+  window.addEventListener('hashchange', clearContactBadgeIfOpen);
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest && event.target.closest('a[href="#contactPanel"]');
+    if (link) setContactNewMessage(false);
+  });
 })();
 </script>
 
