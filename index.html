@@ -1765,7 +1765,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <aside class="sidebar">
 <a class="nav-item active" href="#dashboard"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
 <a class="nav-item" href="#checkPanel"><span class="nav-icon">✓</span><span>Add Payment / Check</span></a>
-<a class="nav-item" href="#newContractPanel"><span class="nav-icon">▣</span><span>NEW CONTRACT</span></a>
+<a class="nav-item" href="#newContractPanel"><span class="nav-icon">▣</span><span>New Contracts</span></a>
 <a class="nav-item" href="#newContractPanel"><span class="nav-icon">＋</span><span>Add Contract</span></a>
 <a class="nav-item" href="#completedPanel"><span class="nav-icon">✓</span><span>Completed Contracts</span></a>
 <a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Check History</span></a>
@@ -2725,3 +2725,45 @@ initCloud();
 
 </body></html>
 
+
+<!-- FundLedger Apple/mobile landscape report date overlap fix -->
+<style id="apple-landscape-report-date-fix">
+/* iPhone/iPad landscape: keep From/To inside report cards without overlap. */
+@media (max-width:1180px){
+  #reportsPanel .report-date-row{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:12px!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    align-items:end!important;
+  }
+  #reportsPanel .report-date-row > .field{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  #reportsPanel .report-date-row input[type="date"]{
+    box-sizing:border-box!important;
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  #reportsPanel .report-date-row .report-run-field{
+    grid-column:1 / -1!important;
+    width:100%!important;
+    max-width:none!important;
+  }
+  #reportsPanel .report-date-row .report-run-field label{
+    display:none!important;
+  }
+  #reportsPanel .report-date-row .report-run-field button{
+    width:100%!important;
+  }
+}
+@media (max-width:430px){
+  #reportsPanel .report-date-row{gap:8px!important}
+}
+</style>
