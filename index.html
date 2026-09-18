@@ -1745,7 +1745,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   </div>
 </div>
 <div id="appScreen" class="hidden">
-<header class="app-header"><button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open menu">☰</button><div class="brand"><span class="brand-heart">♥</span><span>Love Contracts</span></div><div class="header-actions"><button id="refreshBtn" type="button" onclick="refreshCloudData()">↻ &nbsp;Refresh</button><button onclick="signOut()">⇥ &nbsp;Sign Out</button></div></header>
+<header class="app-header"><button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open menu">☰</button><div class="brand"><span class="brand-heart">♥</span><span>Contract Investor</span></div><div class="header-actions"><button id="refreshBtn" type="button" onclick="refreshCloudData()">↻ &nbsp;Refresh</button><button onclick="signOut()">⇥ &nbsp;Sign Out</button></div></header>
 <div id="mobileOverlay" class="mobile-overlay" onclick="document.querySelector('.sidebar')?.classList.remove('open');this.classList.remove('show')"></div>
 <div class="app-shell">
 <aside class="sidebar">
@@ -1946,7 +1946,23 @@ async function refreshCloudData(){
 }
 function setUserStatus(user){const el=$("userStatus");if(el)el.innerHTML=user?"Signed in as "+escape(user.email||"user")+(isAdmin?" <span class=\"admin-badge\">MASTER ADMIN</span>":""):"Not signed in"}
 function setAuthError(s){const el=$("authError");el.textContent=s||"";el.style.display=s?"block":"none"}
-function showApp(){$("authScreen").classList.add("hidden");$("passwordRecoveryScreen").classList.add("hidden");$("appScreen").classList.remove("hidden")}
+function showApp(){
+  $("authScreen").classList.add("hidden");
+  $("passwordRecoveryScreen").classList.add("hidden");
+  $("appScreen").classList.remove("hidden");
+  // Always start on Dashboard after opening/signing in, never the last visited panel.
+  try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+  document.querySelectorAll(".panel").forEach(p=>{
+    if(p.id!=="adminPanel") p.classList.add("hidden");
+  });
+  ["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","contactPanel"].forEach(id=>{
+    const p=$(id); if(p) p.classList.remove("hidden");
+  });
+  document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
+  const dash=document.querySelector('.nav-item[href="#dashboard"]'); if(dash) dash.classList.add("active");
+  const content=document.querySelector(".content"); if(content) content.scrollTop=0;
+  window.scrollTo(0,0);
+}
 function showAuth(){$("appScreen").classList.add("hidden");$("passwordRecoveryScreen").classList.add("hidden");$("authScreen").classList.remove("hidden")}
 function showPasswordRecovery(){$("appScreen").classList.add("hidden");$("authScreen").classList.add("hidden");$("passwordRecoveryScreen").classList.remove("hidden");$("newPassword").focus()}
 function setAuthBusy(busy){
