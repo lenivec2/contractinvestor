@@ -1,0 +1,2687 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#17365f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Checks">
+<title>Love Contracts</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="this.onerror=null;var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2';document.head.appendChild(s)"></script>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f8fc;color:#102d57}button,input,select,textarea{font:inherit;box-sizing:border-box}button{cursor:pointer}
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at 10% 30%,#ff425622 0 70px,transparent 72px),radial-gradient(circle at 92% 18%,#ff425622 0 90px,transparent 92px),linear-gradient(135deg,#eef4fb,#fdf6f7)}.auth-card{width:min(620px,100%);background:#fff;border-radius:20px;padding:42px 46px;box-shadow:0 12px 40px #12345a22}.auth-card h2{margin:0 0 8px;font-size:0}.auth-brand{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#17365f;margin-bottom:30px}.auth-brand-love-row{display:flex;align-items:center;justify-content:center;gap:18px;width:100%}.auth-brand-love{color:#e31b23;font-size:54px;font-weight:850;line-height:1;font-family:cursive;font-style:italic;letter-spacing:-2px}.auth-brand-heart{font-size:48px;line-height:1;color:#ff4256}.auth-brand-contracts{margin-top:8px;font-size:20px;font-weight:850;letter-spacing:6px;color:#17365f}.auth-card>p.muted{text-align:center;margin:-12px 0 24px}.auth-card #authForm{margin-top:0}.auth-card #authEmail,.auth-card #authPassword{padding:14px 15px;font-size:16px}.auth-card #authForm>.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.auth-card #signInBtn,.auth-card #signUpBtn{min-height:50px;border-radius:9px;font-weight:800}.auth-card #signInBtn{background:#147be8;color:#fff;border:0}.auth-card #signUpBtn{background:#fff;color:#17365f;border:1px solid #b9cde2}.muted{color:#718096;font-size:13px}.auth-error{color:#b00020;font-size:13px;margin-top:10px;display:none}.auth-card .row{margin-top:12px}.auth-card input{width:100%;box-sizing:border-box}.auth-card #createAccountBtn,.auth-card #backToSignInBtn{min-height:50px;border-radius:9px;font-weight:800}.auth-card #createAccountBtn{background:#147be8;color:#fff;border:0}.auth-card #backToSignInBtn{background:#fff;color:#17365f;border:1px solid #b9cde2}
+#appScreen{height:100vh;min-height:0;background:#f5f8fc;overflow:hidden}.app-header{height:72px;background:#17365f;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 22px;box-shadow:0 2px 10px #0b244210;position:sticky;top:0;z-index:10}.brand{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:800}.brand-heart{font-size:37px;line-height:1;color:#ff4256}.header-actions{display:flex;gap:10px}.header-actions button{background:transparent;border:1px solid #ffffffaa;color:#fff;border-radius:9px;padding:9px 14px;font-weight:700}.header-actions #refreshBtn{border-color:transparent}.header-actions button:hover{background:#ffffff14}
+.app-shell{display:flex;height:calc(100vh - 72px);min-height:0}.sidebar{width:238px;background:#102f55;color:#fff;padding:14px 10px;overflow-y:auto;flex:0 0 238px}.nav-item{display:flex;align-items:center;gap:14px;padding:13px 14px;margin:4px 0;border-radius:8px;color:#fff;text-decoration:none;font-weight:650}.nav-item.active{background:#1976d2}.nav-item:hover{background:#ffffff12}.nav-icon{width:26px;text-align:center;font-size:21px}.content{flex:1;min-width:0;min-height:0;height:100%;overflow-y:auto;padding:24px 20px 36px;overscroll-behavior:contain}.content-inner{max-width:1280px;margin:auto}.sync{font-size:11px;color:#7b8da5}.hidden{display:none!important}
+.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.summary-card{background:#fff;border:1px solid #dce8f5;border-radius:8px;padding:12px 14px;min-height:92px;box-shadow:0 2px 8px #12345a0a}.summary-label{font-size:12px;font-weight:700;margin-bottom:9px}.summary-value{font-size:19px;font-weight:800;color:#12345a}.summary-card.received .summary-value{color:#008a45}.summary-card.profit .summary-value{color:#12345a}.summary-card.profit.positive .summary-value{color:#008a45}.summary-card.profit.negative .summary-value{color:#d32f2f}.summary-card.active .summary-value{color:#12345a}.summary-card.default .summary-value,.summary-card.default-loss .summary-value{color:#d32f2f}.summary-top{display:flex;align-items:center;gap:9px}.summary-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:23px;background:#e6f1ff}
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:0;align-items:start}.panel{background:#fff;border:1px solid #dce8f5;border-radius:8px;padding:18px;box-shadow:0 2px 8px #12345a0a;margin-bottom:20px}.panel h2{font-size:21px;margin:0 0 14px}.panel h3{font-size:16px;margin:16px 0 9px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.primary-btn{background:#147be8;color:#fff;border:0;border-radius:7px;padding:10px 15px;font-weight:750}.secondary{background:#fff;color:#17365f;border:1px solid #cbdced;border-radius:7px;padding:10px 14px;font-weight:700}.warning{background:#fff4d6;color:#8a5a00;border:1px solid #f1d28a;padding:7px 9px;border-radius:7px;font-weight:750;cursor:pointer}.warning:hover{background:#ffe9ad}.danger{background:#ef3f4d!important;color:#fff!important;border:0!important;border-radius:7px!important;padding:8px 11px!important}.table-action{background:#eef5ff;color:#147be8;border:1px solid #acd0f8;border-radius:6px;padding:7px 9px;font-weight:700}.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;font-size:12px;font-weight:800;padding:11px 9px;text-align:left}td{padding:11px 9px;border-bottom:1px solid #e8eef5;font-size:13px;color:#17365f}tr:last-child td{border-bottom:0}.status{display:inline-block;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:750;background:#d9f6e5;color:#07853f}.status.completed{background:#dcecff;color:#147be8}.gain{font-weight:800;color:#07853f}.loss{font-weight:800;color:#d92d20}.even{font-weight:700;color:#718096}.actions{display:flex;gap:7px;white-space:nowrap}.contract-row td:first-child{font-weight:700}.empty{padding:20px;color:#718096}
+.field{flex:1;min-width:130px}.field label{display:block;font-size:12px;font-weight:700;color:#52657d;margin:0 0 6px}.row{display:flex;gap:10px;flex-wrap:wrap}input,select,textarea{width:100%;border:1px solid #cbd9e8;background:#fff;border-radius:7px;padding:11px 12px;color:#17365f}.check{width:20px;height:20px}.choices{display:flex;gap:8px;flex-wrap:wrap}.choice{width:auto;background:#eef5ff;color:#17365f;border:1px solid #cbdced;border-radius:7px;padding:9px 12px}.choice.selected{background:#147be8;color:#fff;border-color:#147be8}.contract{padding:10px 0;border-top:1px solid #e8eef5;display:flex;justify-content:space-between;gap:12px;align-items:center}.contract-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#17365f;color:#fff;padding:11px 16px;border-radius:9px;display:none;z-index:30}.warning{color:#b00020;font-weight:800}.totals-list{display:grid;gap:10px}.total-line{display:flex;justify-content:space-between;gap:15px;font-size:13px}.total-line strong{font-weight:750}
+.manual-box{background:#f7faff;border:1px solid #dce8f5;border-radius:8px;padding:12px}.manual-box .row{align-items:end}.side-card h2{font-size:20px}.save-check{width:100%;font-size:16px;padding:13px}.completed-count{font-size:13px;color:#718096;margin:-4px 0 12px}.app-subline{display:none}
+@media(max-width:950px){.sidebar{width:190px;flex-basis:190px}.summary-grid{grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr}}
+
+.admin-summary-wrap{margin-top:18px}.admin-summary-title{font-size:18px;font-weight:800;color:#17365f;margin:0 0 10px}.admin-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 20px}.admin-summary-grid .summary-card{min-height:92px}.admin-summary-grid .summary-label{font-size:12px;font-weight:700;margin-bottom:9px}.admin-summary-grid .summary-value{font-size:19px;font-weight:800;color:#12345a}.admin-summary-grid .summary-card.received .summary-value{color:#008a45}.admin-summary-grid .summary-card.profit .summary-value{color:#12345a}.admin-summary-grid .summary-card.profit.positive .summary-value{color:#008a45}.admin-summary-grid .summary-card.profit.negative .summary-value{color:#d32f2f}.admin-summary-grid .summary-card.active .summary-value{color:#12345a}.admin-summary-grid .summary-card.default .summary-value,.admin-summary-grid .summary-card.default-loss .summary-value{color:#d32f2f}
+@media(max-width:950px){.admin-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.admin-summary-grid{grid-template-columns:1fr 1fr;gap:10px}.admin-summary-grid .summary-card{min-height:94px;padding:12px}.admin-summary-grid .summary-value{font-size:18px;line-height:1.15;word-break:break-word}.admin-summary-grid .summary-icon{width:34px;height:34px;font-size:18px}}
+
+.report-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:16px}.report-card{background:#f8fbff;border:1px solid #e3ebf4;border-radius:12px;padding:16px;min-height:92px}.report-label{font-size:12px;font-weight:800;color:#718096;text-transform:uppercase;letter-spacing:.35px}.report-value{font-size:22px;font-weight:800;color:#17365f;margin-top:9px;word-break:break-word}.report-card .loss{color:#d92d20}
+.report-head{align-items:center}.report-head h2{margin-bottom:4px}.report-kpis{margin-top:14px}.report-card{position:relative;overflow:hidden}.report-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#147be8}.report-green:before{background:#00a86b}.report-blue:before{background:#147be8}.report-purple:before{background:#6941c6}.report-cyan:before{background:#0ba8b5}.report-orange:before{background:#f57c00}.report-pink:before{background:#ef3f74}.report-gold:before{background:#e6a700}.report-red:before{background:#d92d20}.reports-columns{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:16px;margin-top:16px}.report-box{background:#fff;border:1px solid #dce8f5;border-radius:12px;padding:16px;margin-bottom:16px;box-shadow:0 2px 8px #12345a0a}.report-box-title{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}.report-box-title>span{width:34px;height:34px;border-radius:9px;background:#eaf3ff;display:grid;place-items:center;color:#147be8;font-weight:900}.report-box h3{margin:0;font-size:17px}.report-box-title p{margin:3px 0 0}.money-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center;gap:8px}.flow-card{border-radius:9px;padding:14px 10px;text-align:center;background:#f4f8fd}.flow-card span,.performance-grid span,.payment-stats span,.range-results span{display:block;font-size:11px;color:#718096;font-weight:750}.flow-card strong{display:block;margin-top:6px;font-size:17px}.flow-invested{background:#e7f8ef;color:#07853f}.flow-received{background:#eaf3ff;color:#147be8}.flow-outstanding{background:#fff2e8;color:#e86d00}.flow-profit{background:#f1ebff;color:#6941c6}.flow-profit strong.gain{color:#07853f}.flow-profit strong.loss{color:#d92d20}.flow-arrow{font-size:18px;color:#94a3b8}.performance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.performance-grid>div{background:#f7faff;border:1px solid #e3ebf4;border-radius:9px;padding:13px}.performance-grid strong{display:block;font-size:20px;color:#17365f;margin-top:5px}.performance-grid .perf-warning strong{color:#d98200}.performance-grid .perf-danger strong{color:#d92d20}.payment-range-controls{margin-bottom:14px}.payment-date-row{margin-top:0}.payment-range-buttons{margin-bottom:10px}.payment-report-layout{display:grid;grid-template-columns:minmax(210px,.7fr) minmax(280px,1.3fr);gap:14px}.payment-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.payment-stats>div{padding:10px;border:1px solid #e3ebf4;border-radius:8px;background:#f9fbfe}.payment-stats strong{display:block;font-size:16px;color:#17365f;margin-top:4px}.mini-chart{border:1px solid #e3ebf4;border-radius:9px;padding:12px;background:#fbfdff}.chart-title{font-weight:800;font-size:13px;color:#17365f;margin-bottom:10px}.chart-bars{height:170px;display:flex;align-items:flex-end;gap:7px;border-bottom:1px solid #dce8f5;padding:0 4px}.chart-bar-wrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;min-width:0}.chart-bar{width:100%;max-width:28px;min-height:3px;background:#147be8;border-radius:5px 5px 0 0}.chart-bar-label{font-size:9px;color:#718096}.chart-bar-value{font-size:9px;color:#52657d;white-space:nowrap}.range-buttons{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.range-btn{background:#f4f8fd;border:1px solid #cbdced;color:#17365f;border-radius:7px;padding:8px 11px;font-size:12px;font-weight:750}.range-btn.active{background:#147be8;color:#fff;border-color:#147be8}.report-date-row{align-items:end}.report-run-field{max-width:125px}.range-results{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}.range-results>div{background:#f7faff;border:1px solid #e3ebf4;border-radius:9px;padding:12px}.range-results strong{display:block;font-size:17px;color:#17365f;margin-top:5px}.contract-report-empty{margin-top:12px;padding:18px;text-align:center;border:1px dashed #cbd9e8;border-radius:9px;color:#718096}.contract-report-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.contract-report-grid>div{padding:10px;border:1px solid #e3ebf4;border-radius:8px;background:#f9fbfe}.contract-report-grid span{display:block;font-size:11px;color:#718096}.contract-report-grid strong{display:block;margin-top:4px;font-size:14px;color:#17365f}.contract-report-history{margin-top:12px}.contract-report-history h4{margin:0 0 7px;font-size:13px}.contract-report-history table{min-width:0}.contract-report-history th,.contract-report-history td{padding:8px 7px;font-size:11px}.export-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.export-grid button{width:100%}
+@media(max-width:900px){.report-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.auth-brand-love-row{gap:12px}.auth-brand-love{font-size:48px}.auth-brand-heart{font-size:40px}.auth-brand-contracts{font-size:17px;letter-spacing:5px}.auth-brand{margin-bottom:24px}.auth-card{padding:30px 20px}}
+@media(max-width:700px){.app-header{height:64px;padding:0 12px}.brand{font-size:21px}.brand-heart{font-size:30px}.header-actions button{padding:8px 9px;font-size:12px}.sidebar{width:64px;flex-basis:64px;padding:10px 6px}.nav-item{justify-content:center;padding:12px 5px}.nav-item span:last-child{display:inline}.nav-icon{font-size:20px}.content{padding:12px 10px}.summary-grid{grid-template-columns:1fr 1fr;gap:10px}.summary-card{padding:12px;min-height:94px}.summary-value{font-size:18px}.summary-label{font-size:12px;margin-bottom:7px}.summary-icon{width:34px;height:34px;font-size:18px}.panel{padding:14px;margin-bottom:12px}.section-head{align-items:flex-start}.section-head .primary-btn{white-space:nowrap}.row{flex-direction:column}.field{width:100%;min-width:0}.row button{width:100%}.contract{flex-direction:column;align-items:stretch}.contract-actions{display:grid;grid-template-columns:1fr 1fr}.actions{flex-wrap:wrap}.scroll{width:100%}table{min-width:720px}.app-subline{display:block;font-size:10px;color:#a9bdd5}}
+
+.mobile-overlay{display:none}.mobile-overlay.show{display:block;position:fixed;inset:58px 0 0;background:rgba(15,23,42,.35);z-index:20}
+/* Mobile-first responsive layout */
+@media (max-width: 700px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  #appScreen{height:100dvh;overflow:hidden}
+  .app-header{height:58px;position:sticky;top:0;padding:0 12px}
+  .app-header .brand{font-size:17px}
+  .app-header .brand-heart{font-size:18px}
+  .app-shell{height:calc(100dvh - 58px);display:block}
+  .sidebar{position:fixed;top:58px;left:0;bottom:0;width:min(82vw,290px);flex:0 0 min(82vw,290px);padding:14px 10px;z-index:30;transform:translateX(-105%);transition:transform .2s ease;box-shadow:8px 0 24px rgba(0,0,0,.18)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar .nav-item{justify-content:flex-start;padding:13px 14px;gap:14px}
+  .sidebar .nav-item span:last-child{display:inline!important;white-space:normal}
+  .sidebar .nav-icon{width:26px;flex:0 0 26px;font-size:21px}
+  .mobile-menu-btn{display:flex!important}
+  .content{height:100%;padding:12px 10px 28px;overflow-y:auto}
+  .content-inner{width:100%;max-width:none}
+  .summary-grid{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+  .summary-card{min-width:0;min-height:82px;padding:12px}
+  .summary-card h3{font-size:11px;line-height:1.2}
+  .summary-value{font-size:17px;line-height:1.15;word-break:break-word}
+  .panel{padding:13px 11px;margin-bottom:12px;border-radius:12px}
+  .section-head{gap:8px;align-items:center}
+  .section-head h2{font-size:16px}
+  .panel .form-grid{grid-template-columns:1fr!important}
+  input,select,textarea,button{font-size:16px;max-width:100%}
+  button{min-height:42px}
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  #contractsPanel .scroll, #historyPanel .scroll{overflow:visible}
+  #contractsPanel table,#historyPanel table{display:block;width:100%;min-width:0}
+  #contractsPanel thead,#historyPanel thead{display:none}
+  #contractsPanel tbody,#historyPanel tbody{display:block;width:100%}
+  #contractsPanel tr,#historyPanel tr{display:block;margin:0 0 10px;padding:11px;border:1px solid #e4eaf2;border-radius:10px;background:#fff;box-shadow:0 1px 3px rgba(20,40,70,.05)}
+  #contractsPanel td,#historyPanel td{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border:0;text-align:right;white-space:normal;word-break:break-word}
+  #contractsPanel td:before,#historyPanel td:before{font-weight:700;text-align:left;color:#64748b;flex:0 0 auto}
+  #contractsPanel td:nth-child(1):before{content:'Name'}
+  #contractsPanel td:nth-child(2):before{content:'Invested'}
+  #contractsPanel td:nth-child(3):before{content:'Paid'}
+  #contractsPanel td:nth-child(4):before{content:'Remaining'}
+  #contractsPanel td:nth-child(5):before{content:'Amount / Check'}
+  #contractsPanel td:nth-child(6):before{content:'Expected Payments'}
+  #contractsPanel td:nth-child(7):before{content:'Payments Left'}
+  #contractsPanel td:nth-child(8):before{content:'Status'}
+  #contractsPanel td:nth-child(9):before{content:'Actions'}
+  #historyPanel td:nth-child(1):before{content:'Date Issued'}
+  #historyPanel td:nth-child(2):before{content:'Date Received'}
+  #historyPanel td:nth-child(3):before{content:'Check Amount'}
+  #historyPanel td:nth-child(4):before{content:'Contract'}
+  #historyPanel td:nth-child(5):before{content:'Check #'}
+  #historyPanel td:nth-child(6):before{content:'Actions'}
+  #contractsPanel td:last-child,#historyPanel td:last-child{padding-bottom:0}
+  #contractsPanel td:first-child,#historyPanel td:first-child{font-size:15px;font-weight:700;padding-top:0}
+  .dashboard-grid{grid-template-columns:1fr!important;gap:0}
+  .dashboard-grid>div{min-width:0}.dashboard-grid>#historyPanel,.dashboard-grid>#reportsPanel{grid-column:1 / -1;min-width:0}
+  #totalsPanel .totals-row{font-size:13px}
+  .modal,.dialog{max-width:calc(100vw - 20px)!important;width:calc(100vw - 20px)!important}
+}
+@media (min-width:701px){.mobile-menu-btn{display:none!important}}
+
+  .edit-modal-overlay{position:fixed;inset:0;background:rgba(15,35,65,.48);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999}
+  .edit-modal{width:min(620px,100%);background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(15,35,65,.25);padding:22px;border:1px solid #dbe5f0}
+  .edit-modal-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+  .edit-modal-head h2{margin:0;font-size:24px;color:#173b67}
+  .edit-modal-close{border:0;background:#eef3f8;color:#294766;width:38px;height:38px;border-radius:50%;font-size:26px;line-height:1;cursor:pointer}
+  .edit-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .edit-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+  .edit-modal-actions .primary-btn{width:auto;margin:0}
+  @media(max-width:600px){.edit-modal-overlay{padding:12px}.edit-modal{padding:18px}.edit-modal-grid{grid-template-columns:1fr}.edit-modal-actions{flex-direction:column-reverse}.edit-modal-actions button{width:100%}}
+
+
+/* Refined password reset controls */
+.reset-panel{margin-top:20px!important;border-top:0!important;padding:22px!important;background:#f7faff;border:1px solid #dbe7f4;border-radius:14px;box-shadow:0 6px 18px rgba(18,52,90,.06)}
+.reset-panel h3{margin:0 0 7px!important;font-size:20px!important;color:#17365f}
+.reset-panel .reset-subtitle{margin:0 0 16px!important;line-height:1.5}
+.reset-panel .reset-email-field label{font-size:12px}
+.reset-panel .reset-actions{display:grid;grid-template-columns:1.35fr 1fr;gap:10px;margin-top:14px}
+.reset-panel .reset-actions button{min-height:48px;border-radius:9px;font-weight:800;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+.reset-panel #sendResetBtn{background:#147be8;color:#fff;border:0;box-shadow:0 5px 12px rgba(20,123,232,.20)}
+.reset-panel #sendResetBtn:hover{background:#0f6fd3;transform:translateY(-1px);box-shadow:0 7px 16px rgba(20,123,232,.25)}
+.reset-panel #cancelResetBtn{background:#fff;color:#17365f;border:1px solid #bfd0e3}
+.reset-panel #cancelResetBtn:hover{background:#eef5fc;border-color:#a9bfd8;transform:translateY(-1px)}
+@media(max-width:600px){.reset-panel .reset-actions{grid-template-columns:1fr}.reset-panel #cancelResetBtn{order:2}}
+
+
+.history-search-box{display:grid;grid-template-columns:minmax(180px,.8fr) minmax(220px,1.4fr) auto;gap:12px;align-items:end;padding:14px 16px;margin:0 0 14px;background:#f7faff;border:1px solid #dbe7f3;border-radius:12px}
+.history-search-box .field{margin:0}.history-search-input input,.history-search-box select{width:100%}.history-clear-field button{white-space:nowrap;height:42px}
+@media(max-width:700px){.history-search-box{grid-template-columns:1fr}.history-clear-field button{width:100%}}
+</style>
+
+<style id="mobile-sidebar-final-fix">
+@media (max-width:700px){
+  .sidebar{
+    width:min(82vw,290px)!important;
+    flex-basis:min(82vw,290px)!important;
+    padding:14px 10px!important;
+  }
+  .sidebar .nav-item{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    gap:14px!important;
+    padding:13px 14px!important;
+    min-height:46px!important;
+    white-space:normal!important;
+  }
+  .sidebar .nav-item span:last-child{
+    display:inline!important;
+    visibility:visible!important;
+    opacity:1!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    flex:1 1 auto!important;
+  }
+  .sidebar .nav-icon{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:26px!important;
+    min-width:26px!important;
+    flex:0 0 26px!important;
+    font-size:21px!important;
+  }
+}
+</style>
+
+
+<style id="reports-mobile-final-fix">
+@media (max-width:700px){
+  /* Reports panels */
+  #reportsPanel,
+  #reportsPanel *{
+    box-sizing:border-box;
+  }
+
+  #reportsPanel{
+    width:100%!important;
+    max-width:100%!important;
+    overflow-x:hidden!important;
+  }
+
+  #reportsPanel .panel,
+  #reportsPanel .card,
+  #reportsPanel .report-card,
+  #reportsPanel .report-section{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+
+  /* Keep report controls inside the viewport */
+  #reportsPanel input,
+  #reportsPanel select,
+  #reportsPanel button{
+    max-width:100%!important;
+  }
+
+  #reportsPanel input,
+  #reportsPanel select{
+    width:100%!important;
+  }
+
+  /* Date-range shortcut buttons */
+  #reportsPanel .date-range-buttons,
+  #reportsPanel .range-buttons{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    gap:10px!important;
+    width:100%!important;
+  }
+
+  #reportsPanel .date-range-buttons > *,
+  #reportsPanel .range-buttons > *{
+    flex:0 1 auto!important;
+    min-width:0!important;
+  }
+
+  /* Summary metric boxes: allow them to shrink rather than overlap */
+  #reportsPanel .report-summary,
+  #reportsPanel .summary-grid,
+  #reportsPanel .metrics,
+  #reportsPanel .report-metrics{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:10px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  #reportsPanel .report-summary > *,
+  #reportsPanel .summary-grid > *,
+  #reportsPanel .metrics > *,
+  #reportsPanel .report-metrics > *{
+    min-width:0!important;
+    width:100%!important;
+    overflow:hidden!important;
+  }
+
+  #reportsPanel .report-summary *,
+  #reportsPanel .summary-grid *,
+  #reportsPanel .metrics *,
+  #reportsPanel .report-metrics *{
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
+  }
+
+  /* Report headings/descriptions */
+  #reportsPanel h1,
+  #reportsPanel h2,
+  #reportsPanel h3,
+  #reportsPanel p{
+    max-width:100%!important;
+    overflow-wrap:anywhere!important;
+  }
+
+  /* Run button should never force horizontal overflow */
+  #reportsPanel .run-report,
+  #reportsPanel button[type="submit"]{
+    max-width:100%!important;
+  }
+
+  /* On very narrow phones, stack the metric cards cleanly. */
+  @media (max-width:430px){
+    #reportsPanel .report-summary,
+    #reportsPanel .summary-grid,
+    #reportsPanel .metrics,
+    #reportsPanel .report-metrics{
+      grid-template-columns:1fr!important;
+    }
+  }
+}
+</style>
+
+
+<style id="final-mobile-regression-fix">
+@media (max-width:700px){
+  /* Sidebar: icon + label */
+  .sidebar{
+    width:min(82vw,290px)!important;
+    flex-basis:min(82vw,290px)!important;
+    padding:14px 10px!important;
+  }
+  .sidebar .nav-item{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    gap:14px!important;
+    padding:13px 14px!important;
+    min-height:46px!important;
+    white-space:normal!important;
+  }
+  .sidebar .nav-item span:last-child{
+    display:inline!important;
+    visibility:visible!important;
+    opacity:1!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    flex:1 1 auto!important;
+  }
+  .sidebar .nav-icon{
+    display:inline-flex!important;
+    width:26px!important;
+    min-width:26px!important;
+    flex:0 0 26px!important;
+  }
+
+  /* Reports: no horizontal overflow or overlapping cards */
+  #reportsPanel,
+  #reportsPanel *{box-sizing:border-box!important}
+  #reportsPanel{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-x:hidden!important;
+  }
+  #reportsPanel input,
+  #reportsPanel select,
+  #reportsPanel button{
+    max-width:100%!important;
+  }
+  #reportsPanel input,
+  #reportsPanel select{
+    width:100%!important;
+  }
+  #reportsPanel .date-range-buttons,
+  #reportsPanel .range-buttons{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    gap:10px!important;
+    width:100%!important;
+  }
+  #reportsPanel .report-summary,
+  #reportsPanel .summary-grid,
+  #reportsPanel .metrics,
+  #reportsPanel .report-metrics{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:10px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #reportsPanel .report-summary>*,
+  #reportsPanel .summary-grid>*,
+  #reportsPanel .metrics>*,
+  #reportsPanel .report-metrics>*{
+    min-width:0!important;
+    width:100%!important;
+    overflow:hidden!important;
+  }
+  #reportsPanel h1,
+  #reportsPanel h2,
+  #reportsPanel h3,
+  #reportsPanel p{
+    max-width:100%!important;
+    overflow-wrap:anywhere!important;
+  }
+}
+@media (max-width:430px){
+  #reportsPanel .report-summary,
+  #reportsPanel .summary-grid,
+  #reportsPanel .metrics,
+  #reportsPanel .report-metrics{
+    grid-template-columns:1fr!important;
+  }
+}
+</style>
+
+
+<style id="reports-mobile-actual-layout-fix">
+@media (max-width:700px){
+  /* The Reports page uses a two-column desktop grid. Collapse it on phones. */
+  #reportsPanel .reports-columns{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    width:100%!important;
+    max-width:100%!important;
+    gap:12px!important;
+    margin-top:12px!important;
+  }
+
+  #reportsPanel .reports-columns>div{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+
+  #reportsPanel .report-box{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin:0 0 12px!important;
+    padding:13px!important;
+    overflow:hidden!important;
+  }
+
+  /* Payment Reports: full-width controls and stats/chart instead of a squeezed desktop layout. */
+  #reportsPanel .payment-report-layout{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    gap:12px!important;
+  }
+
+  #reportsPanel .payment-stats{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    width:100%!important;
+    min-width:0!important;
+    gap:8px!important;
+  }
+
+  #reportsPanel .payment-stats>div{
+    min-width:0!important;
+    width:100%!important;
+    overflow:hidden!important;
+    overflow-wrap:anywhere!important;
+  }
+
+  #reportsPanel .mini-chart{
+    width:100%!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+
+  /* Money-flow cards cannot remain in their 7-column desktop grid. */
+  #reportsPanel .money-flow{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    width:100%!important;
+    min-width:0!important;
+    gap:8px!important;
+  }
+
+  #reportsPanel .flow-card{
+    width:100%!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+
+  #reportsPanel .flow-arrow{
+    display:none!important;
+  }
+
+  /* Date-range results stay in three equal columns only when they actually fit. */
+  #reportsPanel .range-results{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    width:100%!important;
+    min-width:0!important;
+    gap:8px!important;
+  }
+
+  #reportsPanel .range-results>div{
+    min-width:0!important;
+    width:100%!important;
+    overflow:hidden!important;
+    overflow-wrap:anywhere!important;
+  }
+
+  /* Contract breakdown and export grids fill the available phone width. */
+  #reportsPanel .contract-report-grid,
+  #reportsPanel .export-grid{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+
+  #reportsPanel .report-box-title{
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  #reportsPanel .report-box-title>div{
+    min-width:0!important;
+    flex:1 1 auto!important;
+  }
+
+  #reportsPanel .report-box-title h3,
+  #reportsPanel .report-box-title p{
+    overflow-wrap:anywhere!important;
+  }
+}
+
+@media (max-width:430px){
+  #reportsPanel .payment-stats{
+    grid-template-columns:1fr!important;
+  }
+
+  #reportsPanel .money-flow{
+    grid-template-columns:1fr!important;
+  }
+
+  #reportsPanel .range-results{
+    grid-template-columns:1fr!important;
+  }
+
+  #reportsPanel .export-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+</style>
+
+
+<style id="date-range-mobile-final-fix">
+@media (max-width:700px){
+  #reportsPanel input[type="date"]{
+    box-sizing:border-box!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    font-size:14px!important;
+    padding:9px 7px!important;
+  }
+
+  /* Compact From / To date fields */
+  #reportsPanel .date-range-fields,
+  #reportsPanel .date-fields{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:10px!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+
+  #reportsPanel .date-range-fields > *,
+  #reportsPanel .date-fields > *{
+    min-width:0!important;
+    max-width:100%!important;
+  }
+
+  /* Any row containing the two date inputs */
+  #reportsPanel .form-row:has(input[type="date"]){
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:10px!important;
+    width:100%!important;
+    max-width:100%!important;
+  }
+
+  #reportsPanel .form-row:has(input[type="date"]) > *{
+    min-width:0!important;
+    max-width:100%!important;
+  }
+}
+
+@media (max-width:380px){
+  #reportsPanel .date-range-fields,
+  #reportsPanel .date-fields,
+  #reportsPanel .form-row:has(input[type="date"]){
+    gap:7px!important;
+  }
+
+  #reportsPanel input[type="date"]{
+    font-size:13px!important;
+    padding:8px 5px!important;
+  }
+}
+</style>
+
+
+<style id="final-mobile-audit-fix">
+@media (max-width:700px){
+  #reportsPanel{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}
+  #reportsPanel input[type="date"]{
+    box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important;
+    font-size:14px!important;padding:9px 7px!important;
+  }
+  #reportsPanel .date-range-fields,
+  #reportsPanel .date-fields,
+  #reportsPanel .form-row:has(input[type="date"]){
+    display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:10px!important;width:100%!important;max-width:100%!important;min-width:0!important;
+  }
+  #reportsPanel .date-range-fields>*,
+  #reportsPanel .date-fields>*,
+  #reportsPanel .form-row:has(input[type="date"])>*{
+    min-width:0!important;max-width:100%!important;
+  }
+  #reportsPanel .reports-columns,
+  #reportsPanel .payment-report-layout{
+    grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;min-width:0!important;
+  }
+  #reportsPanel .report-box{width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important}
+  #reportsPanel .report-summary,
+  #reportsPanel .summary-grid,
+  #reportsPanel .metrics,
+  #reportsPanel .report-metrics{
+    width:100%!important;min-width:0!important;
+  }
+  .sidebar .nav-item span:last-child{
+    display:inline!important;visibility:visible!important;opacity:1!important;
+  }
+}
+@media (max-width:430px){
+  #reportsPanel .date-range-fields,
+  #reportsPanel .date-fields,
+  #reportsPanel .form-row:has(input[type="date"]){gap:7px!important}
+  #reportsPanel input[type="date"]{font-size:13px!important;padding:8px 5px!important}
+  #reportsPanel .payment-stats,
+  #reportsPanel .money-flow,
+  #reportsPanel .range-results{grid-template-columns:1fr!important}
+}
+
+/* Final mobile fix: Add Payment / Check date fields match Check Amount exactly */
+@media (max-width:700px){
+  #checkPanel #amount,
+  #checkPanel #date,
+  #checkPanel #dateReceived{
+    box-sizing:border-box!important;
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:42px!important;
+    min-height:42px!important;
+    max-height:42px!important;
+    margin:0!important;
+    padding:11px 12px!important;
+    border:1px solid #cbd9e8!important;
+    border-radius:7px!important;
+    font-size:16px!important;
+    line-height:normal!important;
+  }
+
+  #checkPanel .row > .field{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    flex:0 0 100%!important;
+  }
+
+  #checkPanel #date,
+  #checkPanel #dateReceived{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    overflow:hidden!important;
+  }
+
+  #checkPanel #date::-webkit-date-and-time-value,
+  #checkPanel #dateReceived::-webkit-date-and-time-value{
+    text-align:left!important;
+  }
+}
+
+
+/* Final mobile consistency: all form boxes use the same dimensions */
+@media (max-width:700px){
+  input,
+  select,
+  textarea{
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:42px!important;
+    min-height:42px!important;
+    max-height:42px!important;
+    margin:0!important;
+    border:1px solid #cbd9e8!important;
+    border-radius:7px!important;
+    padding:11px 12px!important;
+    font-size:16px!important;
+    line-height:normal!important;
+  }
+
+  #checkPanel input[type="date"],
+  #checkPanel #amount,
+  #checkPanel #date,
+  #checkPanel #dateReceived,
+  #checkPanel #checkno,
+  #newContractPanel input,
+  #newContractPanel select,
+  #newContractPanel textarea,
+  input[type="date"]{
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:42px!important;
+    min-height:42px!important;
+    max-height:42px!important;
+  }
+
+  input[type="date"]{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    overflow:hidden!important;
+  }
+
+  input[type="date"]::-webkit-date-and-time-value{
+    text-align:left!important;
+  }
+
+  .field,
+  .form-group,
+  .input-group{
+    box-sizing:border-box!important;
+    min-width:0!important;
+    max-width:100%!important;
+    width:100%!important;
+  }
+}
+
+@media (max-width:430px){
+  input,
+  select,
+  textarea{
+    height:40px!important;
+    min-height:40px!important;
+    max-height:40px!important;
+    padding:8px 10px!important;
+    font-size:16px!important;
+  }
+
+  input[type="date"]{
+    height:40px!important;
+    min-height:40px!important;
+    max-height:40px!important;
+  }
+}
+
+
+/* Final anti-overlap layout for Add Payment / Check fields */
+#checkPanel > .row{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:10px!important;
+  width:100%!important;
+  min-width:0!important;
+  align-items:end!important;
+}
+#checkPanel > .row > .field{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  flex:none!important;
+}
+#checkPanel > .row > .field > input,
+#checkPanel > .row > .field > select,
+#checkPanel > .row > .field > textarea{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+
+@media (max-width:900px){
+  #checkPanel > .row{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+
+@media (max-width:520px){
+  #checkPanel > .row{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+  #checkPanel > .row > .field{
+    min-width:0!important;
+  }
+  #checkPanel > .row > .field label{
+    line-height:1.2!important;
+    min-height:2.4em!important;
+  }
+}
+
+@media (max-width:360px){
+  #checkPanel > .row{
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+  }
+  #checkPanel > .row > .field label{
+    font-size:11px!important;
+  }
+}
+
+
+/* New Contract responsive fix: prevent fields from overlapping */
+@media (max-width:700px){
+  #newContractPanel{
+    overflow:hidden!important;
+    width:100%!important;
+    max-width:100%!important;
+  }
+
+  #newContractPanel .row{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:14px!important;
+    width:100%!important;
+    max-width:100%!important;
+    align-items:start!important;
+  }
+
+  #newContractPanel .row > .field{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    flex:none!important;
+  }
+
+  #newContractPanel .row > .field > input,
+  #newContractPanel .row > .field > select,
+  #newContractPanel .row > .field > textarea{
+    display:block!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+
+  #newContractPanel #cdate{
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+}
+
+@media (max-width:430px){
+  #newContractPanel .row{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+}
+
+
+/* Check History mobile responsive fix: prevent search controls from overlapping */
+@media (max-width:700px){
+  #historyPanel,
+  #checkHistoryPanel{
+    overflow:hidden!important;
+    width:100%!important;
+    max-width:100%!important;
+  }
+
+  #historyPanel .row,
+  #checkHistoryPanel .row{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:12px!important;
+    width:100%!important;
+    max-width:100%!important;
+  }
+
+  #historyPanel .field,
+  #checkHistoryPanel .field{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    flex:none!important;
+  }
+
+  #historyPanel input,
+  #historyPanel select,
+  #historyPanel button,
+  #checkHistoryPanel input,
+  #checkHistoryPanel select,
+  #checkHistoryPanel button{
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+
+  /* Keep the search controls side-by-side when there is room, without overlap. */
+  #historyPanel .search-row,
+  #checkHistoryPanel .search-row{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:12px!important;
+    align-items:end!important;
+  }
+
+  #historyPanel .search-row > *,
+  #checkHistoryPanel .search-row > *{
+    min-width:0!important;
+    max-width:100%!important;
+  }
+
+  #historyPanel table,
+  #checkHistoryPanel table{
+    width:100%!important;
+    max-width:100%!important;
+  }
+
+  /* Compact check-history cards on phones. */
+  #historyPanel tbody tr,
+  #checkHistoryPanel tbody tr{
+    margin:0 0 6px!important;
+    padding:7px 9px!important;
+    border-radius:8px!important;
+  }
+  #historyPanel tbody td,
+  #checkHistoryPanel tbody td{
+    padding:3px 0!important;
+    gap:8px!important;
+    font-size:13px!important;
+    line-height:1.25!important;
+  }
+  #historyPanel tbody td:first-child,
+  #checkHistoryPanel tbody td:first-child{
+    font-size:14px!important;
+    padding-top:0!important;
+  }
+  #historyPanel tbody td:last-child,
+  #checkHistoryPanel tbody td:last-child{
+    padding-bottom:0!important;
+  }
+  /* Keep Check History Edit/Delete buttons side-by-side on phones. */
+  #historyPanel tbody td:last-child,
+  #checkHistoryPanel tbody td:last-child{
+    display:flex!important;
+    justify-content:center!important;
+    align-items:center!important;
+    text-align:center!important;
+    padding-top:7px!important;
+    margin-top:4px!important;
+    border-top:1px solid #edf1f6!important;
+  }
+  #historyPanel tbody td:last-child:before,
+  #checkHistoryPanel tbody td:last-child:before{
+    display:none!important;
+  }
+  #historyPanel tbody td:last-child .actions,
+  #checkHistoryPanel tbody td:last-child .actions{
+    display:flex!important;
+    flex-direction:row!important;
+    flex-wrap:nowrap!important;
+    justify-content:center!important;
+    align-items:center!important;
+    gap:8px!important;
+    width:auto!important;
+    margin:0 auto!important;
+  }
+  #historyPanel tbody td:last-child .actions button,
+  #checkHistoryPanel tbody td:last-child .actions button{
+    width:auto!important;
+    min-width:0!important;
+    min-height:34px!important;
+    padding:6px 10px!important;
+    font-size:13px!important;
+    white-space:nowrap!important;
+  }
+}
+
+@media (max-width:430px){
+  #historyPanel .search-row,
+  #checkHistoryPanel .search-row{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
+
+</style>
+
+<style id="final-universal-responsive-no-overlap">
+/* Final universal responsive pass: prevents field/card overlap on phones and tablets. */
+@media (max-width:950px){
+  .panel, .panel * { box-sizing:border-box; }
+  .panel { min-width:0!important; max-width:100%!important; overflow-x:hidden!important; }
+
+  /* Keep every ordinary form field inside its own grid cell. */
+  .row > .field,
+  .row > button,
+  .field { min-width:0!important; max-width:100%!important; }
+  .field > input,
+  .field > select,
+  .field > textarea,
+  .field > button { width:100%!important; max-width:100%!important; min-width:0!important; box-sizing:border-box!important; }
+
+  /* Add Payment / Check */
+  #checkPanel > .row{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:12px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #checkPanel > .row > .field{width:100%!important;}
+
+  /* New Contract */
+  #newContractPanel .row{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:12px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #newContractPanel .row > .field{width:100%!important;}
+
+  /* Check History search */
+  #historyPanel .history-search-box{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:12px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #historyPanel .history-search-box > .field{width:100%!important;}
+  #historyPanel .history-clear-field{grid-column:auto!important;}
+
+  /* Reports: collapse desktop two-column layout before it gets cramped. */
+  #reportsPanel .reports-columns{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:14px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #reportsPanel .reports-columns > div,
+  #reportsPanel .report-box{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+
+  #reportsPanel .payment-report-layout{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  #reportsPanel .report-date-row,
+  #reportsPanel .payment-date-row{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #reportsPanel .report-date-row .report-run-field,
+  #reportsPanel .payment-date-row .report-run-field{
+    grid-column:1 / -1!important;
+    width:100%!important;
+    max-width:none!important;
+  }
+
+  #reportsPanel .export-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #reportsPanel .export-grid > button{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    white-space:normal!important;
+  }
+
+  #reportsPanel .performance-grid,
+  #reportsPanel .contract-report-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #reportsPanel .money-flow{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  #reportsPanel .flow-arrow{display:none!important;}
+  #reportsPanel .range-results{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+}
+
+@media (max-width:520px){
+  #checkPanel > .row,
+  #newContractPanel .row,
+  #historyPanel .history-search-box,
+  #reportsPanel .report-date-row,
+  #reportsPanel .payment-date-row,
+  #reportsPanel .export-grid{
+    grid-template-columns:1fr 1fr!important;
+    gap:9px!important;
+  }
+  #reportsPanel .performance-grid,
+  #reportsPanel .contract-report-grid{
+    grid-template-columns:1fr 1fr!important;
+  }
+  #reportsPanel .range-results{
+    grid-template-columns:1fr 1fr 1fr!important;
+  }
+}
+
+@media (max-width:380px){
+  #checkPanel > .row,
+  #newContractPanel .row,
+  #historyPanel .history-search-box,
+  #reportsPanel .report-date-row,
+  #reportsPanel .payment-date-row,
+  #reportsPanel .export-grid,
+  #reportsPanel .performance-grid,
+  #reportsPanel .contract-report-grid,
+  #reportsPanel .range-results{
+    grid-template-columns:1fr!important;
+  }
+}
+</style>
+
+<style id="landscape-add-payment-check-fix">
+/* Mobile landscape only: keep Add Payment / Check fields equal-width and prevent date controls from overflowing. */
+@media (min-width:701px) and (max-height:600px) {
+  #checkPanel > .row {
+    display:grid !important;
+    grid-template-columns:repeat(4, minmax(0, 1fr)) !important;
+    gap:10px !important;
+    align-items:end !important;
+    width:100% !important;
+    min-width:0 !important;
+  }
+  #checkPanel > .row > .field {
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+  }
+  #checkPanel > .row > .field > input,
+  #checkPanel > .row > .field > select {
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    height:42px !important;
+    min-height:42px !important;
+    max-height:42px !important;
+    padding:9px 10px !important;
+    font-size:14px !important;
+  }
+  #checkPanel > .row > .field label {
+    display:block !important;
+    min-height:2.4em !important;
+    line-height:1.2 !important;
+  }
+  #checkPanel input[type="date"] {
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    overflow:hidden !important;
+  }
+  #checkPanel input[type="date"]::-webkit-date-and-time-value {
+    text-align:left !important;
+  }
+}
+</style>
+<style id="landscape-new-contract-fix">
+/* Mobile landscape: keep all New Contract fields equal-width and prevent overlap. */
+@media (max-width:700px) and (orientation:landscape) {
+  #newContractPanel {
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    overflow:hidden !important;
+  }
+  #newContractPanel .row {
+    display:grid !important;
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+    gap:10px !important;
+    width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    align-items:end !important;
+  }
+  #newContractPanel .row > .field {
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    flex:none !important;
+  }
+  #newContractPanel .row > .field label {
+    display:block !important;
+    min-height:2.4em !important;
+    line-height:1.2 !important;
+    margin:0 0 6px !important;
+  }
+  #newContractPanel .row > .field > input,
+  #newContractPanel .row > .field > select,
+  #newContractPanel .row > .field > textarea {
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    height:42px !important;
+    min-height:42px !important;
+    max-height:42px !important;
+    padding:9px 10px !important;
+    font-size:14px !important;
+    line-height:normal !important;
+  }
+  #newContractPanel input[type="date"] {
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    overflow:hidden !important;
+  }
+  #newContractPanel input[type="date"]::-webkit-date-and-time-value {
+    text-align:left !important;
+  }
+}
+</style>
+<style id="landscape-new-contract-final-fix">
+/* Final mobile-landscape New Contract fix: 6 fields in two equal 3-column rows. */
+@media (max-width:700px) and (orientation:landscape){
+  #newContractPanel{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-x:hidden!important;
+  }
+  #newContractPanel > .row{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:10px!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin:0!important;
+  }
+  #newContractPanel > .row > .field{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    flex:none!important;
+  }
+  #newContractPanel > .row > .field label{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:2.4em!important;
+    line-height:1.2!important;
+    margin:0 0 6px!important;
+    overflow-wrap:anywhere!important;
+  }
+  #newContractPanel > .row > .field > input,
+  #newContractPanel > .row > .field > select,
+  #newContractPanel > .row > .field > textarea{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    height:42px!important;
+    min-height:42px!important;
+    max-height:42px!important;
+    padding:9px 10px!important;
+    font-size:14px!important;
+  }
+  #newContractPanel input[type="date"]{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    overflow:hidden!important;
+  }
+  #newContractPanel input[type="date"]::-webkit-date-and-time-value{
+    text-align:left!important;
+  }
+}
+</style>
+<style id="desktop-login-button-center-fix">
+/* Desktop login: center the Sign In / Create Account buttons. */
+@media (min-width:701px){
+  #authScreen .auth-card #authForm > #signInFields > .row,
+  #authScreen .auth-card #authForm > #signUpFields > .row{
+    display:flex!important;
+    justify-content:center!important;
+    align-items:center!important;
+    gap:12px!important;
+  }
+  #authScreen .auth-card #signInBtn,
+  #authScreen .auth-card #signUpBtn,
+  #authScreen .auth-card #createAccountBtn,
+  #authScreen .auth-card #backToSignInBtn{
+    width:180px!important;
+    flex:0 0 180px!important;
+  }
+}
+</style>
+<style id="password-reset-popup-fix">
+/* Password reset: small centered pop-up on the login screen. */
+#resetPanel{
+  position:fixed!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  width:min(430px,calc(100vw - 32px))!important;
+  max-height:calc(100vh - 32px)!important;
+  overflow:auto!important;
+  z-index:1001!important;
+  margin:0!important;
+  padding:24px!important;
+  background:#fff!important;
+  border:1px solid #dbe7f4!important;
+  border-radius:16px!important;
+  box-shadow:0 20px 60px rgba(16,47,85,.28)!important;
+}
+#resetPanel:not(.hidden)::before{
+  content:"";
+  position:fixed;
+  z-index:-1;
+  left:50%;
+  top:50%;
+  width:100vw;
+  height:100vh;
+  transform:translate(-50%,-50%);
+  background:rgba(16,47,85,.38);
+}
+#resetPanel .reset-actions{grid-template-columns:1fr 1fr!important}
+#resetPanel #sendResetBtn,#resetPanel #cancelResetBtn{width:100%!important}
+@media(max-width:600px){
+  #resetPanel{width:calc(100vw - 24px)!important;padding:20px!important}
+  #resetPanel .reset-actions{grid-template-columns:1fr!important}
+}
+</style>
+</style>
+
+<style id="create-account-popup-fix">
+/* Create Account: use the same centered pop-up style as Password Reset. */
+#signUpFields{
+  position:fixed!important;
+  left:50%!important;
+  top:50%!important;
+  transform:translate(-50%,-50%)!important;
+  width:min(430px,calc(100vw - 32px))!important;
+  max-height:calc(100vh - 32px)!important;
+  overflow:auto!important;
+  z-index:1001!important;
+  margin:0!important;
+  padding:24px!important;
+  background:#fff!important;
+  border:1px solid #dbe7f4!important;
+  border-radius:16px!important;
+  box-shadow:0 20px 60px rgba(16,47,85,.28)!important;
+}
+#signUpFields:not(.hidden)::before{
+  content:"";
+  position:fixed;
+  z-index:-1;
+  left:50%;
+  top:50%;
+  width:100vw;
+  height:100vh;
+  transform:translate(-50%,-50%);
+  background:rgba(16,47,85,.38);
+}
+#signUpFields::after{
+  content:"Create your Love Contracts account";
+  display:block;
+  position:absolute;
+  top:24px;
+  left:24px;
+  right:24px;
+  font-size:20px;
+  font-weight:800;
+  color:#17365f;
+  pointer-events:none;
+}
+#signUpFields .field:first-child{margin-top:34px!important}
+#signUpFields .row{grid-template-columns:1fr 1fr!important}
+#signUpFields .row button{width:100%!important}
+@media(max-width:600px){
+  #signUpFields{width:calc(100vw - 24px)!important;padding:20px!important}
+  #signUpFields::after{top:20px;left:20px;right:20px}
+  #signUpFields .row{grid-template-columns:1fr!important}
+}
+</style>
+
+
+<style id="desktop-new-contract-equal-boxes">
+/* Desktop: keep every New Contract field the same size. */
+@media (min-width:701px){
+  #newContractPanel .row{
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:12px !important;
+    width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+  }
+  #newContractPanel .row > .field{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+    flex:none !important;
+  }
+  #newContractPanel .row > .field > input,
+  #newContractPanel .row > .field > select,
+  #newContractPanel .row > .field > textarea{
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    height:42px !important;
+  }
+}
+</style>
+
+<style id="desktop-check-equal-boxes">
+/* Desktop Add Payment / Check: all four fields use identical-width boxes. */
+@media (min-width:901px){
+  #checkPanel > .row{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:14px!important;
+    width:100%!important;
+    min-width:0!important;
+    align-items:end!important;
+  }
+  #checkPanel > .row > .field{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    flex:none!important;
+  }
+  #checkPanel > .row > .field label{
+    display:block!important;
+    min-height:2.4em!important;
+    line-height:1.2!important;
+    margin-bottom:6px!important;
+  }
+  #checkPanel > .row > .field > input,
+  #checkPanel > .row > .field > select,
+  #checkPanel > .row > .field > textarea{
+    display:block!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:42px!important;
+    min-height:42px!important;
+    max-height:42px!important;
+    padding:9px 10px!important;
+    font-size:14px!important;
+    line-height:normal!important;
+  }
+}
+</style>
+
+<style id="mobile-landscape-new-contract-absolute-fix">
+/* Absolute final fix: New Contract fields are equal-width in phone landscape. */
+@media (max-width:700px) and (orientation:landscape){
+  #newContractPanel{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    overflow:hidden !important;
+  }
+  #newContractPanel > .row{
+    display:grid !important;
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+    grid-auto-flow:row !important;
+    gap:10px !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    box-sizing:border-box !important;
+  }
+  #newContractPanel > .row > .field{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    flex:0 0 auto !important;
+    box-sizing:border-box !important;
+    overflow:hidden !important;
+  }
+  #newContractPanel > .row > .field label{
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    min-height:2.4em !important;
+    margin:0 0 5px !important;
+    line-height:1.15 !important;
+    overflow-wrap:anywhere !important;
+    word-break:break-word !important;
+  }
+  #newContractPanel > .row > .field input,
+  #newContractPanel > .row > .field select,
+  #newContractPanel > .row > .field textarea{
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    height:40px !important;
+    min-height:40px !important;
+    max-height:40px !important;
+    margin:0 !important;
+    padding:8px !important;
+    font-size:13px !important;
+    line-height:normal !important;
+  }
+  #newContractPanel > .row > .field input[type="date"]{
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    overflow:hidden !important;
+    text-overflow:clip !important;
+  }
+  #newContractPanel > .row > .field input[type="number"],
+  #newContractPanel > .row > .field input[type="text"],
+  #newContractPanel > .row > .field input[type="date"]{
+    flex:none !important;
+  }
+}
+</style>
+
+<style id="contract-date-landscape-equal-fix">
+/* Specifically keep Contract Date the exact same box size as the other New Contract fields in phone landscape. */
+@media (max-width:700px) and (orientation:landscape){
+  #newContractPanel #cdate{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    height:42px!important;
+    min-height:42px!important;
+    max-height:42px!important;
+    margin:0!important;
+    padding:9px 10px!important;
+    font-size:14px!important;
+    line-height:normal!important;
+    flex:1 1 auto!important;
+  }
+  #newContractPanel .field{
+    min-width:0!important;
+    width:100%!important;
+  }
+}
+</style>
+
+<style id="final-contract-date-same-as-investment">
+/* Final fix: Contract Date must occupy exactly the same grid cell and box dimensions as Investment in phone landscape. */
+@media (max-width:700px) and (orientation:landscape){
+  #newContractPanel .row{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+  #newContractPanel .row > .field{
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    flex:none!important;
+  }
+  #newContractPanel #cinvest,
+  #newContractPanel #cdate{
+    display:block!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:42px!important;
+    min-height:42px!important;
+    max-height:42px!important;
+    margin:0!important;
+    padding:9px 10px!important;
+    font-size:14px!important;
+    line-height:normal!important;
+    border:1px solid #cbd9e8!important;
+    border-radius:7px!important;
+  }
+  #newContractPanel #cdate{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    overflow:hidden!important;
+  }
+  #newContractPanel #cdate::-webkit-date-and-time-value{
+    text-align:left!important;
+  }
+}
+</style>
+
+<style id="phone-landscape-new-contract-real-fix">
+/* Real phone-landscape fix: phone landscape viewports can be wider than 700px.
+   Use viewport height so these rules also apply when the phone is turned sideways. */
+@media (orientation: landscape) and (max-height: 600px){
+  #newContractPanel{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow-x:hidden!important;
+  }
+  #newContractPanel > .row{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;
+    gap:12px!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  #newContractPanel > .row > .field{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    flex:none!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+  }
+  #newContractPanel > .row > .field label{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    min-height:2.4em!important;
+    margin:0 0 6px!important;
+    line-height:1.2!important;
+    overflow-wrap:anywhere!important;
+  }
+  #newContractPanel > .row > .field > input,
+  #newContractPanel > .row > .field > select,
+  #newContractPanel > .row > .field > textarea{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    height:42px!important;
+    min-height:42px!important;
+    max-height:42px!important;
+    margin:0!important;
+    padding:9px 10px!important;
+    font-size:14px!important;
+    line-height:normal!important;
+  }
+  #newContractPanel #cinvest,
+  #newContractPanel #cdate{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    height:42px!important;
+    min-height:42px!important;
+    max-height:42px!important;
+  }
+  #newContractPanel #cdate{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    overflow:hidden!important;
+    text-overflow:clip!important;
+  }
+  #newContractPanel #cdate::-webkit-date-and-time-value{
+    text-align:left!important;
+  }
+}
+</style>
+
+<style id="contact-new-message-badge-style">
+  .contact-new-message {
+    display: none;
+    margin: 2px 0 6px 42px;
+    width: fit-content;
+    padding: 2px 7px;
+    border-radius: 9px;
+    background: #d11;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: .3px;
+    animation: contactNewMessageFlash 1s infinite;
+  }
+  @keyframes contactNewMessageFlash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .35; }
+  }
+</style>
+
+
+<style id="contact-new-message-flash-final">
+#contactNewMessage{
+  display:block;
+  margin:2px 0 6px 42px;
+  width:max-content;
+  padding:2px 7px;
+  border-radius:10px;
+  background:#d71920;
+  color:#fff;
+  font-size:9px;
+  font-weight:800;
+  line-height:1.2;
+  letter-spacing:.3px;
+  animation:contactMessageFlash 1s ease-in-out infinite;
+}
+@keyframes contactMessageFlash{
+  0%,100%{opacity:1}
+  50%{opacity:.25}
+}
+</style>
+
+</head>
+<body>
+<div id="authScreen" class="auth-wrap">
+  <div class="auth-card">
+    <h2>Contract Checks</h2>
+    <div class="auth-brand"><div class="auth-brand-love-row"><span class="auth-brand-heart" aria-hidden="true">♥</span><span class="auth-brand-love">Love</span><span class="auth-brand-heart" aria-hidden="true">♥</span></div><div class="auth-brand-contracts">CONTRACTS</div></div>
+    <p id="authSubtitle" class="muted">Sign in to keep your contracts and check history in the cloud.</p>
+    <form id="authForm" autocomplete="on">
+      <div id="signInFields">
+        <div class="field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
+        <div class="field" style="margin-top:10px"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Password"></div>
+        <div class="row" style="margin-top:12px">
+          <button id="signInBtn" type="submit">Sign In</button>
+          <button id="signUpBtn" class="secondary" type="button">Create Account</button>
+        </div>
+        <div style="text-align:center;margin-top:12px"><button id="forgotPasswordBtn" class="link-button" type="button">Reset your password</button></div>
+      </div>
+      <div id="signUpFields" class="hidden">
+        <div class="field"><label for="signUpEmail">Email</label><input id="signUpEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
+        <div class="field" style="margin-top:10px"><label for="signUpPassword">Password</label><input id="signUpPassword" type="password" autocomplete="new-password" placeholder="Create a password"></div>
+        <div class="field" style="margin-top:10px"><label for="signUpConfirmPassword">Confirm Password</label><input id="signUpConfirmPassword" type="password" autocomplete="new-password" placeholder="Re-enter your password"></div>
+        <div class="row" style="margin-top:12px">
+          <button id="createAccountBtn" type="button">Create Account</button>
+          <button id="backToSignInBtn" class="secondary" type="button">Back to Sign In</button>
+        </div>
+      </div>
+    </form>
+    <div id="authError" class="auth-error" role="alert"></div>
+    <div id="resetPanel" class="hidden reset-panel">
+      <h3>Reset your password</h3>
+      <p class="muted reset-subtitle">Enter your email and we'll send you a secure password reset link.</p>
+      <div class="field reset-email-field"><label for="resetEmail">Email address</label><input id="resetEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
+      <div class="reset-actions">
+        <button id="sendResetBtn" type="button">✉ &nbsp; Send Reset Link</button>
+        <button id="cancelResetBtn" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="passwordRecoveryScreen" class="auth-wrap hidden">
+  <div class="auth-card">
+    <h2>Choose a new password</h2>
+    <p class="muted">Enter a new password for your Contract Tracker account.</p>
+    <div class="field"><label>New Password</label><input id="newPassword" type="password" autocomplete="new-password" placeholder="New password"></div>
+    <div class="field" style="margin-top:10px"><label>Confirm Password</label><input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Confirm password"></div>
+    <div class="row" style="margin-top:12px"><button id="updatePasswordBtn" type="button">Update Password</button></div>
+    <div id="recoveryError" class="auth-error" role="alert"></div>
+  </div>
+</div>
+<div id="appScreen" class="hidden">
+<header class="app-header"><button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open menu">☰</button><div class="brand"><span class="brand-heart">♥</span><span>Love Contracts</span></div><div class="header-actions"><button id="refreshBtn" type="button" onclick="refreshCloudData()">↻ &nbsp;Refresh</button><button onclick="signOut()">⇥ &nbsp;Sign Out</button></div></header>
+<div id="mobileOverlay" class="mobile-overlay" onclick="document.querySelector('.sidebar')?.classList.remove('open');this.classList.remove('show')"></div>
+<div class="app-shell">
+<aside class="sidebar">
+<a class="nav-item active" href="#dashboard"><span class="nav-icon">⌂</span><span>Dashboard</span></a>
+<a class="nav-item" href="#checkPanel"><span class="nav-icon">✓</span><span>Add Payment / Check</span></a>
+<a class="nav-item" href="#newContractPanel"><span class="nav-icon">▣</span><span>NEW CONTRACT</span></a>
+<a class="nav-item" href="#newContractPanel"><span class="nav-icon">＋</span><span>Add Contract</span></a>
+<a class="nav-item" href="#completedPanel"><span class="nav-icon">✓</span><span>Completed Contracts</span></a>
+<a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Check History</span></a>
+<a class="nav-item" href="#reportsPanel"><span class="nav-icon">▥</span><span>Reports</span></a>
+<a class="nav-item" href="#contactPanel"><span class="nav-icon">✉</span><span>Contact Us</span></a>
+<div id="contactNewMessage" class="contact-new-message">NEW MESSAGE</div>
+</aside>
+<main class="content" id="dashboard"><div class="content-inner">
+<div id="adminPanel" class="panel hidden"><h2>Admin Dashboard</h2><p class="muted">Master account view. Regular users only see their own data.</p><div class="row"><div class="field"><label>User</label><select id="adminUserSelect"><option value="">Select a user</option></select></div><div class="field" style="max-width:180px"><label>&nbsp;</label><button id="adminRefreshBtn" class="primary-btn" type="button">Refresh Users</button></div></div><div id="adminUserSummary" class="muted" style="margin-top:12px">Select a user to view their dashboard.</div><div id="adminUserData" class="hidden" style="margin-top:14px"></div></div>
+<div class="summary-grid">
+<div class="summary-card"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Invested</div><div class="summary-value" id="invested">$0.00</div></div></div></div>
+<div class="summary-card received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Money Received</div><div class="summary-value" id="received">$0.00</div></div></div></div>
+<div class="summary-card profit"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Overall Profit</div><div class="summary-value" id="profit">$0.00</div></div></div></div>
+<div class="summary-card active"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Active Contracts</div><div class="summary-value" id="openContracts">0</div></div></div></div>
+<div class="summary-card"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">All Contracts</div><div class="summary-value" id="allContracts">0</div></div></div></div>
+<div class="summary-card"><div class="summary-top"><div class="summary-icon">✓</div><div><div class="summary-label">Paid in Full</div><div class="summary-value" id="paidInFull">0</div></div></div></div>
+<div class="summary-card default"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Default Contracts</div><div class="summary-value" id="defaultContracts">0</div></div></div></div>
+<div class="summary-card default-loss"><div class="summary-top"><div class="summary-icon">−</div><div><div class="summary-label">Default Loss</div><div class="summary-value" id="defaultLoss">$0.00</div></div></div></div>
+</div>
+<section class="panel" id="checkPanel"><h2>Add Payment / Check</h2><div class="row"><div class="field"><label>Check Amount</label><input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="$0.00" oninput="updateBreakdown()"></div><div class="field"><label>Date Issued</label><input id="date" type="date"></div><div class="field"><label>Date Received <span class="muted">(optional)</span></label><input id="dateReceived" type="date"></div><div class="field"><label>Check #</label><input id="checkno" inputmode="numeric" placeholder="Optional"></div></div><h3>Select contracts for this check</h3><div class="choices" id="contractChoices"></div><h3>Manual Payment Breakdown</h3><div class="manual-box" id="manualBreakdown"></div><p class="muted" id="splitPreview">Select a contract above to open it here, then enter the amount for that contract.</p><button class="primary-btn save-check" onclick="addCheck()">Save Check</button></section>
+<section class="panel" id="newContractPanel"><h2>NEW CONTRACT</h2><div class="row"><div class="field"><label>Contract name</label><input id="cname" placeholder="Contract #1"></div><div class="field"><label>Investment</label><input id="cinvest" type="number" inputmode="decimal" step="0.01" placeholder="5300"></div><div class="field"><label>Amount per check</label><input id="cpreset" type="number" inputmode="decimal" step="0.01"></div><div class="field"><label>Expected payments</label><input id="cpayments" type="number" inputmode="numeric" min="0" step="1" placeholder="34"></div><div class="field"><label>Contract date</label><input id="cdate" type="date"></div><div class="field"><label>Check #</label><input id="ccheckno" inputmode="numeric" placeholder="Optional"></div></div><button class="primary-btn" style="margin-top:14px" onclick="addContract()">＋ Add Contract</button></section>
+<section class="panel" id="contractsPanel" style="width:100%;max-width:100%;"><div class="section-head"><h2>Active Contracts</h2></div><div class="scroll"><table><thead><tr><th>Name</th><th>Invested</th><th>Paid</th><th>Remaining</th><th>Amount / Check</th><th>Expected Payments</th><th>Payments Left</th><th>Status</th><th>Actions</th></tr></thead><tbody id="contracts"></tbody></table></div></section>
+<section class="panel side-card" id="completedPanel"><h2>Completed Contracts</h2><div class="completed-count" id="completedCount">0 contracts completed</div><button class="primary-btn" style="width:100%" onclick="document.getElementById('completedPanel').scrollIntoView({behavior:'smooth'})">View Completed</button><div class="scroll" style="margin-top:12px"><table><thead><tr><th>Contract</th><th>Day Opened</th><th>Day Closed</th><th>Invested</th><th>Received</th><th>Remaining Payment</th><th>Gain / Loss</th><th>Status</th><th>Action</th></tr></thead><tbody id="completedContracts"></tbody></table></div></section>
+<div class="dashboard-grid">
+
+<select id="filter" class="hidden"><option value="">All contracts</option></select><section class="panel" id="historyPanel"><div class="section-head"><h2>Check History</h2><button class="secondary" onclick="exportCSV()">⇩ Export CSV</button></div><div class="history-search-box"><div class="field"><label>Search Check History By</label><select id="historySearchType" onchange="updateHistorySearchInput()"><option value="dateIssued">Date Issued</option><option value="dateReceived">Date Received</option><option value="amount">Check Amount</option><option value="contract">Contract Name</option><option value="checkno">Check Number</option></select></div><div class="field history-search-input"><label id="historySearchLabel">Date Issued</label><input id="historySearch" type="date" oninput="renderCheckHistory()" autocomplete="off"></div><div class="field history-clear-field"><label>&nbsp;</label><button type="button" class="secondary" onclick="clearHistorySearch()">Clear Search</button></div></div><div class="scroll"><table><thead><tr><th>Date Issued</th><th>Date Received</th><th>Check Amount</th><th>Contracts</th><th>Check #</th><th>Actions</th></tr></thead><tbody id="history"></tbody></table></div></section>
+<section class="panel hidden" id="reportsPanel">
+  <div class="section-head report-head"><div><h2>Reports</h2><p class="muted" style="margin:0">View detailed performance, payment activity, and contract results.</p></div><button class="secondary" type="button" onclick="exportFullReport()">⇩ Export Full Report</button></div>
+  <div class="report-grid report-kpis">
+    <div class="report-card report-green"><div class="report-label">Total Investment</div><div class="report-value" id="reportInvested">$0.00</div></div>
+    <div class="report-card report-blue"><div class="report-label">Money Received</div><div class="report-value" id="reportReceived">$0.00</div></div>
+    <div class="report-card report-purple"><div class="report-label">Overall Profit / Loss</div><div class="report-value" id="reportProfit">$0.00</div></div>
+    <div class="report-card report-cyan"><div class="report-label">Active Contracts</div><div class="report-value" id="reportOpenContracts">0</div></div>
+    <div class="report-card report-orange"><div class="report-label">All Contracts</div><div class="report-value" id="reportAllContracts">0</div></div>
+    <div class="report-card report-pink"><div class="report-label">Paid in Full</div><div class="report-value" id="reportPaidInFull">0</div></div>
+    <div class="report-card report-gold"><div class="report-label">Default Contracts</div><div class="report-value" id="reportDefaultContracts">0</div></div>
+    <div class="report-card report-red"><div class="report-label">Default Loss</div><div class="report-value loss" id="reportDefaultLoss">$0.00</div></div>
+  </div>
+  <div class="reports-columns">
+    <div>
+      <section class="report-box money-flow-box"><div class="report-box-title"><span>⇄</span><div><h3>Money Flow</h3><p class="muted">Quick view of your total portfolio flow.</p></div></div><div class="money-flow"><div class="flow-card flow-invested"><span>Total Invested</span><strong id="flowInvested">$0.00</strong></div><div class="flow-arrow">→</div><div class="flow-card flow-received"><span>Total Received</span><strong id="flowReceived">$0.00</strong></div><div class="flow-arrow">→</div><div class="flow-card flow-outstanding"><span>Outstanding</span><strong id="flowOutstanding">$0.00</strong></div><div class="flow-arrow">→</div><div class="flow-card flow-profit"><span>Profit / Loss</span><strong id="flowProfit">$0.00</strong></div></div></section>
+      <section class="report-box"><div class="report-box-title"><span>◔</span><div><h3>Contract Performance</h3><p class="muted">Overview of your contract status.</p></div></div><div class="performance-grid"><div><span>Total Contracts</span><strong id="perfAll">0</strong></div><div><span>Active Contracts</span><strong id="perfActive">0</strong></div><div><span>Completed</span><strong id="perfCompleted">0</strong></div><div class="perf-warning"><span>Defaulted</span><strong id="perfDefault">0</strong></div><div class="perf-danger"><span>Default Loss</span><strong id="perfDefaultLoss">$0.00</strong></div><div><span>Owed Money</span><strong id="perfOwed">0</strong></div></div></section>
+      <section class="report-box"><div class="report-box-title"><span>▣</span><div><h3>Payment Reports</h3><p class="muted">Track your check and payment activity.</p></div></div><div class="payment-range-controls"><div class="range-buttons payment-range-buttons"><button type="button" class="range-btn" onclick="setPaymentRange('today',this)">Today</button><button type="button" class="range-btn" onclick="setPaymentRange('week',this)">This Week</button><button type="button" class="range-btn active" onclick="setPaymentRange('month',this)">This Month</button><button type="button" class="range-btn" onclick="setPaymentRange('year',this)">This Year</button><button type="button" class="range-btn" onclick="setPaymentRange('custom',this)">Custom</button></div><div class="row report-date-row payment-date-row"><div class="field"><label>From</label><input id="paymentFrom" type="date"></div><div class="field"><label>To</label><input id="paymentTo" type="date"></div><div class="field report-run-field"><label>&nbsp;</label><button class="primary-btn" type="button" onclick="runPaymentReport()">Run Report</button></div></div></div><div class="payment-report-layout"><div class="payment-stats"><div><span>Total Checks / Payments</span><strong id="payTotal">0</strong></div><div><span>Total Received</span><strong id="payMonth">$0.00</strong></div><div><span>Average Payment</span><strong id="payYear">$0.00</strong></div><div><span>Largest Payment</span><strong id="payAverage">$0.00</strong></div><div><span>Payments in Range</span><strong id="payLargest">0</strong></div><div><span>Outstanding Contracts</span><strong id="payOutstanding">0</strong></div></div><div class="mini-chart"><div class="chart-title" id="paymentChartTitle">Payments by Month</div><div class="chart-bars" id="paymentChart"></div></div></div></section>
+    </div>
+    <div>
+      <section class="report-box date-report-box"><div class="report-box-title"><span>▣</span><div><h3>Date Range Report</h3><p class="muted">See investment and payment activity for a period.</p></div></div><div class="range-buttons"><button type="button" class="range-btn" onclick="setReportRange('today',this)">Today</button><button type="button" class="range-btn" onclick="setReportRange('week',this)">This Week</button><button type="button" class="range-btn" onclick="setReportRange('month',this)">This Month</button><button type="button" class="range-btn" onclick="setReportRange('year',this)">This Year</button><button type="button" class="range-btn" onclick="setReportRange('custom',this)">Custom</button></div><div class="row report-date-row"><div class="field"><label>From</label><input id="reportFrom" type="date"></div><div class="field"><label>To</label><input id="reportTo" type="date"></div><div class="field report-run-field"><label>&nbsp;</label><button class="primary-btn" type="button" onclick="runDateReport()">Run Report</button></div></div><div class="range-results"><div><span>Invested</span><strong id="rangeInvested">$0.00</strong></div><div><span>Received</span><strong id="rangeReceived">$0.00</strong></div><div><span>Profit / Loss</span><strong id="rangeProfit">$0.00</strong></div></div></section>
+      <section class="report-box"><div class="report-box-title"><span>▤</span><div><h3>Individual Contract Breakdown</h3><p class="muted">Select a contract to view detailed information.</p></div></div><div class="row" style="align-items:end"><div class="field"><label>Select Report</label><select id="reportTypeSelect" onchange="updateReportContractOptions()"><option value="all">All Contracts</option><option value="open">Only Open Contracts</option><option value="closed">Closed Contracts</option><option value="default">Default Contracts</option></select></div><div class="field"><label>Search Contract</label><input id="reportContractSearch" type="search" placeholder="Search contract..." oninput="updateReportContractOptions()" autocomplete="off"></div><div class="field"><label>Select Contract</label><select id="reportContractSelect" onchange="renderSelectedContractReport()"><option value="">Select a contract</option></select></div></div><div id="selectedContractReport" class="contract-report-empty">Select a contract above to view its breakdown.</div></section>
+      <section class="report-box"><div class="report-box-title"><span>⇩</span><div><h3>Export</h3><p class="muted">Download your reports and data.</p></div></div><div class="export-grid"><button class="primary-btn" type="button" onclick="exportFullReport()">Export Full Report</button><button class="primary-btn" type="button" onclick="exportCSV()">Export Payments CSV</button><button class="secondary" type="button" onclick="exportContractsCSV()">Export Contracts CSV</button><button class="secondary" type="button" onclick="window.print()">Print Report / PDF</button></div></section>
+    </div>
+  </div>
+</section>
+
+<section class="panel hidden" id="contactPanel">
+  <div class="section-head"><div><h2>Contact Us</h2><p class="muted" style="margin:0">Send a message to the administrator.</p></div></div>
+  <div class="form-card" style="max-width:760px">
+    <div class="field"><label for="contactEmail">Your email</label><input id="contactEmail" type="email" placeholder="you@example.com" autocomplete="email"></div>
+    <div class="field"><label for="contactMessage">Message</label><textarea id="contactMessage" rows="7" maxlength="2000" placeholder="Type your message..."></textarea></div>
+    <button class="primary-btn" id="sendContactMessageBtn" type="button" onclick="submitContactMessage()">Send Message</button>
+    <div id="contactMessageStatus" class="muted" style="margin-top:12px"></div>
+  </div>
+  <div style="margin-top:20px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <h3 style="margin:0">Your Messages</h3>
+    <button type="button" class="secondary" id="deleteAllContactMessagesBtn" onclick="deleteAllContactMessages()">Delete All Messages</button>
+  </div>
+  <div id="contactThread" class="muted">Loading messages…</div>
+</div>
+</section>
+
+<section class="panel" id="appDataPanel"><h2>App Data</h2><p class="muted">Your contracts are stored under your signed-in account. Other users have separate cloud data.</p></section>
+</div></div></div></main></div></div><div class="toast" id="toast"></div>
+<script>
+(function(){
+  const btn=document.getElementById('mobileMenuBtn');
+  const side=document.querySelector('.sidebar');
+  const overlay=document.getElementById('mobileOverlay');
+  if(btn&&side){btn.addEventListener('click',()=>{side.classList.toggle('open');if(overlay)overlay.classList.toggle('show',side.classList.contains('open'));});}
+  if(side){side.addEventListener('click',e=>{if(e.target.closest('a,button')&&window.innerWidth<=700){side.classList.remove('open');if(overlay)overlay.classList.remove('show');}});}
+})();
+const ALLOC=198.88;
+const SUPABASE_URL="https://gtyghdgbieyzurkkzzvh.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_k3z3T6m8oxzjvh1uVSkpMw_-FkBxVID";
+let supabaseClient=null;
+
+function initSupabaseClient(){
+  if(!window.supabase||typeof window.supabase.createClient!=="function"){
+    setAuthError("The sign-in service could not load. Check your internet connection and reopen the app.");
+    return false;
+  }
+  try{
+    supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    return true;
+  }catch(e){
+    console.error(e);
+    setAuthError("The sign-in service could not start. Please reopen the app.");
+    return false;
+  }
+}
+let currentUser=null;
+let isAdmin=false;
+let adminUsers=[];
+let adminRows=[];
+let cloudSaveTimer=null;
+let cloudSaveInFlight=false;
+let cloudSyncQueued=false;
+let cloudLoadInFlight=false;
+const EMPTY_DATA={contracts:[],checks:[]};
+let data={contracts:[],checks:[]};
+let cloudDataReady=false;
+function localKey(userId){return "contractChecksIOS:"+userId}
+function loadLocalCache(userId){
+  try{const raw=localStorage.getItem(localKey(userId));return raw?JSON.parse(raw):JSON.parse(JSON.stringify(EMPTY_DATA))}
+  catch(e){return JSON.parse(JSON.stringify(EMPTY_DATA))}
+}
+function saveLocalCache(userId,snapshot){try{localStorage.setItem(localKey(userId),JSON.stringify(snapshot))}catch(e){console.error(e)}}
+let removedBreakdownContracts=new Set();
+let selectedChoiceIds=[];
+let breakdownRows=[];
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n||0);
+function save(){
+ if(!currentUser||!cloudDataReady)return;
+ const snapshot=JSON.parse(JSON.stringify(data));
+ saveLocalCache(currentUser.id,snapshot);
+ clearTimeout(cloudSaveTimer);
+ cloudSaveTimer=setTimeout(syncToCloud,250);
+}
+async function syncToCloud(){
+ if(!currentUser){return}
+ if(cloudSaveInFlight){cloudSyncQueued=true;return}
+ cloudSaveInFlight=true;
+ cloudSyncQueued=false;
+ setSyncStatus("Saving to cloud…");
+ const snapshot=JSON.parse(JSON.stringify(data));
+ const {error}=await supabaseClient.from("contract_tracker_data").upsert({user_id:currentUser.id,data:snapshot,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+ cloudSaveInFlight=false;
+ if(error){setSyncStatus("Cloud sync error");console.error(error);toast("Cloud sync failed");}
+ else setSyncStatus("Saved to cloud • "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}));
+ if(cloudSyncQueued&&currentUser){cloudSyncQueued=false;setTimeout(syncToCloud,0)}
+}
+function setSyncStatus(s){const el=$("syncStatus");if(el)el.textContent=s}
+function setupNavScrolling(){
+  document.querySelectorAll(".nav-item").forEach(item=>{
+    item.addEventListener("click",e=>{
+      const id=item.getAttribute("href");
+      if(!id || !id.startsWith("#")) return;
+      const target=document.querySelector(id);
+      if(!target) return;
+      e.preventDefault();
+      document.querySelectorAll(".panel").forEach(p=>{ if(p.id!=="adminPanel") p.classList.add("hidden"); });
+      if(id==="#dashboard"){
+        document.querySelectorAll(".panel").forEach(p=>{ if(["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","contactPanel"].includes(p.id)) p.classList.remove("hidden"); });
+        document.querySelector(".content")?.scrollTo({top:0,behavior:"smooth"});
+      }else{
+        target.classList.remove("hidden");
+        target.scrollIntoView({behavior:"smooth",block:"start"});
+      }
+      document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
+      item.classList.add("active");
+      if(id==="#reportsPanel") renderReports();
+      if(id==="#contactPanel") loadMyContactMessages();
+    });
+  });
+}
+
+async function refreshCloudData(){
+ if(!currentUser||!supabaseClient){toast("Please sign in first");return}
+ const userId=currentUser.id;
+ const btn=$("refreshBtn");
+ if(btn){btn.disabled=true;btn.textContent="Refreshing…"}
+ setSyncStatus("Refreshing from cloud…");
+ try{
+  // If a recent change is still waiting to be uploaded, save it first so Refresh
+  // can never replace newer local data with an older cloud snapshot.
+  if(cloudSaveTimer){
+   clearTimeout(cloudSaveTimer);
+   cloudSaveTimer=null;
+   await syncToCloud();
+  }
+  // If another save is currently running, wait briefly for it to finish.
+  while(cloudSaveInFlight){await new Promise(resolve=>setTimeout(resolve,50))}
+  if(!currentUser||currentUser.id!==userId)return;
+  const ok=await loadCloudData(userId);
+  if(ok)toast("Latest data loaded");
+ }catch(e){
+  console.error(e);
+  setSyncStatus("Refresh failed");
+  toast("Could not refresh cloud data");
+ }finally{
+  if(btn){btn.disabled=false;btn.textContent="↻ Refresh"}
+ }
+}
+function setUserStatus(user){const el=$("userStatus");if(el)el.innerHTML=user?"Signed in as "+escape(user.email||"user")+(isAdmin?" <span class=\"admin-badge\">MASTER ADMIN</span>":""):"Not signed in"}
+function setAuthError(s){const el=$("authError");el.textContent=s||"";el.style.display=s?"block":"none"}
+function showApp(){$("authScreen").classList.add("hidden");$("passwordRecoveryScreen").classList.add("hidden");$("appScreen").classList.remove("hidden")}
+function showAuth(){$("appScreen").classList.add("hidden");$("passwordRecoveryScreen").classList.add("hidden");$("authScreen").classList.remove("hidden")}
+function showPasswordRecovery(){$("appScreen").classList.add("hidden");$("authScreen").classList.add("hidden");$("passwordRecoveryScreen").classList.remove("hidden");$("newPassword").focus()}
+function setAuthBusy(busy){
+ const signInBtn=$("signInBtn"),signUpBtn=$("signUpBtn"),forgotBtn=$("forgotPasswordBtn");
+ if(signInBtn){signInBtn.disabled=busy;signInBtn.textContent=busy?"Signing In…":"Sign In";}
+ if(signUpBtn){signUpBtn.disabled=busy;}
+ if(forgotBtn){forgotBtn.disabled=busy;}
+}
+function setRecoveryError(s){const el=$("recoveryError");el.textContent=s||"";el.style.display=s?"block":"none"}
+async function loadAdminUsers(){
+ if(!currentUser||!isAdmin||!supabaseClient)return;
+ const select=$("adminUserSelect"),summary=$("adminUserSummary"),box=$("adminUserData");
+ select.innerHTML='<option value="">Loading users…</option>'; box.classList.add("hidden");
+ try{
+  const {data:users,error:userError}=await supabaseClient.rpc("admin_list_users");
+  if(userError){
+    console.error("admin_list_users failed",userError);
+    throw new Error("Unable to load users: "+(userError.message||"Admin user list function failed"));
+  }
+  adminUsers=users||[];
+  adminRows=[];
+  select.innerHTML='<option value="">Select a user</option>'+adminUsers.map(u=>`<option value="${u.id}">${escape(u.email||u.id)}</option>`).join("");
+  summary.textContent=adminUsers.length+" user"+(adminUsers.length===1?"":"s")+" found. Select a user to load their contracts and checks.";
+ }catch(e){console.error(e);select.innerHTML='<option value="">Unable to load users</option>';summary.textContent="Admin user list could not be loaded. Make sure the admin SQL setup has been run.";toast("Admin user list failed")}
+}
+async function renderAdminUser(userId){
+ const box=$("adminUserData"),summary=$("adminUserSummary");
+ if(!userId){box.classList.add("hidden");summary.textContent=adminUsers.length+" user"+(adminUsers.length===1?"":"s")+" found. Select a user to load their dashboard.";return}
+ const user=adminUsers.find(u=>u.id===userId);
+ summary.textContent="Loading dashboard for "+(user?.email||userId)+"…";
+ box.classList.remove("hidden");box.innerHTML='<div class="muted">Loading selected user dashboard…</div>';
+ try{
+  const {data:row,error}=await supabaseClient.rpc("admin_get_user_data",{target_user_id:userId});
+  if(error){console.error("admin_get_user_data failed",error);throw error}
+  // Support both a single JSON object and a one-row RPC array response.
+  let d=row;
+  if(Array.isArray(d)) d=d[0]||{};
+  if(typeof d==="string"){try{d=JSON.parse(d)}catch(_){d={}}}
+  d=d&&typeof d==="object"?d:{};
+  let contracts=d.contracts||[],checks=d.checks||[];
+  if(typeof contracts==="string"){try{contracts=JSON.parse(contracts)}catch(_){contracts=[]}}
+  if(typeof checks==="string"){try{checks=JSON.parse(checks)}catch(_){checks=[]}}
+  contracts=Array.isArray(contracts)?contracts:[];
+  checks=Array.isArray(checks)?checks:[];
+
+  const received=checks.reduce((a,x)=>a+(parseFloat(x.amount)||0),0);
+  const invested=contracts.reduce((a,x)=>a+(parseFloat(x.invested)||0),0);
+  const overallProfit=received-invested;
+  const activeContracts=contracts.filter(c=>!c.closed).length;
+  const paidInFull=contracts.filter(c=>c.closed&&!c.defaulted).length;
+  const defaultContracts=contracts.filter(c=>c.closed&&c.defaulted);
+  const defaultLoss=defaultContracts.reduce((sum,c)=>{
+   const rec=checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0);
+   return sum+Math.max(0,(parseFloat(c.invested)||0)-rec);
+  },0);
+  const profitClass=overallProfit>0.009?'positive':overallProfit<-0.009?'negative':'';
+  summary.innerHTML=`<b>${escape(user?.email||userId)}</b> — Selected User Dashboard`;
+  box.innerHTML=`
+   <div class="admin-summary-wrap">
+    <div class="admin-summary-title">Dashboard Summary</div>
+    <div class="admin-summary-grid">
+     <div class="summary-card"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Invested</div><div class="summary-value">${money(invested)}</div></div></div></div>
+     <div class="summary-card received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Money Received</div><div class="summary-value">${money(received)}</div></div></div></div>
+     <div class="summary-card profit ${profitClass}"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Overall Profit</div><div class="summary-value">${money(overallProfit)}</div></div></div></div>
+     <div class="summary-card active"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Active Contracts</div><div class="summary-value">${activeContracts}</div></div></div></div>
+     <div class="summary-card"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">All Contracts</div><div class="summary-value">${contracts.length}</div></div></div></div>
+     <div class="summary-card"><div class="summary-top"><div class="summary-icon">✓</div><div><div class="summary-label">Paid in Full</div><div class="summary-value">${paidInFull}</div></div></div></div>
+     <div class="summary-card default"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Default Contracts</div><div class="summary-value">${defaultContracts.length}</div></div></div></div>
+     <div class="summary-card default-loss"><div class="summary-top"><div class="summary-icon">−</div><div><div class="summary-label">Default Loss</div><div class="summary-value">${money(defaultLoss)}</div></div></div></div>
+    </div>
+   </div>
+   <h3>Contracts</h3>
+   <div class="scroll"><table class="admin-table"><thead><tr><th>Contract</th><th>Investment</th><th>Received</th><th>Status</th></tr></thead><tbody>${contracts.map(c=>{const xs=checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+(parseFloat(x.amount)||0),0);return `<tr><td><b>${escape(c.name)}</b></td><td>${money(c.invested)}</td><td>${money(rec)}</td><td>${c.closed?(c.defaulted?"Default":"Paid in Full"):"Open"}</td></tr>`}).join("")||'<tr><td colspan="4" class="muted">No contracts.</td></tr>'}</tbody></table></div>
+   <h3 style="margin-top:18px">Check History</h3>
+   <div class="scroll"><table class="admin-table"><thead><tr><th>Date Issued</th><th>Date Received</th><th>Contract</th><th>Check #</th><th>Amount</th><th>Verified</th></tr></thead><tbody>${checks.map(x=>`<tr><td>${escape(x.date||"")}</td><td>${escape(x.dateReceived||"")||"—"}</td><td>${escape(x.contract||"")}</td><td>${escape(x.checkno||"")||"—"}</td><td>${money(x.amount)}</td><td>${x.verified?"Yes":"No"}</td></tr>`).join("")||'<tr><td colspan="6" class="muted">No checks.</td></tr>'}</tbody></table></div>`;
+ }catch(e){console.error(e);box.innerHTML='<div class="muted">Unable to load this user\'s dashboard. Please run the updated Admin SQL setup.</div>';summary.textContent="Could not load data for "+(user?.email||userId);toast("Could not load user data")}
+}
+async function initAdmin(){
+ isAdmin=!!(currentUser&&currentUser.app_metadata&&currentUser.app_metadata.role==="admin");
+ const panel=$("adminPanel");
+ if(panel)panel.classList.toggle("hidden",!isAdmin);
+ if(isAdmin)await loadAdminUsers();
+ setUserStatus(currentUser);
+}
+
+async function sendPasswordReset(){
+ setAuthError("");
+ if(!supabaseClient&&!initSupabaseClient())return;
+ const email=$("resetEmail").value.trim();
+ if(!email){setAuthError("Enter your email to reset your password.");$("resetEmail").focus();return}
+ setAuthBusy(true);
+ try{
+  const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+window.location.pathname});
+  if(error){setAuthError(error.message);return}
+  setAuthError("Password reset link sent. Check your email and open the link to choose a new password.");
+  const panel=$("resetPanel");
+  if(panel)panel.classList.add("hidden");
+  const resetEmail=$("resetEmail");
+  if(resetEmail)resetEmail.value="";
+ }catch(e){console.error(e);setAuthError("Unable to send the reset email right now. Check your connection and try again.");}
+ finally{setAuthBusy(false)}
+}
+async function updatePassword(){
+ setRecoveryError("");
+ if(!supabaseClient&&!initSupabaseClient())return;
+ const password=$("newPassword").value;
+ const confirm=$("confirmPassword").value;
+ if(password.length<6){setRecoveryError("Password must be at least 6 characters.");return}
+ if(password!==confirm){setRecoveryError("Passwords do not match.");return}
+ const btn=$("updatePasswordBtn");btn.disabled=true;btn.textContent="Updating…";
+ try{
+  const {error}=await supabaseClient.auth.updateUser({password});
+  if(error){setRecoveryError(error.message);return}
+  $("newPassword").value="";$("confirmPassword").value="";
+  setRecoveryError("");
+  alert("Password updated successfully. You can now sign in with your new password.");
+  await supabaseClient.auth.signOut();
+  showAuth();
+ }catch(e){console.error(e);setRecoveryError("Unable to update your password right now. Please try again.");}
+ finally{btn.disabled=false;btn.textContent="Update Password"}
+}
+function showSignUpForm(){
+ setAuthError("");
+ const panel=$("signUpFields");
+ panel.classList.remove("hidden");
+ setTimeout(()=>$("signUpEmail").focus(),0);
+}
+function showSignInForm(){
+ $("authSubtitle").textContent="Sign in to keep your contracts and check history in the cloud.";
+ $("signUpFields").classList.add("hidden");
+ $("signInFields").classList.remove("hidden");
+ setAuthError("");
+ $("authEmail").focus();
+}
+async function signIn(){
+ setAuthError("");
+ if(!supabaseClient&&!initSupabaseClient())return;
+ const email=$("authEmail").value.trim(),password=$("authPassword").value;
+ if(!email||!password){setAuthError("Enter your email and password.");return}
+ setAuthBusy(true);
+ try{
+  const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error)setAuthError(error.message);
+ }catch(e){
+  console.error(e);
+  setAuthError("Unable to sign in right now. Check your connection and try again.");
+ }finally{setAuthBusy(false)}
+}
+async function signUp(){
+ setAuthError("");
+ if(!supabaseClient&&!initSupabaseClient())return;
+ const email=$("signUpEmail").value.trim(),password=$("signUpPassword").value,confirm=$("signUpConfirmPassword").value;
+ if(!email||!password||!confirm){setAuthError("Enter your email, password, and confirm your password.");return}
+ if(password.length<6){setAuthError("Password must be at least 6 characters.");return}
+ if(password!==confirm){setAuthError("Passwords do not match.");$("signUpConfirmPassword").focus();return}
+ setAuthBusy(true);
+ try{
+  const {data:result,error}=await supabaseClient.auth.signUp({email,password});
+  if(error){setAuthError(error.message);return}
+  if(result?.user && Array.isArray(result.user.identities) && result.user.identities.length===0){setAuthError("An account with that email may already exist. Try signing in or use Reset your password.");return}
+  if(result?.session){toast("Account created"); setAuthError("");}
+  else{setAuthError("Account created. Check your email to confirm your account, then sign in.")}
+ }catch(e){
+  console.error(e);
+  setAuthError("Unable to create the account right now. Check your connection and try again.");
+ }finally{setAuthBusy(false)}
+}
+async function signOut(){
+ cloudDataReady=false;
+ data=JSON.parse(JSON.stringify(EMPTY_DATA));
+ if(supabaseClient)await supabaseClient.auth.signOut();
+ currentUser=null;isAdmin=false;showAuth();setUserStatus(null);setSyncStatus("Not signed in");
+ render();
+}
+async function loadCloudData(expectedUserId=null){
+ // Always bind the load to the user who started it. This prevents a slow request
+ // for User A from ever populating User B's screen after an account switch.
+ const userId=expectedUserId||currentUser?.id;
+ if(!userId||!supabaseClient)return false;
+ cloudDataReady=false;
+ // Keep the user's last known data visible while the cloud request is running.
+ // Never blank the dashboard before we know that the cloud read succeeded.
+ const cached=loadLocalCache(userId);
+ if(cached&&Array.isArray(cached.contracts)&&Array.isArray(cached.checks)){
+  data=cached;
+  render();
+ }
+ cloudLoadInFlight=true;
+ try{
+  const {data:row,error}=await supabaseClient.from("contract_tracker_data").select("data").eq("user_id",userId).maybeSingle();
+  // The user may have logged out/switched accounts while the request was in flight.
+  if(!currentUser||currentUser.id!==userId)return false;
+  if(error){
+   console.error(error);
+   // Preserve the last known data if the cloud read fails. A failed refresh
+   // must never make the dashboard appear empty.
+   if(cached&&Array.isArray(cached.contracts)&&Array.isArray(cached.checks)){data=cached;render()}
+   setSyncStatus("Cloud refresh failed — showing last saved data");
+   toast("Could not refresh cloud data");
+   return false;
+  }
+  if(row&&row.data){
+   // Never use a browser-wide/shared cache as a fallback. Cloud data is authoritative.
+   data=row.data;
+   saveLocalCache(userId,data);
+   cloudDataReady=true;
+   setSyncStatus("Loaded from cloud");
+   return true;
+  }
+  // A genuinely new user gets a brand-new empty dataset.
+  data=JSON.parse(JSON.stringify(EMPTY_DATA));
+  const {error:emptyError}=await supabaseClient.from("contract_tracker_data").insert({user_id:userId,data,updated_at:new Date().toISOString()});
+  if(!currentUser||currentUser.id!==userId)return false;
+  if(emptyError){
+   console.error(emptyError);
+   toast("Could not initialize cloud data");
+   data=JSON.parse(JSON.stringify(EMPTY_DATA));
+   render();
+   return false;
+  }
+  saveLocalCache(userId,data);
+  cloudDataReady=true;
+  setSyncStatus("Cloud account ready — 0 contracts, 0 checks");
+  return true;
+ }finally{cloudLoadInFlight=false}
+}
+function formatContactDate(value){
+  if(!value)return "";
+  try{
+    const d=new Date(value);
+    if(Number.isNaN(d.getTime()))return String(value);
+    return d.toLocaleString([], {year:"numeric",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+  }catch(e){return String(value)}
+}
+async function submitContactMessage(){
+  if(!currentUser||!supabaseClient){toast("Please sign in first");return}
+  const email=$("contactEmail")?.value.trim()||currentUser.email||"";
+  const message=$("contactMessage")?.value.trim()||"";
+  const status=$("contactMessageStatus");
+  const btn=$("sendContactMessageBtn");
+  if(!email||!message){if(status)status.textContent="Enter your email and message.";return}
+  if(message.length>2000){if(status)status.textContent="Message is too long.";return}
+  if(btn){btn.disabled=true;btn.textContent="Sending…"}
+  if(status)status.textContent="";
+  try{
+    const {error}=await supabaseClient.rpc("contact_submit_message",{p_email:email,p_message:message});
+    if(error)throw error;
+    $("contactMessage").value="";
+    if(status)status.textContent="Message sent successfully.";
+    toast("Message sent");
+    await loadMyContactMessages();
+  }catch(e){
+    console.error(e);
+    if(status)status.textContent="Could not send your message. Make sure the Contact Us SQL setup has been run in Supabase.";
+  }finally{if(btn){btn.disabled=false;btn.textContent="Send Message"}}
+}
+async function loadMyContactMessages(){
+  const box=$("contactThread");
+  if(!box||!currentUser||!supabaseClient)return;
+  try{
+    // Prefer the Contact Us RPC. If PostgREST has not refreshed the RPC correctly,
+    // fall back to the RLS-protected table query so users can still load their messages.
+    let rows=null;
+    let loadError=null;
+    const rpcResult=await supabaseClient.rpc("contact_list_my_messages");
+    rows=rpcResult.data;
+    loadError=rpcResult.error;
+    if(loadError){
+      console.warn("contact_list_my_messages RPC failed; trying direct RLS query",loadError);
+      const directResult=await supabaseClient
+        .from("contact_messages")
+        .select("id,email,message,admin_reply,created_at,replied_at")
+        .eq("user_id",currentUser.id)
+        .order("created_at",{ascending:false});
+      rows=directResult.data;
+      loadError=directResult.error;
+    }
+    if(loadError)throw loadError;
+    const list=Array.isArray(rows)?rows:[];
+    if(!list.length){box.innerHTML='<div class="muted">No messages yet.</div>';setContactNewMessage(false);return}
+    box.innerHTML=list.map(r=>{
+      const reply=r.admin_reply
+        ? `<div style="margin-top:10px;padding:10px;background:#f3f8fd;border-radius:8px"><strong>Admin Reply:</strong><div style="margin-top:5px">${escape(r.admin_reply)}</div></div>`
+        : `<div class="muted" style="margin-top:8px">Waiting for a reply.</div>`;
+      return `<div style="border:1px solid #dce8f5;border-radius:10px;padding:14px;margin:10px 0;background:#fff">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div style="min-width:0;flex:1">
+            <div style="font-weight:800;margin-bottom:6px">From: ${escape(r.email||currentUser?.email||"Unknown sender")}</div>
+            <div class="muted" style="margin-bottom:8px">Sent: ${escape(formatContactDate(r.created_at)||r.created_at||"")}</div>
+            <div><strong>${escape(r.message||"")}</strong></div>
+          </div>
+          <button type="button" class="secondary" style="flex:0 0 auto" onclick="deleteContactMessage('${String(r.id).replace(/'/g,"\\'")}')">Delete</button>
+        </div>
+        ${reply}
+      </div>`;
+    }).join("");
+    setContactNewMessage(list.some(r=>!!r.admin_reply));
+  }catch(e){
+    console.error(e);
+    const detail=escape(e?.message||e?.details||"Unknown Supabase error");
+    box.innerHTML=`<div class="muted">Unable to load messages.</div><div class="muted" style="margin-top:6px;font-size:12px">${detail}</div>`;
+  }
+}
+async function deleteContactMessage(id){
+  if(!currentUser||!supabaseClient||!id)return;
+  if(!confirm("Delete this message? This cannot be undone."))return;
+  try{
+    const {error}=await supabaseClient.rpc("contact_delete_message",{p_id:id});
+    if(error)throw error;
+    toast("Message deleted");
+    await loadMyContactMessages();
+  }catch(e){
+    console.error(e);
+    toast("Could not delete the message. Make sure the updated Contact Us SQL has been run in Supabase.");
+  }
+}
+async function deleteAllContactMessages(){
+  if(!currentUser||!supabaseClient)return;
+  if(!confirm("Delete ALL of your Contact Us messages? This cannot be undone."))return;
+  const btn=$("deleteAllContactMessagesBtn");
+  if(btn){btn.disabled=true;btn.textContent="Deleting…"}
+  try{
+    const {error}=await supabaseClient.rpc("contact_delete_all_my_messages");
+    if(error)throw error;
+    toast("All messages deleted");
+    await loadMyContactMessages();
+  }catch(e){
+    console.error(e);
+    toast("Could not delete the messages. Make sure the updated Contact Us SQL has been run in Supabase.");
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent="Delete All Messages"}
+  }
+}
+async function initCloud(){
+ if(!supabaseClient&&!initSupabaseClient())return;
+ // Refresh the session so changes to auth.app_metadata (such as the Master Admin role)
+ // are included in the JWT used by the app and by Supabase RLS policies.
+ let sessionData;
+ try{
+  const current=await supabaseClient.auth.getSession();
+  sessionData=current.data;
+ }catch(e){
+  console.warn("Session lookup failed",e);
+  sessionData={session:null};
+ }
+ currentUser=sessionData.session?.user||null;
+ if(currentUser){if($("contactEmail"))$("contactEmail").value=currentUser.email||"";cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showApp();setUserStatus(currentUser);setSyncStatus("Loading cloud data…");await loadCloudData(currentUser?.id);await initAdmin();$("date").value=new Date().toISOString().slice(0,10);render()}else{cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showAuth();render()}
+ supabaseClient.auth.onAuthStateChange(async (_event,session)=>{
+   if(_event==="PASSWORD_RECOVERY"){
+    showPasswordRecovery();
+    return;
+   }
+   if(session?.user){
+    const effectiveUser=session.user;
+    currentUser=effectiveUser;
+    if($("contactEmail"))$("contactEmail").value=effectiveUser.email||"";
+    cloudDataReady=false;
+    data=JSON.parse(JSON.stringify(EMPTY_DATA));
+    showApp();
+    setUserStatus(currentUser);
+    setSyncStatus("Loading cloud data…");
+    loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;await initAdmin();$("date").value=new Date().toISOString().slice(0,10);render()});
+   }else{currentUser=null;cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));setUserStatus(null);showAuth();render()}
+ });
+}
+function updateContractNumberPlaceholder(){let n=data.contracts.length+1;$("cname").placeholder=`Contract #${n}`}
+function toast(s){$("toast").textContent=s;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",1800)}
+function addContract(){
+ let name=$("cname").value.trim(), inv=parseFloat($("cinvest").value)||0,preset=parseFloat($("cpreset").value)||0,payments=Math.max(0,parseInt($("cpayments").value,10)||0),date=$("cdate").value,checkno=$("ccheckno").value.trim();
+ if(!name){toast("Enter a contract name");return}
+ if(data.contracts.some(c=>c.name.toLowerCase()===name.toLowerCase())){toast("Contract already exists");return}
+ data.contracts.push({id:Date.now(),name,invested:inv,defaultAllocation:preset,expectedPayments:payments,date,checkno,openedDate:date,closedDate:null});save();$("cname").value="";$("cinvest").value="";$("cpreset").value="";$("cpayments").value="";$("cdate").value="";$("ccheckno").value="";render();toast("Contract added");
+}
+function getAllocations(){
+ return breakdownRows.map(x=>({contract:x.contract,amount:parseFloat(x.amount)||0})).filter(x=>x.contract&&x.amount>0);
+}
+function addCheck(){
+ let date=$("date").value,dateReceived=$("dateReceived").value,amount=parseFloat($("amount").value),checkno=$("checkno").value.trim();
+ let allocations=getAllocations();
+ if(!data.contracts.length){toast("Add a contract first");return}
+ if(!date||!(amount>0)){toast("Enter date and check amount");return}
+ if(dateReceived&&dateReceived<date){toast("Date Received cannot be before Date Issued");return}
+ if(!allocations.length){toast("Enter an amount for at least one contract");return}
+ if(new Set(allocations.map(x=>x.contract)).size!==allocations.length){toast("Choose different contracts for each allocation");return}
+ let allocated=allocations.reduce((sum,x)=>sum+x.amount,0);
+ if(Math.abs(allocated-amount)>.009){toast("Contract allocations must equal the check amount");return}
+ let now=Date.now();allocations.forEach((x,index)=>{data.checks.push({id:now+index,contract:x.contract,date,dateReceived:dateReceived||"",amount:x.amount,checkno,verified:false});let c=data.contracts.find(c=>c.name===x.contract);if(c&&Number.isFinite(parseInt(c.paymentsOverride,10)))c.paymentsOverride=Math.max(0,parseInt(c.paymentsOverride,10))+1;});save();selectedChoiceIds=[];breakdownRows=[];removedBreakdownContracts=new Set();$("amount").value="";$("dateReceived").value="";$("checkno").value="";render();toast("Check recorded");
+}
+function updateBreakdown(){
+ let total=parseFloat($("amount").value)||0,assigned=breakdownRows.reduce((sum,x)=>sum+(parseFloat(x.amount)||0),0),remaining=total-assigned;
+ let difference=remaining>.009?`Money left: ${money(remaining)}`:remaining<-.009?`Over by: ${money(-remaining)}`:'Fully assigned';
+ let parts=breakdownRows.filter(x=>x.contract||x.amount).map(x=>`${x.contract||'Contract'}: ${money(parseFloat(x.amount)||0)}`);
+ $("splitPreview").textContent=`${parts.join(' • ')}${parts.length?' • ':''}${difference}`;
+}
+function applyPreset(i){
+ let c=data.contracts.find(c=>c.name===breakdownRows[i].contract);
+ if(c&&c.defaultAllocation>0)breakdownRows[i].amount=c.defaultAllocation.toFixed(2);
+ updateBreakdown();
+}
+function syncBreakdownRows(){
+ let open=data.contracts.filter(c=>!c.closed);
+ breakdownRows=breakdownRows.filter(r=>!r.contract || open.some(c=>c.name===r.contract));
+}
+function changeBreakdownContract(i,name){
+ if(i<0||i>=breakdownRows.length)return;
+ if(breakdownRows.some((r,idx)=>idx!==i&&r.contract===name)){toast("That contract is already selected");renderManualBreakdown();return;}
+ let old=breakdownRows[i].contract;
+ breakdownRows[i].contract=name;
+ let c=data.contracts.find(c=>c.name===name);
+ if(!name){ breakdownRows[i].amount=''; updateBreakdown(); renderManualBreakdown(); return; }
+ if(c&&(!breakdownRows[i].amount || breakdownRows[i].amount==='0')) breakdownRows[i].amount=(breakdownRows[i].manual ? '' : (c.defaultAllocation>0?c.defaultAllocation.toFixed(2):''));
+ removedBreakdownContracts.delete(name);
+ if(old!==name) removedBreakdownContracts.add(old);
+ updateBreakdown();
+}
+function renderManualBreakdown(){
+ syncBreakdownRows();
+ let open=data.contracts.filter(c=>!c.closed);
+ $("manualBreakdown").innerHTML=breakdownRows.length?breakdownRows.map((row,i)=>{
+  let opts=open.filter(c=>c.name===row.contract || !breakdownRows.some((r,idx)=>idx!==i&&r.contract===c.name)).map(c=>`<option value="${escape(c.name)}" ${c.name===row.contract?'selected':''}>${escape(c.name)}</option>`).join('');
+  return `<div class="row" style="align-items:end;margin-bottom:8px"><div class="field"><label>Contract</label><select onchange="changeBreakdownContract(${i},this.value)"><option value="" ${!row.contract?'selected':''}>Select contract</option>${opts}</select></div><div class="field"><label>Amount</label><input type="number" inputmode="decimal" step="0.01" value="${row.amount}" placeholder="0.00" oninput="breakdownRows[${i}].amount=this.value;updateBreakdown()"></div><button class="table-action" type="button" onclick="removeBreakdownContract(${i})">Remove</button></div>`;
+ }).join(''):'<p class="muted">No open contracts. Add or reopen a contract to enter a payment.</p>';
+ updateBreakdown();
+}
+function addBreakdownContract(){
+ breakdownRows.push({contract:'',amount:'',manual:true});
+ renderManualBreakdown();
+ let inputs=document.querySelectorAll('#manualBreakdown input[type=number]');
+ if(inputs.length)inputs[inputs.length-1].focus();
+}
+
+function removeBreakdownContract(i){
+ if(i<0||i>=breakdownRows.length)return;
+ let name=breakdownRows[i].contract;
+ removedBreakdownContracts.add(name);
+ breakdownRows.splice(i,1);
+ renderManualBreakdown();
+}
+function toggleContractChoice(id){
+ let contract=data.contracts.find(c=>c.id===id);if(!contract||contract.closed)return;
+ let selected=selectedChoiceIds.includes(id);
+ if(selected){
+   selectedChoiceIds=selectedChoiceIds.filter(x=>x!==id);
+   breakdownRows=breakdownRows.filter(r=>r.contract!==contract.name);
+ }else{
+   selectedChoiceIds.push(id);
+   if(!breakdownRows.some(r=>r.contract===contract.name)){
+     breakdownRows.push({contract:contract.name,amount:(contract.defaultAllocation>0?contract.defaultAllocation.toFixed(2):''),manual:false});
+   }
+ }
+ renderContractChoices();
+ renderManualBreakdown();
+ if(!selected){
+   let rows=document.querySelectorAll('#manualBreakdown input[type=number]');
+   if(rows.length)rows[rows.length-1].focus();
+ }
+}
+
+function removeContract(id){
+ let contract=data.contracts.find(c=>c.id===id);if(!contract)return;
+ let count=data.checks.filter(x=>x.contract===contract.name).length;
+ if(!confirm(`Remove ${contract.name}${count?` and its ${count} recorded check${count===1?'':'s'}`:''}?`))return;
+ data.contracts=data.contracts.filter(c=>c.id!==id);data.checks=data.checks.filter(x=>x.contract!==contract.name);save();render();toast("Contract removed");
+}
+function closeContract(id){
+ let contract=data.contracts.find(c=>c.id===id);if(!contract||contract.closed)return;
+ let receivedCount=data.checks.filter(x=>x.contract===contract.name).length;
+ let paymentsLeft=Math.max(0,(contract.expectedPayments||0)-receivedCount);
+ let isDefault=paymentsLeft>0;
+ let message=isDefault
+  ? `The payee appears to have DEFAULTED on ${contract.name}. Close this contract as DEFAULT? It has ${paymentsLeft} payment${paymentsLeft===1?'':'s'} remaining. It will move to Contracts Completed and be marked as Default.`
+  : `Close ${contract.name} as paid in full? Its history will be kept, but it will no longer appear in new payment selections.`;
+ if(!confirm(message))return;
+ contract.closed=true;
+ contract.closedDate=new Date().toISOString().slice(0,10);
+ contract.defaulted=isDefault;
+ selectedChoiceIds=selectedChoiceIds.filter(x=>x!==id);
+ breakdownRows=breakdownRows.filter(r=>r.contract!==contract.name);
+ save();render();toast(isDefault?"Contract closed as default":"Contract closed as paid in full");
+}
+function restoreContract(id){
+ let contract=data.contracts.find(c=>c.id===id);if(!contract)return;
+ if(!contract.closed)return;
+ if(!confirm(`Restore ${contract.name} to active Contracts?`))return;
+ contract.closed=false;
+ contract.closedDate=null;
+ save();render();toast("Contract restored to Contracts");
+}
+function editCheck(id){
+ let check=data.checks.find(x=>x.id===id);if(!check)return;
+ let oldModal=document.getElementById('editCheckModal');if(oldModal)oldModal.remove();
+ let contractOptions=data.contracts.map(c=>`<option value="${escape(c.name)}" ${c.name===check.contract?'selected':''}>${escape(c.name)}</option>`).join('');
+ let modal=document.createElement('div');modal.id='editCheckModal';modal.className='edit-modal-overlay';
+ modal.innerHTML=`<div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="editCheckTitle">
+   <div class="edit-modal-head"><h2 id="editCheckTitle">Edit Check</h2><button type="button" class="edit-modal-close" onclick="closeEditCheck()">×</button></div>
+   <div class="edit-modal-grid">
+     <div class="field"><label>Date Issued</label><input id="editCheckDate" type="date" value="${escape(check.date||'')}"></div>
+     <div class="field"><label>Date Received <span class="muted">(optional)</span></label><input id="editCheckDateReceived" type="date" value="${escape(check.dateReceived||'')}"></div>
+     <div class="field"><label>Check Amount</label><input id="editCheckAmount" type="number" inputmode="decimal" step="0.01" value="${escape(check.amount??'')}"></div>
+     <div class="field"><label>Contract</label><select id="editCheckContract">${contractOptions||'<option value="">No contracts</option>'}</select></div>
+     <div class="field"><label>Check #</label><input id="editCheckNumber" inputmode="numeric" placeholder="Optional" value="${escape(check.checkno||'')}"></div>
+   </div>
+   <div class="edit-modal-actions"><button type="button" class="secondary" onclick="closeEditCheck()">Cancel</button><button type="button" class="primary-btn" onclick="saveEditedCheck(${id})">Save Changes</button></div>
+ </div>`;
+ document.body.appendChild(modal);
+ setTimeout(()=>document.getElementById('editCheckDate')?.focus(),0);
+}
+function closeEditCheck(){document.getElementById('editCheckModal')?.remove()}
+function saveEditedCheck(id){
+ let check=data.checks.find(x=>x.id===id);if(!check)return;
+ let date=document.getElementById('editCheckDate')?.value||'';
+ let dateReceived=document.getElementById('editCheckDateReceived')?.value||'';
+ let amount=parseFloat(document.getElementById('editCheckAmount')?.value||'');
+ let contract=document.getElementById('editCheckContract')?.value||'';
+ let checkno=(document.getElementById('editCheckNumber')?.value||'').trim();
+ if(date&&!/^\d{4}-\d{2}-\d{2}$/.test(date)){toast('Enter the date as YYYY-MM-DD');return}
+ if(dateReceived&&!/^\d{4}-\d{2}-\d{2}$/.test(dateReceived)){toast('Enter Date Received as YYYY-MM-DD');return}
+ if(dateReceived&&dateReceived<date){toast('Date Received cannot be before Date Issued');return}
+ if(!(amount>0)){toast('Enter a valid check amount');return}
+ if(!contract){toast('Select a contract');return}
+ if(!data.contracts.some(c=>c.name===contract)){toast('Select an existing contract');return}
+ check.date=date;check.dateReceived=dateReceived;check.amount=amount;check.contract=contract;check.checkno=checkno;
+ closeEditCheck();save();render();toast('Check updated');
+}
+function editContract(id){
+ let contract=data.contracts.find(c=>c.id===id);if(!contract)return;
+ let oldModal=document.getElementById('editContractModal');if(oldModal)oldModal.remove();
+ let checks=data.checks.filter(x=>x.contract===contract.name);
+ let paid=Number.isFinite(parseFloat(contract.paidOverride))?parseFloat(contract.paidOverride):checks.reduce((a,x)=>a+(parseFloat(x.amount)||0),0);
+ let expected=Math.max(0,parseInt(contract.expectedPayments,10)||0);
+ let payments=Number.isFinite(parseInt(contract.paymentsOverride,10))?Math.max(0,parseInt(contract.paymentsOverride,10)):checks.length;
+ let remaining=Number.isFinite(parseFloat(contract.remainingOverride))?parseFloat(contract.remainingOverride):Math.max(0,(parseFloat(contract.invested)||0)-paid);
+ let modal=document.createElement('div');modal.id='editContractModal';modal.className='edit-modal-overlay';
+ modal.innerHTML=`<div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="editContractTitle">
+   <div class="edit-modal-head"><h2 id="editContractTitle">Edit Contract</h2><button type="button" class="edit-modal-close" onclick="closeEditContract()">×</button></div>
+   <div class="edit-modal-grid">
+     <div class="field"><label>Contract Name</label><input id="editContractName" type="text" value="${escape(contract.name)}"></div>
+     <div class="field"><label>Invested</label><input id="editContractInvested" type="number" inputmode="decimal" step="0.01" value="${escape(contract.invested??0)}"></div>
+     <div class="field"><label>Paid</label><input id="editContractPaid" type="number" inputmode="decimal" step="0.01" value="${paid.toFixed(2)}"></div>
+     <div class="field"><label>Remaining</label><input id="editContractRemaining" type="number" inputmode="decimal" step="0.01" value="${remaining.toFixed(2)}"></div>
+     <div class="field"><label>Amount / Check</label><input id="editContractAmount" type="number" inputmode="decimal" step="0.01" value="${escape(contract.defaultAllocation??0)}"></div>
+     <div class="field"><label>Expected Payments</label><input id="editContractExpected" type="number" inputmode="numeric" min="0" step="1" value="${expected}"></div>
+     <div class="field"><label>Payments</label><input id="editContractPayments" type="number" inputmode="numeric" min="0" step="1" value="${payments}"></div>
+   </div>
+   <div class="edit-modal-actions"><button type="button" class="secondary" onclick="closeEditContract()">Cancel</button><button type="button" class="primary-btn" onclick="saveEditedContract(${id})">Save Changes</button></div>
+ </div>`;
+ document.body.appendChild(modal);
+ setTimeout(()=>document.getElementById('editContractName')?.focus(),0);
+}
+function closeEditContract(){document.getElementById('editContractModal')?.remove()}
+function saveEditedContract(id){
+ let contract=data.contracts.find(c=>c.id===id);if(!contract)return;
+ let name=(document.getElementById('editContractName')?.value||'').trim();
+ let invested=parseFloat(document.getElementById('editContractInvested')?.value||'');
+ let paid=parseFloat(document.getElementById('editContractPaid')?.value||'');
+ let remaining=parseFloat(document.getElementById('editContractRemaining')?.value||'');
+ let amount=parseFloat(document.getElementById('editContractAmount')?.value||'');
+ let expected=parseInt(document.getElementById('editContractExpected')?.value||'',10);
+ let payments=parseInt(document.getElementById('editContractPayments')?.value||'',10);
+ if(!name){toast('Enter a contract name');return}
+ if(data.contracts.some(c=>c.id!==id&&c.name.toLowerCase()===name.toLowerCase())){toast('Contract already exists');return}
+ if(!(invested>=0)){toast('Enter a valid investment');return}
+ if(!(paid>=0)){toast('Enter a valid paid amount');return}
+ if(!(remaining>=0)){toast('Enter a valid remaining amount');return}
+ if(!(amount>=0)){toast('Enter a valid amount per check');return}
+ if(!Number.isFinite(expected)||expected<0){toast('Enter valid expected payments');return}
+ if(!Number.isFinite(payments)||payments<0){toast('Enter valid payments');return}
+ let oldName=contract.name;
+ contract.name=name;contract.invested=invested;contract.paidOverride=paid;contract.remainingOverride=remaining;contract.defaultAllocation=amount;contract.expectedPayments=expected;contract.paymentsOverride=payments;
+ data.checks.forEach(x=>{if(x.contract===oldName)x.contract=name});
+ breakdownRows.forEach(r=>{if(r.contract===oldName)r.contract=name});
+ selectedChoiceIds=selectedChoiceIds.map(x=>x===id?x:x);
+ closeEditContract();save();render();toast('Contract updated');
+}
+function deleteCheck(id){
+ let check=data.checks.find(c=>c.id===id);if(!check)return;
+ if(confirm(`Delete this check of ${money(check.amount)} for ${check.contract}?`)){
+  data.checks=data.checks.filter(c=>c.id!==id);save();render();toast("Check deleted");
+ }
+}
+function verify(id){let x=data.checks.find(c=>c.id===id);x.verified=!x.verified;save();render()}
+function renderContractChoices(){
+ let open=data.contracts.filter(c=>!c.closed);
+ $("contractChoices").innerHTML=open.length?open.map(c=>`<button type="button" class="choice ${selectedChoiceIds.includes(c.id)?'selected':''}" onclick="toggleContractChoice(${c.id})">${escape(c.name)}</button>`).join(''):'<span class="muted">No open contracts.</span>';
+}
+function updateHistorySearchInput(){let type=$("historySearchType")?.value||'dateIssued',input=$("historySearch"),label=$("historySearchLabel");if(!input)return;let config={dateIssued:['Date Issued','date','Search by date issued'],dateReceived:['Date Received','date','Search by date received'],amount:['Check Amount','number','Search by check amount'],contract:['Contract Name','search','Search by contract name'],checkno:['Check Number','search','Search by check number']}[type]||['Date Issued','date','Search'];label.textContent=config[0];input.type=config[1];input.placeholder=config[2];input.step=config[1]==='number'?'0.01':undefined;if(config[1]!=='number')input.removeAttribute('step');renderCheckHistory()}
+function clearHistorySearch(){let input=$("historySearch");if(input)input.value='';renderCheckHistory()}
+function renderCheckHistory(){let f=$("filter")?.value||'',historyChecks=data.checks.filter(x=>!f||x.contract===f),historyType=$("historySearchType")?.value||'dateIssued',historyTerm=$("historySearch")?.value||'';if(historyTerm){let term=historyTerm.trim().toLowerCase();historyChecks=historyChecks.filter(x=>{let value=historyType==='dateReceived'?(x.dateReceived||''):historyType==='amount'?String(parseFloat(x.amount)||0):historyType==='contract'?String(x.contract||''):historyType==='checkno'?String(x.checkno||''):String(x.date||'');return value.toLowerCase().includes(term)})}$("history").innerHTML=historyChecks.map(x=>`<tr><td>${escape(x.date||"")}</td><td>${escape(x.dateReceived||"")||'—'}</td><td>${money(x.amount)}</td><td>${escape(x.contract||"")}</td><td>${escape(x.checkno)||'—'}</td><td><div class="actions"><button class="table-action" onclick="editCheck(${x.id})">Edit</button><button class="danger" onclick="deleteCheck(${x.id})">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="6" class="empty">No checks match your search.</td></tr>'}
+function render(){
+ updateContractNumberPlaceholder();
+ let open=data.contracts.filter(c=>!c.closed),filterOpts=open.map(c=>`<option>${escape(c.name)}</option>`).join("");
+ selectedChoiceIds=selectedChoiceIds.filter(id=>open.some(c=>c.id===id));
+ breakdownRows=breakdownRows.map(r=>open.some(c=>c.name===r.contract)?r:{contract:"",amount:""});
+ renderManualBreakdown();
+ let current=$("filter")?$("filter").value:"";
+ if($("filter")){ $("filter").innerHTML='<option value="">All contracts</option>'+filterOpts; $("filter").value=current; }
+ let contractRows=open.map(c=>{
+   let xs=data.checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+x.amount,0),remaining=Math.max(0,c.invested-rec);
+   let expected=Math.max(0,parseInt(c.expectedPayments,10)||0),paidCount=Number.isFinite(parseInt(c.paymentsOverride,10))?Math.max(0,parseInt(c.paymentsOverride,10)):xs.length,left=Math.max(0,expected-paidCount);
+   let remainingByPayments=expected ? left*(parseFloat(c.defaultAllocation)||0) : remaining;
+   let paid=Number.isFinite(parseFloat(c.paidOverride))?parseFloat(c.paidOverride):rec;
+   let remainingDisplay=Number.isFinite(parseFloat(c.remainingOverride))?parseFloat(c.remainingOverride):remainingByPayments;
+   return `<tr class="contract-row"><td>${escape(c.name)}</td><td>${money(c.invested)}</td><td>${money(paid)}</td><td>${money(remainingDisplay)}</td><td>${c.defaultAllocation>0?money(c.defaultAllocation):'—'}</td><td>${expected||'—'}</td><td>${expected?left:'—'}</td><td><span class="status">Active</span></td><td><div class="actions"><button class="table-action" type="button" onclick="editContract(${c.id})">Edit</button><button class="warning" type="button" onclick="closeContract(${c.id})">Close / Default</button><button class="danger" type="button" onclick="removeContract(${c.id})">Delete</button></div></td></tr>`;
+ }).join('')||'<tr><td colspan="9" class="empty">No active contracts yet.</td></tr>';
+ $("contracts").innerHTML=contractRows;
+ let received=data.checks.reduce((a,x)=>a+x.amount,0), invested=data.contracts.reduce((a,c)=>a+c.invested,0);
+ const overallProfit=received-invested;$("invested").textContent=money(invested);$("received").textContent=money(received);$("profit").textContent=money(overallProfit);const profitCard=$("profit")?.closest(".summary-card.profit");if(profitCard){profitCard.classList.toggle("positive",overallProfit>0);profitCard.classList.toggle("negative",overallProfit<0);}$("openContracts").textContent=open.length;
+ let paidInFull=data.contracts.filter(c=>c.closed&&!c.defaulted).length,defaultContracts=data.contracts.filter(c=>c.closed&&c.defaulted),defaultLoss=defaultContracts.reduce((sum,c)=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+x.amount,0);return sum+Math.max(0,(parseFloat(c.invested)||0)-rec)},0);
+ $("allContracts").textContent=data.contracts.length;$("paidInFull").textContent=paidInFull;$("defaultContracts").textContent=defaultContracts.length;$("defaultLoss").textContent=money(defaultLoss);
+ $("reportInvested").textContent=money(invested);$("reportReceived").textContent=money(received);$("reportProfit").textContent=money(overallProfit);$("reportProfit").classList.toggle("gain",overallProfit>0);$("reportProfit").classList.toggle("loss",overallProfit<0);$("reportAllContracts").textContent=data.contracts.length;$("reportOpenContracts").textContent=open.length;$("reportPaidInFull").textContent=paidInFull;$("reportDefaultContracts").textContent=defaultContracts.length;$("reportDefaultLoss").textContent=money(defaultLoss);
+ renderCheckHistory();
+ renderContractChoices(); renderCompletedContracts(); renderReports();
+ updateBreakdown();
+}
+function renderCompletedContracts(){
+ let completed=data.contracts.filter(c=>c.closed); $("completedCount").textContent=`${completed.length} contract${completed.length===1?'':'s'} completed`;
+ let rows=completed.map(c=>{let xs=data.checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+x.amount,0),expected=Math.max(0,parseInt(c.expectedPayments,10)||0),paidCount=Number.isFinite(parseInt(c.paymentsOverride,10))?Math.max(0,parseInt(c.paymentsOverride,10)):xs.length,left=Math.max(0,expected-paidCount),remainingPayment=expected>0?left*(parseFloat(c.defaultAllocation)||0):Math.max(0,(parseFloat(c.invested)||0)-rec),delta=rec-(parseFloat(c.invested)||0),resultClass=delta>0.009?'gain':delta<-0.009?'loss':'even',resultText=delta>0.009?`Gain ${money(delta)}`:delta<-0.009?`Loss ${money(-delta)}`:'$0.00';return `<tr><td><b>${escape(c.name)}</b></td><td>${escape(c.openedDate||c.date||"—")}</td><td>${escape(c.closedDate||"—")}</td><td>${money(c.invested)}</td><td>${money(rec)}</td><td>${money(remainingPayment)}</td><td><span class="${resultClass}">${resultText}</span></td><td><span class="status completed">${c.defaulted?"Default":"Completed"}</span></td><td><button class="table-action" onclick="restoreContract(${c.id})">Restore</button></td></tr>`}).join('');
+ $("completedContracts").innerHTML=rows||'<tr><td colspan="9" class="empty">No completed contracts.</td></tr>';
+}
+function escape(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+function localDateString(d){let x=new Date(d);return new Date(x.getTime()-x.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function setReportRange(kind,btn){let now=new Date(),from=new Date(now),to=new Date(now);if(kind==='week'){let day=now.getDay();from.setDate(now.getDate()+(day===0?-6:1-day))}else if(kind==='month'){from=new Date(now.getFullYear(),now.getMonth(),1)}else if(kind==='year'){from=new Date(now.getFullYear(),0,1)}else if(kind==='custom'){document.querySelectorAll('.range-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');$('reportFrom').focus();return} $('reportFrom').value=localDateString(from);$('reportTo').value=localDateString(to);document.querySelectorAll('.range-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');runDateReport()}
+function runDateReport(){let from=$('reportFrom')?.value||'',to=$('reportTo')?.value||'';if(!from||!to){toast('Select a start and end date');return}if(from>to){toast('From date cannot be after To date');return}let received=data.checks.filter(x=>{let d=x.dateReceived||x.date||'';return d>=from&&d<=to}).reduce((a,x)=>a+(parseFloat(x.amount)||0),0),invested=data.contracts.filter(c=>{let d=c.openedDate||c.date||'';return d>=from&&d<=to}).reduce((a,c)=>a+(parseFloat(c.invested)||0),0),profit=received-invested;$('rangeInvested').textContent=money(invested);$('rangeReceived').textContent=money(received);$('rangeProfit').textContent=money(profit);$('rangeProfit').classList.toggle('gain',profit>0);$('rangeProfit').classList.toggle('loss',profit<0)}
+function updateReportContractOptions(){let type=$('reportTypeSelect')?.value||'all',sel=$('reportContractSelect'),search=($('reportContractSearch')?.value||'').trim().toLowerCase();if(!sel)return;let current=sel.value,filtered=data.contracts.filter(c=>(type==='open'?!c.closed:type==='closed'?!!c.closed:type==='default'?(!!c.closed&&!!c.defaulted):true)&&(!search||String(c.name||'').toLowerCase().includes(search)));sel.innerHTML='<option value="">Select a contract</option>'+filtered.map(c=>`<option value="${escape(c.name)}">${escape(c.name)}</option>`).join('');if(filtered.some(c=>c.name===current))sel.value=current;else if(filtered.length===1)sel.value=filtered[0].name;renderSelectedContractReport()}
+function renderSelectedContractReport(){let name=$('reportContractSelect')?.value||'',box=$('selectedContractReport');if(!name){box.className='contract-report-empty';box.textContent='Select a contract above to view its breakdown.';return}let c=data.contracts.find(x=>x.name===name);if(!c){box.className='contract-report-empty';box.textContent='Contract not found.';return}let xs=data.checks.filter(x=>x.contract===name),rec=xs.reduce((a,x)=>a+(parseFloat(x.amount)||0),0),expected=Math.max(0,parseInt(c.expectedPayments,10)||0),paidCount=Number.isFinite(parseInt(c.paymentsOverride,10))?Math.max(0,parseInt(c.paymentsOverride,10)):xs.length,left=Math.max(0,expected-paidCount),remaining=Number.isFinite(parseFloat(c.remainingOverride))?Math.max(0,parseFloat(c.remainingOverride)):expected?left*(parseFloat(c.defaultAllocation)||0):Math.max(0,(parseFloat(c.invested)||0)-rec),profit=rec-(parseFloat(c.invested)||0),status=c.closed?(c.defaulted?'Default':'Completed'):'Active';box.className='contract-report';box.innerHTML=`<div class="contract-report-grid"><div><span>Amount Invested</span><strong>${money(c.invested)}</strong></div><div><span>Total Received</span><strong>${money(rec)}</strong></div><div><span>Remaining</span><strong>${money(remaining)}</strong></div><div><span>Profit / Loss</span><strong class="${profit>0?'gain':profit<0?'loss':''}">${money(profit)}</strong></div><div><span>Number of Payments</span><strong>${xs.length}</strong></div><div><span>Expected Payments</span><strong>${expected||'—'}</strong></div><div><span>Payments Left</span><strong>${expected?left:'—'}</strong></div><div><span>Status</span><strong>${escape(status)}</strong></div><div><span>Opened</span><strong>${escape(c.openedDate||c.date||'—')}</strong></div><div><span>Last Payment</span><strong>${escape(xs.length?xs.map(x=>x.dateReceived||x.date||'').sort().pop():'—')}</strong></div></div><div class="contract-report-history"><h4>Payment History</h4><div class="scroll"><table><thead><tr><th>#</th><th>Date Received</th><th>Amount</th><th>Check #</th></tr></thead><tbody>${xs.map((x,i)=>`<tr><td>${i+1}</td><td>${escape(x.dateReceived||x.date||'—')}</td><td>${money(x.amount)}</td><td>${escape(x.checkno)||'—'}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No payments recorded.</td></tr>'}</tbody></table></div></div>`}
+function setPaymentRange(kind,btn){let now=new Date(),from=new Date(now),to=new Date(now);if(kind==='week'){let day=now.getDay();from.setDate(now.getDate()+(day===0?-6:1-day))}else if(kind==='month'){from=new Date(now.getFullYear(),now.getMonth(),1)}else if(kind==='year'){from=new Date(now.getFullYear(),0,1)}else if(kind==='custom'){document.querySelectorAll('.payment-range-buttons .range-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');$('paymentFrom').focus();return}$('paymentFrom').value=localDateString(from);$('paymentTo').value=localDateString(to);document.querySelectorAll('.payment-range-buttons .range-btn').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');runPaymentReport()}
+function runPaymentReport(){let from=$('paymentFrom')?.value||'',to=$('paymentTo')?.value||'';if(!from||!to){toast('Select a start and end date');return}if(from>to){toast('From date cannot be after To date');return}let checks=data.checks.filter(x=>{let d=x.dateReceived||x.date||'';return d>=from&&d<=to}),valsTotal=checks.reduce((a,x)=>a+(parseFloat(x.amount)||0),0),avg=checks.length?valsTotal/checks.length:0,largest=checks.reduce((m,x)=>Math.max(m,parseFloat(x.amount)||0),0);$('payTotal').textContent=checks.length;$('payMonth').textContent=money(valsTotal);$('payYear').textContent=money(avg);$('payAverage').textContent=money(largest);$('payLargest').textContent=checks.length;$('payOutstanding').textContent=data.contracts.filter(c=>!c.closed&&Math.max(0,(parseFloat(c.invested)||0)-data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0))>.009).length;let start=new Date(from+'T00:00:00'),end=new Date(to+'T00:00:00'),sameMonth=start.getFullYear()===end.getFullYear()&&start.getMonth()===end.getMonth(),months=[];if(sameMonth){months=[{key:`${start.getFullYear()}-${String(start.getMonth()+1).padStart(2,'0')}`,label:start.toLocaleString('en-US',{month:'short',year:'numeric'})}]}else{let d=new Date(start.getFullYear(),start.getMonth(),1),last=new Date(end.getFullYear(),end.getMonth(),1);while(d<=last){months.push({key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,label:d.toLocaleString('en-US',{month:'short',year:'numeric'})});d.setMonth(d.getMonth()+1)}}let chartVals=months.map(m=>checks.filter(x=>(x.dateReceived||x.date||'').startsWith(m.key)).reduce((a,x)=>a+(parseFloat(x.amount)||0),0)),max=Math.max(1,...chartVals);$('paymentChartTitle').textContent=sameMonth?'Payments for Selected Month':'Payments by Month';$('paymentChart').innerHTML=months.map((m,i)=>`<div class="chart-bar-wrap"><div class="chart-bar-value">${money(chartVals[i]).replace('.00','')}</div><div class="chart-bar" style="height:${Math.max(3,(chartVals[i]/max)*125)}px"></div><div class="chart-bar-label">${m.label}</div></div>`).join('')}
+function renderPaymentReport(){let today=localDateString(new Date());if(!$('paymentFrom').value||!$('paymentTo').value){let d=new Date();d=new Date(d.getFullYear(),d.getMonth(),1);$('paymentFrom').value=localDateString(d);$('paymentTo').value=today}runPaymentReport()}
+function renderReports(){let open=data.contracts.filter(c=>!c.closed),received=data.checks.reduce((a,x)=>a+(parseFloat(x.amount)||0),0),invested=data.contracts.reduce((a,c)=>a+(parseFloat(c.invested)||0),0),profit=received-invested,defaults=data.contracts.filter(c=>c.closed&&c.defaulted),defaultLoss=defaults.reduce((sum,c)=>sum+Math.max(0,(parseFloat(c.invested)||0)-data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0)),0),completed=data.contracts.filter(c=>c.closed&&!c.defaulted),owed=data.contracts.filter(c=>!c.closed&&Math.max(0,(parseFloat(c.invested)||0)-data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0))>.009);$('reportInvested').textContent=money(invested);$('reportReceived').textContent=money(received);$('reportProfit').textContent=money(profit);$('reportProfit').classList.toggle('gain',profit>0);$('reportProfit').classList.toggle('loss',profit<0);$('reportAllContracts').textContent=data.contracts.length;$('reportOpenContracts').textContent=open.length;$('reportPaidInFull').textContent=completed.length;$('reportDefaultContracts').textContent=defaults.length;$('reportDefaultLoss').textContent=money(defaultLoss);$('flowInvested').textContent=money(invested);$('flowReceived').textContent=money(received);$('flowOutstanding').textContent=money(Math.max(0,invested-received));$('flowProfit').textContent=money(profit);$('flowProfit').classList.toggle('gain',profit>0);$('flowProfit').classList.toggle('loss',profit<0);$('perfAll').textContent=data.contracts.length;$('perfActive').textContent=open.length;$('perfCompleted').textContent=completed.length;$('perfDefault').textContent=defaults.length;$('perfDefaultLoss').textContent=money(defaultLoss);$('perfOwed').textContent=owed.length;renderPaymentReport();updateReportContractOptions();if(!$('reportFrom').value||!$('reportTo').value){let today=localDateString(new Date());$('reportFrom').value=today.slice(0,8)+'01';$('reportTo').value=today}runDateReport()}
+function exportContractsCSV(){let rows=[['Contract','Opened','Closed','Invested','Received','Remaining','Profit/Loss','Status']];data.contracts.forEach(c=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',c.invested,rec,Math.max(0,(parseFloat(c.invested)||0)-rec),rec-(parseFloat(c.invested)||0),c.closed?(c.defaulted?'Default':'Completed'):'Active'])});downloadCSV(rows,'contracts-report.csv')}
+function exportFullReport(){let rows=[['Love Contracts Full Report'],[],['Metric','Value'],['Total Investment',$('reportInvested')?.textContent||''],['Money Received',$('reportReceived')?.textContent||''],['Overall Profit/Loss',$('reportProfit')?.textContent||''],['Active Contracts',$('reportOpenContracts')?.textContent||''],['All Contracts',$('reportAllContracts')?.textContent||''],['Paid in Full',$('reportPaidInFull')?.textContent||''],['Default Contracts',$('reportDefaultContracts')?.textContent||''],['Default Loss',$('reportDefaultLoss')?.textContent||''],[],['Contracts'],['Contract','Opened','Closed','Invested','Received','Remaining','Profit/Loss','Status']];data.contracts.forEach(c=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',c.invested,rec,Math.max(0,(parseFloat(c.invested)||0)-rec),rec-(parseFloat(c.invested)||0),c.closed?(c.defaulted?'Default':'Completed'):'Active'])});rows.push([],['Payments'],['Date Issued','Date Received','Contract','Check #','Amount','Verified']);data.checks.forEach(x=>rows.push([x.date||'',x.dateReceived||'',x.contract||'',x.checkno||'',x.amount||0,x.verified?'Yes':'No']));downloadCSV(rows,'love-contracts-full-report.csv')}
+function downloadCSV(rows,name){let csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function exportCSV(){
+ let rows=[["Date Issued","Date Received","Contract","Check #","Check Amount","Verified"]];
+ data.checks.forEach(x=>rows.push([x.date,x.dateReceived||"",x.contract,x.checkno,x.amount,x.verified?"Yes":"No"]));
+ let csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n");
+ let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="received-checks.csv";a.click();
+}
+function clearData(){if(confirm(currentUser?"Delete ALL contracts and checks from your cloud account? This cannot be undone.":"Delete all contracts and checks from this device?")){data={contracts:[],checks:[]};save();render();toast("Data deleted")}}
+$("date").value=new Date().toISOString().slice(0,10);
+$("authForm").addEventListener("submit",e=>{e.preventDefault();signIn()});
+$("signUpBtn").addEventListener("click",()=>showSignUpForm());
+$("createAccountBtn").addEventListener("click",()=>signUp());
+$("backToSignInBtn").addEventListener("click",()=>showSignInForm());
+$("forgotPasswordBtn").addEventListener("click",()=>{
+  setAuthError("");
+  const panel=$("resetPanel");
+  panel.classList.remove("hidden");
+  const loginEmail=$("authEmail")?.value.trim()||"";
+  if(loginEmail&&!$("resetEmail").value)$("resetEmail").value=loginEmail;
+  setTimeout(()=>$("resetEmail").focus(),0);
+});
+$("sendResetBtn").addEventListener("click",sendPasswordReset);
+$("cancelResetBtn").addEventListener("click",()=>{$("resetPanel").classList.add("hidden");setAuthError("")});
+$("updatePasswordBtn").addEventListener("click",updatePassword);
+$("adminUserSelect").addEventListener("change",e=>renderAdminUser(e.target.value));
+$("adminRefreshBtn").addEventListener("click",loadAdminUsers);
+setupNavScrolling();
+updateHistorySearchInput();
+render();
+initCloud();
+</script>
+
+<script id="contact-new-message-badge-script">
+(function () {
+  function setContactNewMessage(show) {
+    var badge = document.getElementById('contactNewMessage');
+    if (badge) badge.style.display = show ? 'block' : 'none';
+  }
+  window.setContactNewMessage = setContactNewMessage;
+})();
+</script>
+
+
+<script id="contact-us-reports-style-navigation">
+(function () {
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest && event.target.closest('a[href="#contactPanel"]');
+    if (!link) return;
+    event.preventDefault();
+
+    // Match the dashboard's hash-based panel behavior.
+    if (window.location.hash !== '#contactPanel') {
+      window.location.hash = 'contactPanel';
+    } else {
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    }
+
+    // If the app exposes a panel switcher, use it when available.
+    try {
+      if (typeof window.showPanel === 'function') window.showPanel('contactPanel');
+    } catch (e) {}
+  });
+})();
+</script>
+
+
+<script id="eastern-24-hour-time">
+(function () {
+  window.formatEastern24 = function (value) {
+    if (!value) return '';
+    var d = new Date(value);
+    if (isNaN(d.getTime())) return value;
+    try {
+      return new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }).format(d).replace(',', '');
+    } catch (e) {
+      return value;
+    }
+  };
+})();
+</script>
+
+
+<script id="contact-message-clear-on-open">
+(function () {
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest && event.target.closest('a[href="#contactPanel"]');
+    if (!link) return;
+    var badge = document.getElementById('contactNewMessage');
+    if (badge) {
+      badge.style.display = 'none';
+      badge.setAttribute('aria-hidden', 'true');
+    }
+  });
+})();
+</script>
+
+</body></html>
+
