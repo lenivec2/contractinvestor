@@ -1922,9 +1922,9 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
     <h3 style="margin:0" id="contactThreadTitle">Your Messages</h3>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end">
-      <div class="field" id="adminMessageUserFilterWrap" style="display:none;min-width:220px;margin:0"><label for="adminMessageUserFilter">View messages from</label><select id="adminMessageUserFilter" onchange="filterAdminContactMessages()"><option value="all">All Users</option></select></div>
+      <div class="field" id="adminMessageStatusFilterWrap" style="display:none;min-width:180px;margin:0"><label for="adminMessageStatusFilter">Inbox</label><select id="adminMessageStatusFilter" onchange="filterAdminContactMessages()"><option value="new">New Messages</option><option value="ongoing">Ongoing</option><option value="saved">Saved Conversations</option><option value="all">All Conversations</option></select></div><div class="field" id="adminMessageUserFilterWrap" style="display:none;min-width:220px;margin:0"><label for="adminMessageUserFilter">View messages from</label><select id="adminMessageUserFilter" onchange="filterAdminContactMessages()"><option value="all">All Users</option></select></div>
       <button type="button" class="primary-btn" id="refreshContactMessagesBtn" onclick="refreshContactMessages()">↻ Refresh Messages</button>
-      <button type="button" class="secondary" id="deleteSelectedUserMessagesBtn" style="display:none" onclick="deleteSelectedUserContactMessages()">Delete This User's Messages</button>
+      <button type="button" class="secondary" id="saveSelectedUserConversationBtn" style="display:none" onclick="saveSelectedUserConversation()">Save Conversation</button><button type="button" class="secondary" id="restoreSelectedUserConversationBtn" style="display:none" onclick="restoreSelectedUserConversation()">Restore Conversation</button><button type="button" class="secondary" id="deleteSelectedUserMessagesBtn" style="display:none" onclick="deleteSelectedUserContactMessages()">Delete All Messages From This User</button>
       <button type="button" class="secondary" id="deleteAllContactMessagesBtn" onclick="deleteAllContactMessages()">Delete All Messages</button>
     </div>
   </div>
@@ -2334,11 +2334,19 @@ let adminContactMessagesCache=[];
 function renderAdminContactMessages(){
   const box=$("contactThread");
   const filter=$("adminMessageUserFilter");
+  const statusFilter=$("adminMessageStatusFilter");
   const deleteUserBtn=$("deleteSelectedUserMessagesBtn");
+  const saveBtn=$("saveSelectedUserConversationBtn");
+  const restoreBtn=$("restoreSelectedUserConversationBtn");
   if(!box||!isAdmin)return;
   const selected=filter?.value||"all";
-  if(deleteUserBtn)deleteUserBtn.style.display=selected==="all"?"none":"";
-  const list=selected==="all"?adminContactMessagesCache:adminContactMessagesCache.filter(r=>String(r.user_id)===selected);
+  const status=statusFilter?.value||"new";
+  if(deleteUserBtn){deleteUserBtn.style.display=selected==="all"?"none":"";deleteUserBtn.textContent="Delete All Messages From This User"}
+  if(saveBtn)saveBtn.style.display=(selected!=="all"&&status!=="saved")?"":"none";
+  if(restoreBtn)restoreBtn.style.display=(selected!=="all"&&status==="saved")?"":"none";
+  let list=adminContactMessagesCache;
+  if(status!=="all")list=list.filter(r=>(r.conversation_status||"new")===status);
+  if(selected!=="all")list=list.filter(r=>String(r.user_id)===selected);
   renderContactMessageList(list);
 }
 function filterAdminContactMessages(){ renderAdminContactMessages(); }
@@ -2354,7 +2362,7 @@ function renderContactMessageList(list){
     const adminReply=isAdmin?`<div style="margin-top:12px"><textarea id="adminReply_${safeId}" rows="3" maxlength="2000" placeholder="Reply to this user...">${escape(r.admin_reply||"")}</textarea><button type="button" class="primary-btn" style="margin-top:8px" onclick="sendAdminContactReply('${safeId}')">${r.admin_reply?"Update Reply":"Send Reply"}</button></div>`:"";
     return `<div style="border:1px solid #dce8f5;border-radius:10px;padding:14px;margin:10px 0;background:#fff"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><div style="min-width:0;flex:1"><div style="font-weight:800;margin-bottom:6px">From: ${escape(r.email||"Unknown sender")}</div><div class="muted" style="margin-bottom:8px">Sent: ${escape(formatContactDate(r.created_at)||r.created_at||"")}</div><div><strong>${escape(r.message||"")}</strong></div></div><button type="button" class="secondary" style="flex:0 0 auto" onclick="deleteContactMessage('${safeId}')">Delete</button></div>${reply}${adminReply}</div>`;
   }).join("");
-  setContactNewMessage(isAdmin?adminContactMessagesCache.length>0:list.some(r=>!!r.admin_reply));
+  setContactNewMessage(isAdmin?adminContactMessagesCache.some(r=>(r.conversation_status||"new")==="new"):list.some(r=>!!r.admin_reply));
 }
 async function loadMyContactMessages(){
   const box=$("contactThread");
@@ -2382,8 +2390,10 @@ async function loadMyContactMessages(){
     if(loadError)throw loadError;
     const list=Array.isArray(rows)?rows:[];
     const filterWrap=$("adminMessageUserFilterWrap");
+    const statusWrap=$("adminMessageStatusFilterWrap");
     const filter=$("adminMessageUserFilter");
     if(filterWrap)filterWrap.style.display=isAdmin?"":"none";
+    if(statusWrap)statusWrap.style.display=isAdmin?"":"none";
     if(isAdmin){
       adminContactMessagesCache=list;
       if(filter){
@@ -2391,7 +2401,7 @@ async function loadMyContactMessages(){
         const users=new Map();
         list.forEach(r=>{if(r.user_id&&!users.has(String(r.user_id)))users.set(String(r.user_id),r.email||"Unknown sender")});
         filter.innerHTML='<option value="all">All Users</option>'+Array.from(users.entries()).sort((a,b)=>String(a[1]).localeCompare(String(b[1]))).map(([id,email])=>`<option value="${escape(id)}">${escape(email)}</option>`).join('');
-        filter.value=users.has(previous)?previous:"all";
+        filter.value=(previous==="all"||users.has(previous))?previous:"all";
       }
       renderAdminContactMessages();
     }else{
@@ -2436,6 +2446,24 @@ async function deleteContactMessage(id){
     toast("Could not delete the message. Make sure the updated Contact Us SQL has been run in Supabase.");
   }
 }
+async function setSelectedConversationStatus(status){
+  if(!isAdmin||!currentUser||!supabaseClient)return;
+  const filter=$("adminMessageUserFilter"); const userId=filter?.value||"all";
+  if(userId==="all"){toast("Select one user first");return}
+  try{
+    const {error}=await supabaseClient.rpc("contact_admin_set_conversation_status",{p_user_id:userId,p_status:status});
+    if(error)throw error;
+    toast(status==="saved"?"Conversation saved":"Conversation restored");
+    const sf=$("adminMessageStatusFilter"); if(sf)sf.value=status==="saved"?"saved":"ongoing";
+    await loadMyContactMessages();
+  }catch(e){console.error(e);toast("Could not update conversation. Run the updated SQL in Supabase.")}
+}
+async function saveSelectedUserConversation(){
+  const filter=$("adminMessageUserFilter"); const label=filter?.options[filter.selectedIndex]?.text||"this user";
+  if(!confirm(`Save/archive the conversation with ${label}? It will disappear from New/Ongoing and remain under Saved Conversations.`))return;
+  await setSelectedConversationStatus("saved");
+}
+async function restoreSelectedUserConversation(){ await setSelectedConversationStatus("ongoing"); }
 async function deleteSelectedUserContactMessages(){
   if(!isAdmin||!currentUser||!supabaseClient)return;
   const filter=$("adminMessageUserFilter");
