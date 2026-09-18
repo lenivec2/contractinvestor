@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Checks">
-<title>Love Contracts</title>
+<title>FundLedger</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="this.onerror=null;var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2';document.head.appendChild(s)"></script>
 <style>
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f8fc;color:#102d57}button,input,select,textarea{font:inherit;box-sizing:border-box}button{cursor:pointer}
@@ -1343,7 +1343,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   background:rgba(16,47,85,.38);
 }
 #signUpFields::after{
-  content:"Create your Love Contracts account";
+  content:"Create your FundLedger account";
   display:block;
   position:absolute;
   top:24px;
@@ -1700,7 +1700,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <div id="authScreen" class="auth-wrap">
   <div class="auth-card">
     <h2>Contract Checks</h2>
-    <div class="auth-brand"><div class="auth-brand-love-row"><span class="auth-brand-heart" aria-hidden="true">♥</span><span class="auth-brand-love">Love</span><span class="auth-brand-heart" aria-hidden="true">♥</span></div><div class="auth-brand-contracts">CONTRACTS</div></div>
+    <div class="auth-brand"><div class="auth-brand-love-row"><span class="auth-brand-love" style="color:#17365f;font-family:inherit;font-style:normal;letter-spacing:-1px">FundLedger</span></div></div>
     <p id="authSubtitle" class="muted">Sign in to keep your contracts and check history in the cloud.</p>
     <form id="authForm" autocomplete="on">
       <div id="signInFields">
@@ -1745,7 +1745,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   </div>
 </div>
 <div id="appScreen" class="hidden">
-<header class="app-header"><button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open menu">☰</button><div class="brand"><span class="brand-heart">♥</span><span>Contract Investor</span></div><div class="header-actions"><button id="refreshBtn" type="button" onclick="refreshCloudData()">↻ &nbsp;Refresh</button><button onclick="signOut()">⇥ &nbsp;Sign Out</button></div></header>
+<header class="app-header"><button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open menu">☰</button><div class="brand"><span>FundLedger</span></div><div class="header-actions"><button id="refreshBtn" type="button" onclick="refreshCloudData()">↻ &nbsp;Refresh</button><button onclick="signOut()">⇥ &nbsp;Sign Out</button></div></header>
 <div id="mobileOverlay" class="mobile-overlay" onclick="document.querySelector('.sidebar')?.classList.remove('open');this.classList.remove('show')"></div>
 <div class="app-shell">
 <aside class="sidebar">
@@ -2594,7 +2594,7 @@ function runPaymentReport(){let from=$('paymentFrom')?.value||'',to=$('paymentTo
 function renderPaymentReport(){let today=localDateString(new Date());if(!$('paymentFrom').value||!$('paymentTo').value){let d=new Date();d=new Date(d.getFullYear(),d.getMonth(),1);$('paymentFrom').value=localDateString(d);$('paymentTo').value=today}runPaymentReport()}
 function renderReports(){let open=data.contracts.filter(c=>!c.closed),received=data.checks.reduce((a,x)=>a+(parseFloat(x.amount)||0),0),invested=data.contracts.reduce((a,c)=>a+(parseFloat(c.invested)||0),0),profit=received-invested,defaults=data.contracts.filter(c=>c.closed&&c.defaulted),defaultLoss=defaults.reduce((sum,c)=>sum+Math.max(0,(parseFloat(c.invested)||0)-data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0)),0),completed=data.contracts.filter(c=>c.closed&&!c.defaulted),owed=data.contracts.filter(c=>!c.closed&&Math.max(0,(parseFloat(c.invested)||0)-data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0))>.009);$('reportInvested').textContent=money(invested);$('reportReceived').textContent=money(received);$('reportProfit').textContent=money(profit);$('reportProfit').classList.toggle('gain',profit>0);$('reportProfit').classList.toggle('loss',profit<0);$('reportAllContracts').textContent=data.contracts.length;$('reportOpenContracts').textContent=open.length;$('reportPaidInFull').textContent=completed.length;$('reportDefaultContracts').textContent=defaults.length;$('reportDefaultLoss').textContent=money(defaultLoss);$('flowInvested').textContent=money(invested);$('flowReceived').textContent=money(received);$('flowOutstanding').textContent=money(Math.max(0,invested-received));$('flowProfit').textContent=money(profit);$('flowProfit').classList.toggle('gain',profit>0);$('flowProfit').classList.toggle('loss',profit<0);$('perfAll').textContent=data.contracts.length;$('perfActive').textContent=open.length;$('perfCompleted').textContent=completed.length;$('perfDefault').textContent=defaults.length;$('perfDefaultLoss').textContent=money(defaultLoss);$('perfOwed').textContent=owed.length;renderPaymentReport();updateReportContractOptions();if(!$('reportFrom').value||!$('reportTo').value){let today=localDateString(new Date());$('reportFrom').value=today.slice(0,8)+'01';$('reportTo').value=today}runDateReport()}
 function exportContractsCSV(){let rows=[['Contract','Opened','Closed','Invested','Received','Remaining','Profit/Loss','Status']];data.contracts.forEach(c=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',c.invested,rec,Math.max(0,(parseFloat(c.invested)||0)-rec),rec-(parseFloat(c.invested)||0),c.closed?(c.defaulted?'Default':'Completed'):'Active'])});downloadCSV(rows,'contracts-report.csv')}
-function exportFullReport(){let rows=[['Love Contracts Full Report'],[],['Metric','Value'],['Total Investment',$('reportInvested')?.textContent||''],['Money Received',$('reportReceived')?.textContent||''],['Overall Profit/Loss',$('reportProfit')?.textContent||''],['Active Contracts',$('reportOpenContracts')?.textContent||''],['All Contracts',$('reportAllContracts')?.textContent||''],['Paid in Full',$('reportPaidInFull')?.textContent||''],['Default Contracts',$('reportDefaultContracts')?.textContent||''],['Default Loss',$('reportDefaultLoss')?.textContent||''],[],['Contracts'],['Contract','Opened','Closed','Invested','Received','Remaining','Profit/Loss','Status']];data.contracts.forEach(c=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',c.invested,rec,Math.max(0,(parseFloat(c.invested)||0)-rec),rec-(parseFloat(c.invested)||0),c.closed?(c.defaulted?'Default':'Completed'):'Active'])});rows.push([],['Payments'],['Date Issued','Date Received','Contract','Check #','Amount','Verified']);data.checks.forEach(x=>rows.push([x.date||'',x.dateReceived||'',x.contract||'',x.checkno||'',x.amount||0,x.verified?'Yes':'No']));downloadCSV(rows,'love-contracts-full-report.csv')}
+function exportFullReport(){let rows=[['FundLedger Full Report'],[],['Metric','Value'],['Total Investment',$('reportInvested')?.textContent||''],['Money Received',$('reportReceived')?.textContent||''],['Overall Profit/Loss',$('reportProfit')?.textContent||''],['Active Contracts',$('reportOpenContracts')?.textContent||''],['All Contracts',$('reportAllContracts')?.textContent||''],['Paid in Full',$('reportPaidInFull')?.textContent||''],['Default Contracts',$('reportDefaultContracts')?.textContent||''],['Default Loss',$('reportDefaultLoss')?.textContent||''],[],['Contracts'],['Contract','Opened','Closed','Invested','Received','Remaining','Profit/Loss','Status']];data.contracts.forEach(c=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',c.invested,rec,Math.max(0,(parseFloat(c.invested)||0)-rec),rec-(parseFloat(c.invested)||0),c.closed?(c.defaulted?'Default':'Completed'):'Active'])});rows.push([],['Payments'],['Date Issued','Date Received','Contract','Check #','Amount','Verified']);data.checks.forEach(x=>rows.push([x.date||'',x.dateReceived||'',x.contract||'',x.checkno||'',x.amount||0,x.verified?'Yes':'No']));downloadCSV(rows,'fundledger-full-report.csv')}
 function downloadCSV(rows,name){let csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function exportCSV(){
  let rows=[["Date Issued","Date Received","Contract","Check #","Check Amount","Verified"]];
