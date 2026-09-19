@@ -2102,7 +2102,7 @@ function setupNavScrolling(){
       e.preventDefault();
       document.querySelectorAll(".panel").forEach(p=>{ if(p.id!=="adminPanel") p.classList.add("hidden"); });
       const dashboardSummary=$("dashboardSummary");
-      if(dashboardSummary) dashboardSummary.classList.toggle("hidden",!["#dashboard","#reportsPanel"].includes(id));
+      if(dashboardSummary) dashboardSummary.classList.toggle("hidden",id!=="#dashboard");
       if(id==="#dashboard"){
         document.querySelectorAll(".panel").forEach(p=>{ if(["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","contactPanel"].includes(p.id)) p.classList.remove("hidden"); });
         document.querySelector(".content")?.scrollTo({top:0,behavior:"smooth"});
