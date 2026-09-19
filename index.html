@@ -1820,6 +1820,67 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
+<style id="add-contract-layout-final">
+/* Keep the main amounts prominent, make the fee/payment-count fields compact,
+   and give the calculation results a full readable row. */
+@media (min-width:701px){
+  #newContractPanel > .contract-entry-grid{
+    display:grid!important;
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    gap:12px!important;
+    align-items:end!important;
+  }
+  #newContractPanel .contract-name-field,
+  #newContractPanel .contract-invest-field,
+  #newContractPanel .contract-return-field{grid-column:span 2!important}
+  #newContractPanel .contract-fee-field,
+  #newContractPanel .contract-payments-field,
+  #newContractPanel .contract-date-field,
+  #newContractPanel .contract-check-field{grid-column:span 1!important}
+  #newContractPanel .contract-amount-field{grid-column:span 2!important}
+}
+#newContractPanel .contract-calc-summary{
+  grid-column:1 / -1!important;
+  width:100%!important;
+  max-width:100%!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:12px!important;
+  padding:14px!important;
+  margin-top:2px!important;
+  overflow:visible!important;
+}
+#newContractPanel .contract-calc-summary > div{
+  min-width:0!important;
+  padding:10px 12px!important;
+  border:1px solid #dce8f5!important;
+  border-radius:8px!important;
+  background:#fff!important;
+}
+#newContractPanel .contract-calc-summary span{
+  display:block!important;
+  min-height:0!important;
+  line-height:1.25!important;
+  white-space:normal!important;
+}
+#newContractPanel .contract-calc-summary strong{
+  display:block!important;
+  margin-top:6px!important;
+  font-size:17px!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+}
+@media (max-width:700px){
+  #newContractPanel > .contract-entry-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #newContractPanel .contract-calc-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;padding:10px!important}
+  #newContractPanel .contract-calc-summary strong{font-size:15px!important}
+}
+@media (orientation:landscape) and (max-height:600px){
+  #newContractPanel > .contract-entry-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  #newContractPanel .contract-calc-summary{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  #newContractPanel .contract-calc-summary strong{font-size:14px!important}
+}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -1902,7 +1963,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <div class="summary-card default-loss"><div class="summary-top"><div class="summary-icon">−</div><div><div class="summary-label">Default Loss</div><div class="summary-value" id="defaultLoss">$0.00</div></div></div></div>
 </div>
 <section class="panel" id="checkPanel"><h2>Add Payment / Check</h2><div class="row"><div class="field"><label>Check Amount</label><input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="$0.00" oninput="updateBreakdown()"></div><div class="field"><label>Date Issued</label><input id="date" type="date"></div><div class="field"><label>Date Received <span class="muted">(optional)</span></label><input id="dateReceived" type="date"></div><div class="field"><label>Check #</label><input id="checkno" inputmode="numeric" placeholder="Optional"></div></div><h3>Select contracts for this check</h3><div class="choices" id="contractChoices"></div><h3>Manual Payment Breakdown</h3><div class="manual-box" id="manualBreakdown"></div><p class="muted" id="splitPreview">Select a contract above to open it here, then enter the amount for that contract.</p><button class="primary-btn save-check" onclick="addCheck()">Save Check</button></section>
-<section class="panel" id="newContractPanel"><h2>Add Contract</h2><div class="row"><div class="field"><label>Contract name</label><input id="cname" placeholder="Contract #1"></div><div class="field"><label>Invest</label><input id="cinvest" type="number" inputmode="decimal" min="0" step="0.01" placeholder="5300"></div><div class="field"><label>Total Return</label><input id="ctotalreturn" type="number" inputmode="decimal" min="0" step="0.01" placeholder="6900" oninput="updateContractPaymentCalculation()"></div><div class="field"><label>Admin Fee (%)</label><input id="cadminfee" type="number" inputmode="decimal" min="0" max="100" step="0.01" placeholder="2" oninput="updateContractPaymentCalculation()"></div><div class="field"><label>Expected payments</label><input id="cpayments" type="number" inputmode="numeric" min="1" step="1" placeholder="34" oninput="updateContractPaymentCalculation()"></div><div class="field"><label>Amount per Check</label><input id="cpreset" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Calculated automatically" oninput="updateContractPaymentOverride()"></div><div class="field"><label>Contract date</label><input id="cdate" type="date"></div><div class="field"><label>Check #</label><input id="ccheckno" inputmode="numeric" placeholder="Optional"></div><div id="contractCalcSummary" class="contract-calc-summary"><div><span>Total Return</span><strong id="contractCalcTotal">$0.00</strong></div><div class="fee-value"><span>Admin Fee</span><strong id="contractCalcFee">$0.00</strong></div><div><span>Net Return</span><strong id="contractCalcNet">$0.00</strong></div><div><span>Amount per Check</span><strong id="contractCalcPayment">$0.00</strong></div></div></div><button class="primary-btn" style="margin-top:14px" onclick="addContract()">＋ Add Contract</button></section>
+<section class="panel" id="newContractPanel"><h2>Add Contract</h2><div class="row contract-entry-grid"><div class="field contract-name-field"><label>Contract name</label><input id="cname" placeholder="Contract #1"></div><div class="field contract-invest-field"><label>Invest</label><input id="cinvest" type="number" inputmode="decimal" min="0" step="0.01" placeholder="5300"></div><div class="field contract-return-field"><label>Total Return</label><input id="ctotalreturn" type="number" inputmode="decimal" min="0" step="0.01" placeholder="6900" oninput="updateContractPaymentCalculation()"></div><div class="field contract-fee-field"><label>Admin Fee (%)</label><input id="cadminfee" type="number" inputmode="decimal" min="0" max="100" step="0.01" placeholder="2" oninput="updateContractPaymentCalculation()"></div><div class="field contract-payments-field"><label>Expected payments</label><input id="cpayments" type="number" inputmode="numeric" min="1" step="1" placeholder="34" oninput="updateContractPaymentCalculation()"></div><div class="field contract-amount-field"><label>Amount per Check</label><input id="cpreset" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Calculated automatically" oninput="updateContractPaymentOverride()"></div><div class="field contract-date-field"><label>Contract date</label><input id="cdate" type="date"></div><div class="field contract-check-field"><label>Check #</label><input id="ccheckno" inputmode="numeric" placeholder="Optional"></div><div id="contractCalcSummary" class="contract-calc-summary"><div><span>Total Return</span><strong id="contractCalcTotal">$0.00</strong></div><div class="fee-value"><span>Admin Fee</span><strong id="contractCalcFee">$0.00</strong></div><div><span>Net Return</span><strong id="contractCalcNet">$0.00</strong></div><div><span>Amount per Check</span><strong id="contractCalcPayment">$0.00</strong></div></div></div><button class="primary-btn" style="margin-top:14px" onclick="addContract()">＋ Add Contract</button></section>
 <section class="panel" id="contractsPanel" style="width:100%;max-width:100%;"><div class="section-head"><h2>Active Contracts</h2></div><div class="scroll"><table><thead><tr><th>Name</th><th>Day Opened</th><th>Invested</th><th>Paid</th><th>Break-Even</th><th>Amount / Check</th><th>Expected Payments</th><th>Payments Left</th><th>Status</th><th>Actions</th></tr></thead><tbody id="contracts"></tbody></table></div></section>
 <section class="panel side-card" id="completedPanel"><h2>Completed Contracts</h2><div class="completed-count" id="completedCount">0 contracts completed</div><button class="primary-btn" style="width:100%" onclick="document.getElementById('completedPanel').scrollIntoView({behavior:'smooth'})">View Completed</button><div class="scroll" style="margin-top:12px"><table><thead><tr><th>Contract</th><th>Day Opened</th><th>Day Closed</th><th>Invested</th><th>Received</th><th>Remaining Payment</th><th>Gain / Loss</th><th>Status</th><th>Action</th></tr></thead><tbody id="completedContracts"></tbody></table></div></section>
 <div class="dashboard-grid">
