@@ -1889,6 +1889,9 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   #newContractPanel .contract-calc-summary strong{font-size:14px!important}
 }
 </style>
+<style id="summary-reorder-styles">
+.summary-card[draggable="true"]{cursor:grab}.summary-card.summary-dragging{opacity:.5;outline:2px dashed #147be8}.summary-option-actions{display:flex;align-items:center;gap:7px}.summary-move-btn{width:32px;height:32px;padding:0!important;border:1px solid #cbdced;border-radius:7px;background:#eef5ff;color:#17365f;font-size:17px;font-weight:800;line-height:1}.summary-move-btn:hover{background:#dcecff}.summary-move-btn:disabled{opacity:.35;cursor:not-allowed}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -2029,16 +2032,16 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
         </div>
       </div>
       <div class="appearance-group">
-        <h4>Summary Boxes</h4><p>Select the individual summary boxes shown when the Summary Boxes section is enabled.</p>
-        <div class="appearance-options">
-          <label class="appearance-option"><span>Total Invested</span><input type="checkbox" data-summary-toggle="invested" onchange="updateDashboardAppearance(this)"></label>
-          <label class="appearance-option"><span>Money Received</span><input type="checkbox" data-summary-toggle="received" onchange="updateDashboardAppearance(this)"></label>
-          <label class="appearance-option"><span>Overall Profit</span><input type="checkbox" data-summary-toggle="profit" onchange="updateDashboardAppearance(this)"></label>
-          <label class="appearance-option"><span>Active Contracts</span><input type="checkbox" data-summary-toggle="active" onchange="updateDashboardAppearance(this)"></label>
-          <label class="appearance-option"><span>All Contracts</span><input type="checkbox" data-summary-toggle="all" onchange="updateDashboardAppearance(this)"></label>
-          <label class="appearance-option"><span>Paid in Full</span><input type="checkbox" data-summary-toggle="paid" onchange="updateDashboardAppearance(this)"></label>
-          <label class="appearance-option"><span>Default Contracts</span><input type="checkbox" data-summary-toggle="default" onchange="updateDashboardAppearance(this)"></label>
-          <label class="appearance-option"><span>Default Loss</span><input type="checkbox" data-summary-toggle="defaultLoss" onchange="updateDashboardAppearance(this)"></label>
+        <h4>Summary Boxes</h4><p>Select which boxes appear. Drag boxes on the Dashboard or use the arrows here to change their order.</p>
+        <div class="appearance-options" id="summaryBoxOptions">
+          <label class="appearance-option" data-summary-option="invested"><span>Total Invested</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="invested" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Total Invested up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('invested',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Total Invested down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('invested',1)">↓</button></span></label>
+          <label class="appearance-option" data-summary-option="received"><span>Money Received</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="received" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Money Received up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('received',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Money Received down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('received',1)">↓</button></span></label>
+          <label class="appearance-option" data-summary-option="profit"><span>Overall Profit</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="profit" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Overall Profit up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('profit',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Overall Profit down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('profit',1)">↓</button></span></label>
+          <label class="appearance-option" data-summary-option="active"><span>Active Contracts</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="active" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Active Contracts up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('active',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Active Contracts down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('active',1)">↓</button></span></label>
+          <label class="appearance-option" data-summary-option="all"><span>All Contracts</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="all" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move All Contracts up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('all',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move All Contracts down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('all',1)">↓</button></span></label>
+          <label class="appearance-option" data-summary-option="paid"><span>Paid in Full</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="paid" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Paid in Full up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('paid',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Paid in Full down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('paid',1)">↓</button></span></label>
+          <label class="appearance-option" data-summary-option="default"><span>Default Contracts</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="default" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Default Contracts up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('default',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Default Contracts down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('default',1)">↓</button></span></label>
+          <label class="appearance-option" data-summary-option="defaultLoss"><span>Default Loss</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="defaultLoss" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Default Loss up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('defaultLoss',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Default Loss down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('defaultLoss',1)">↓</button></span></label>
         </div>
       </div>
       <div class="appearance-group">
@@ -2159,7 +2162,7 @@ let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
 let cloudLoadInFlight=false;
-const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{},dashboardSections:{},activeContractColumns:{},completedContractColumns:{}}};
+const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{},activeContractColumns:{},completedContractColumns:{}}};
 let data={contracts:[],checks:[]};
 let cloudDataReady=false;
 function localKey(userId){return "contractChecksIOS:"+userId}
@@ -2254,6 +2257,44 @@ function dashboardAppearancePreferences(){
  if(!data.preferences.dashboardCards||typeof data.preferences.dashboardCards!=="object")data.preferences.dashboardCards={};
  return data.preferences.dashboardCards;
 }
+function dashboardCardOrderPreferences(){
+ if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
+ const saved=Array.isArray(data.preferences.dashboardCardOrder)?data.preferences.dashboardCardOrder:[];
+ const order=saved.filter((key,index)=>DASHBOARD_CARD_KEYS.includes(key)&&saved.indexOf(key)===index);
+ DASHBOARD_CARD_KEYS.forEach(key=>{if(!order.includes(key))order.push(key)});
+ data.preferences.dashboardCardOrder=order;
+ return order;
+}
+function applyDashboardCardOrder(){
+ const order=dashboardCardOrderPreferences(),grid=$("dashboardSummary"),options=$("summaryBoxOptions");
+ order.forEach((key,index)=>{
+  const card=grid?.querySelector(`[data-summary-key="${key}"]`);if(card)grid.appendChild(card);
+  const option=options?.querySelector(`[data-summary-option="${key}"]`);if(option){options.appendChild(option);const buttons=option.querySelectorAll(".summary-move-btn");if(buttons[0])buttons[0].disabled=index===0;if(buttons[1])buttons[1].disabled=index===order.length-1}
+ });
+}
+function moveSummaryCard(key,direction){
+ const order=dashboardCardOrderPreferences().slice(),from=order.indexOf(key),to=from+direction;
+ if(from<0||to<0||to>=order.length)return;
+ [order[from],order[to]]=[order[to],order[from]];data.preferences.dashboardCardOrder=order;
+ applyDashboardCardOrder();updateSummaryGridLayout();save();toast("Summary box order saved");
+}
+let draggedSummaryCardKey="";
+function reorderSummaryCard(draggedKey,targetKey,placeAfter){
+ if(!draggedKey||!targetKey||draggedKey===targetKey)return;
+ const order=dashboardCardOrderPreferences().slice(),from=order.indexOf(draggedKey);if(from<0)return;
+ order.splice(from,1);let to=order.indexOf(targetKey);if(to<0)return;if(placeAfter)to++;
+ order.splice(to,0,draggedKey);data.preferences.dashboardCardOrder=order;
+ applyDashboardCardOrder();updateSummaryGridLayout();save();toast("Summary box order saved");
+}
+function setupSummaryCardReordering(){
+ document.querySelectorAll("[data-summary-key]").forEach(card=>{
+  card.draggable=true;card.title="Drag to rearrange";
+  card.addEventListener("dragstart",event=>{draggedSummaryCardKey=card.dataset.summaryKey;card.classList.add("summary-dragging");event.dataTransfer.effectAllowed="move";event.dataTransfer.setData("text/plain",draggedSummaryCardKey)});
+  card.addEventListener("dragend",()=>{draggedSummaryCardKey="";card.classList.remove("summary-dragging")});
+  card.addEventListener("dragover",event=>{event.preventDefault();event.dataTransfer.dropEffect="move"});
+  card.addEventListener("drop",event=>{event.preventDefault();const key=event.dataTransfer.getData("text/plain")||draggedSummaryCardKey,rect=card.getBoundingClientRect(),after=event.clientX>rect.left+rect.width/2;reorderSummaryCard(key,card.dataset.summaryKey,after)});
+ });
+}
 function dashboardSectionPreferences(){
  if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
  if(!data.preferences.dashboardSections||typeof data.preferences.dashboardSections!=="object")data.preferences.dashboardSections={};
@@ -2291,10 +2332,27 @@ function applyDashboardSections(){
  const summary=$("dashboardSummary");if(summary)summary.classList.toggle("hidden",preferences.summary===false);
  Object.entries(DASHBOARD_SECTION_IDS).forEach(([key,id])=>{const panel=$(id);if(panel)panel.classList.toggle("hidden",preferences[key]===false)});
 }
+function updateSummaryGridLayout(){
+ const grid=$("dashboardSummary");if(!grid)return;
+ const visibleCards=[...grid.querySelectorAll("[data-summary-key]")].filter(card=>!card.classList.contains("appearance-hidden"));
+ visibleCards.forEach(card=>card.style.gridColumn="");
+ const count=visibleCards.length;if(!count){grid.style.gridTemplateColumns="";return}
+ const contentWidth=document.querySelector(".content")?.clientWidth||window.innerWidth||0;
+ let columns;
+ if(contentWidth<700)columns=Math.min(2,count);
+ else if(count===5)columns=contentWidth>=1000?5:3;
+ else if(count===6)columns=3;
+ else if(count>=7)columns=Math.min(4,count);
+ else columns=Math.min(4,count);
+ grid.style.gridTemplateColumns=`repeat(${Math.max(1,columns)},minmax(0,1fr))`;
+ if(count>1&&count%columns===1)visibleCards[visibleCards.length-1].style.gridColumn="1 / -1";
+}
 function applyDashboardAppearance(){
  const preferences=dashboardAppearancePreferences();
  document.querySelectorAll("[data-summary-key]").forEach(card=>card.classList.toggle("appearance-hidden",preferences[card.dataset.summaryKey]===false));
  document.querySelectorAll("[data-summary-toggle]").forEach(input=>{input.checked=preferences[input.dataset.summaryToggle]!==false});
+ applyDashboardCardOrder();
+ updateSummaryGridLayout();
  if(dashboardIsSelected())applyDashboardSections();
 }
 function updateDashboardAppearance(input){
@@ -2341,7 +2399,7 @@ function setupNavScrolling(){
       const dashboardSummary=$("dashboardSummary");
       if(dashboardSummary) dashboardSummary.classList.toggle("hidden",id!=="#dashboard");
       if(id==="#dashboard"){
-        document.querySelectorAll(".panel").forEach(p=>{ if(["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","contactPanel"].includes(p.id)) p.classList.remove("hidden"); });
+        document.querySelectorAll(".panel").forEach(p=>{ if(["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].includes(p.id)) p.classList.remove("hidden"); });
         document.querySelector(".content")?.scrollTo({top:0,behavior:"smooth"});
       }else{
         target.classList.remove("hidden");
@@ -2401,6 +2459,7 @@ async function refreshWhenAppReturns(){
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshWhenAppReturns()});
 window.addEventListener("pageshow",event=>{if(event.persisted)refreshWhenAppReturns()});
 window.addEventListener("focus",refreshWhenAppReturns);
+window.addEventListener("resize",updateSummaryGridLayout);
 function setUserStatus(user){const el=$("userStatus");if(el)el.innerHTML=user?"Signed in as "+escape(user.email||"user")+(isAdmin?" <span class=\"admin-badge\">MASTER ADMIN</span>":""):"Not signed in"}
 function setAuthError(s){const el=$("authError");el.textContent=s||"";el.style.display=s?"block":"none"}
 function showApp(){
@@ -2410,7 +2469,7 @@ function showApp(){
   // Always start on Dashboard after opening/signing in, never the last visited panel.
   try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
   document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
-  ["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","contactPanel"].forEach(id=>{
+  ["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].forEach(id=>{
     const p=$(id); if(p) p.classList.remove("hidden");
   });
   const dashboardSummary=$("dashboardSummary"); if(dashboardSummary) dashboardSummary.classList.remove("hidden");
@@ -3371,6 +3430,7 @@ $("adminLockBtn").addEventListener("click",lockAdminDashboard);
 $("adminChangePinBtn").addEventListener("click",changeAdminPin);
 ["adminPinInput","adminPinConfirm"].forEach(id=>{$(id).addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,4)});$(id).addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminPin()})});
 window.addEventListener("focus",()=>{if(currentUser&&!isAdmin)enforceAccountAccess()});
+setupSummaryCardReordering();
 setupNavScrolling();
 updateHistorySearchInput();
 loadPasswordResetCooldown();
