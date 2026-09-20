@@ -20,6 +20,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 .field{flex:1;min-width:130px}.field label{display:block;font-size:12px;font-weight:700;color:#52657d;margin:0 0 6px}.row{display:flex;gap:10px;flex-wrap:wrap}input,select,textarea{width:100%;border:1px solid #cbd9e8;background:#fff;border-radius:7px;padding:11px 12px;color:#17365f}.check{width:20px;height:20px}.choices{display:flex;gap:8px;flex-wrap:wrap}.choice{width:auto;background:#eef5ff;color:#17365f;border:1px solid #cbdced;border-radius:7px;padding:9px 12px}.choice.selected{background:#147be8;color:#fff;border-color:#147be8}.contract{padding:10px 0;border-top:1px solid #e8eef5;display:flex;justify-content:space-between;gap:12px;align-items:center}.contract-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#17365f;color:#fff;padding:11px 16px;border-radius:9px;display:none;z-index:30}.warning{color:#b00020;font-weight:800}.totals-list{display:grid;gap:10px}.total-line{display:flex;justify-content:space-between;gap:15px;font-size:13px}.total-line strong{font-weight:750}
 .contract-calc-summary{flex:0 0 100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:4px;padding:12px;background:#f7faff;border:1px solid #dce8f5;border-radius:8px}.contract-calc-summary div{font-size:12px;color:#52657d}.contract-calc-summary strong{display:block;margin-top:4px;font-size:15px;color:#17365f}.contract-calc-summary .fee-value strong{color:#d92d20}@media(max-width:700px){.contract-calc-summary{grid-template-columns:1fr 1fr}}
 .manual-box{background:#f7faff;border:1px solid #dce8f5;border-radius:8px;padding:12px}.manual-box .row{align-items:end}.side-card h2{font-size:20px}.check-form-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.check-form-actions button{width:100%;font-size:16px;padding:13px}.completed-count{font-size:13px;color:#718096;margin:-4px 0 12px}.app-subline{display:none}
+.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.settings-card{border:1px solid #dce8f5;border-radius:10px;background:#f8fbff;padding:16px}.settings-card h3{margin:0 0 8px;font-size:16px}.settings-card p{margin:0;color:#52657d;overflow-wrap:anywhere}.settings-status{display:inline-flex;align-items:center;gap:7px;color:#07883d!important;font-weight:750}.settings-status::before{content:"✓";display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#dcf7e7}.settings-actions{margin-top:16px;display:flex;gap:10px}.settings-actions button{min-width:180px}.settings-appearance{grid-column:1/-1}.appearance-group+.appearance-group{margin-top:22px;padding-top:20px;border-top:1px solid #dce8f5}.appearance-group h4{margin:0 0 5px;font-size:15px;color:#17365f}.appearance-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.appearance-option{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #dce8f5;background:#fff;border-radius:9px;padding:12px 14px;color:#17365f;font-weight:700}.appearance-option input{width:22px;height:22px;margin:0;accent-color:#147be8}.summary-card.appearance-hidden{display:none!important}@media(max-width:600px){.settings-grid,.appearance-options{grid-template-columns:1fr}.settings-actions{flex-direction:column}.settings-actions button{width:100%}}
 @media(max-width:950px){.sidebar{width:190px;flex-basis:190px}.summary-grid{grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr}}
 
 .admin-summary-wrap{margin-top:18px}.admin-summary-title{font-size:18px;font-weight:800;color:#17365f;margin:0 0 10px}.admin-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 20px}.admin-summary-grid .summary-card{min-height:92px}.admin-summary-grid .summary-label{font-size:12px;font-weight:700;margin-bottom:9px}.admin-summary-grid .summary-value{font-size:19px;font-weight:800;color:#12345a}.admin-summary-grid .summary-card.received .summary-value{color:#008a45}.admin-summary-grid .summary-card.profit .summary-value{color:#12345a}.admin-summary-grid .summary-card.profit.positive .summary-value{color:#008a45}.admin-summary-grid .summary-card.profit.negative .summary-value{color:#d32f2f}.admin-summary-grid .summary-card.active .summary-value{color:#12345a}.admin-summary-grid .summary-card.default .summary-value,.admin-summary-grid .summary-card.default-loss .summary-value{color:#d32f2f}
@@ -1954,21 +1955,22 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <a class="nav-item" href="#completedPanel"><span class="nav-icon">✓</span><span>Completed Contracts</span></a>
 <a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Check History</span></a>
 <a class="nav-item" href="#reportsPanel"><span class="nav-icon">▥</span><span>Reports</span></a>
+<a class="nav-item" href="#settingsPanel"><span class="nav-icon">⚙</span><span>Settings</span></a>
 <a class="nav-item" href="#contactPanel"><span class="nav-icon">✉</span><span>Contact Us</span></a>
 <div id="contactNewMessage" class="contact-new-message" style="display:none" aria-hidden="true">NEW MESSAGE</div>
 </aside>
 <main class="content" id="dashboard"><div class="content-inner">
 <div class="summary-grid" id="dashboardSummary">
-<div class="summary-card"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Invested</div><div class="summary-value" id="invested">$0.00</div></div></div></div>
-<div class="summary-card received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Money Received</div><div class="summary-value" id="received">$0.00</div></div></div></div>
-<div class="summary-card profit"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Overall Profit</div><div class="summary-value" id="profit">$0.00</div></div></div></div>
-<div class="summary-card active" role="button" tabindex="0" style="cursor:pointer" onclick="document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()}"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Active Contracts</div><div class="summary-value" id="openContracts">0</div></div></div></div>
-<div class="summary-card"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">All Contracts</div><div class="summary-value" id="allContracts">0</div></div></div></div>
-<div class="summary-card"><div class="summary-top"><div class="summary-icon">✓</div><div><div class="summary-label">Paid in Full</div><div class="summary-value" id="paidInFull">0</div></div></div></div>
-<div class="summary-card default"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Default Contracts</div><div class="summary-value" id="defaultContracts">0</div></div></div></div>
-<div class="summary-card default-loss"><div class="summary-top"><div class="summary-icon">−</div><div><div class="summary-label">Default Loss</div><div class="summary-value" id="defaultLoss">$0.00</div></div></div></div>
+<div class="summary-card" data-summary-key="invested"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Invested</div><div class="summary-value" id="invested">$0.00</div></div></div></div>
+<div class="summary-card received" data-summary-key="received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Money Received</div><div class="summary-value" id="received">$0.00</div></div></div></div>
+<div class="summary-card profit" data-summary-key="profit"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Overall Profit</div><div class="summary-value" id="profit">$0.00</div></div></div></div>
+<div class="summary-card active" data-summary-key="active" role="button" tabindex="0" style="cursor:pointer" onclick="document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()}"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Active Contracts</div><div class="summary-value" id="openContracts">0</div></div></div></div>
+<div class="summary-card" data-summary-key="all"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">All Contracts</div><div class="summary-value" id="allContracts">0</div></div></div></div>
+<div class="summary-card" data-summary-key="paid"><div class="summary-top"><div class="summary-icon">✓</div><div><div class="summary-label">Paid in Full</div><div class="summary-value" id="paidInFull">0</div></div></div></div>
+<div class="summary-card default" data-summary-key="default"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Default Contracts</div><div class="summary-value" id="defaultContracts">0</div></div></div></div>
+<div class="summary-card default-loss" data-summary-key="defaultLoss"><div class="summary-top"><div class="summary-icon">−</div><div><div class="summary-label">Default Loss</div><div class="summary-value" id="defaultLoss">$0.00</div></div></div></div>
 </div>
-<section class="panel" id="checkPanel"><h2>Add Payment / Check</h2><div class="row"><div class="field"><label>Check Amount</label><input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="$0.00" oninput="updateBreakdown()" onchange="checkForDuplicateCheck(true)"></div><div class="field"><label>Date Issued</label><input id="date" type="date" onchange="checkForDuplicateCheck(true)"></div><div class="field"><label>Date Received</label><input id="dateReceived" type="text" placeholder="Optional" onfocus="activateOptionalDate(this)" onblur="resetOptionalDate(this)"></div><div class="field"><label>Check #</label><input id="checkno" inputmode="numeric" placeholder="Optional" onchange="checkForDuplicateCheck(true)"></div></div><h3>Select contracts for this check</h3><div class="choices" id="contractChoices"></div><h3>Manual Payment Breakdown</h3><div class="manual-box" id="manualBreakdown"></div><p class="muted" id="splitPreview">Select a contract above to open it here, then enter the amount for that contract.</p><div class="check-form-actions"><button class="secondary" type="button" onclick="clearCheckEntry()">Cancel / Clear</button><button class="primary-btn save-check" type="button" onclick="addCheck()">Save Check</button></div></section>
+<section class="panel" id="checkPanel"><h2>Add Payment / Check</h2><div class="row"><div class="field"><label>Check Amount</label><input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="$0.00" oninput="updateBreakdown()" onchange="checkForDuplicateCheck(true)"></div><div class="field"><label>Date Issued</label><input id="date" type="date" data-auto-today="1" onchange="this.dataset.autoToday='0';checkForDuplicateCheck(true)"></div><div class="field"><label>Date Received</label><input id="dateReceived" type="text" placeholder="Optional" onfocus="activateOptionalDate(this)" onblur="resetOptionalDate(this)"></div><div class="field"><label>Check #</label><input id="checkno" inputmode="numeric" placeholder="Optional" onchange="checkForDuplicateCheck(true)"></div></div><h3>Select contracts for this check</h3><div class="choices" id="contractChoices"></div><h3>Manual Payment Breakdown</h3><div class="manual-box" id="manualBreakdown"></div><p class="muted" id="splitPreview">Select a contract above to open it here, then enter the amount for that contract.</p><div class="check-form-actions"><button class="secondary" type="button" onclick="clearCheckEntry()">Cancel / Clear</button><button class="primary-btn save-check" type="button" onclick="addCheck()">Save Check</button></div></section>
 <section class="panel" id="newContractPanel"><h2>Add Contract</h2><div class="row contract-entry-grid"><div class="field contract-name-field"><label>Contract name</label><input id="cname" placeholder="Contract #1"></div><div class="field contract-invest-field"><label>Participant Funded Amount</label><input id="cinvest" type="number" inputmode="decimal" min="0" step="0.01" placeholder="5,300"></div><div class="field contract-return-field"><label>Total Return</label><input id="ctotalreturn" type="number" inputmode="decimal" min="0" step="0.01" placeholder="6,900" oninput="updateContractPaymentCalculation()"></div><div class="field contract-fee-field"><label>Admin Fee (%)</label><input id="cadminfee" type="number" inputmode="decimal" min="0" max="100" step="0.01" value="2" oninput="updateContractPaymentCalculation()"></div><div class="field contract-payments-field"><label>Expected payments</label><input id="cpayments" type="number" inputmode="numeric" min="1" step="1" value="34" oninput="updateContractPaymentCalculation()"></div><div class="field contract-amount-field"><label>Amount per Check</label><input id="cpreset" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Calculated automatically" oninput="updateContractPaymentOverride()"></div><div class="field contract-date-field"><label>Contract date</label><input id="cdate" type="date"></div><div class="field contract-check-field"><label>Check #</label><input id="ccheckno" inputmode="numeric" placeholder="Optional"></div><div id="contractCalcSummary" class="contract-calc-summary"><div><span>Total Return</span><strong id="contractCalcTotal">$0.00</strong></div><div class="fee-value"><span>Admin Fee</span><strong id="contractCalcFee">$0.00</strong></div><div><span>Net Return</span><strong id="contractCalcNet">$0.00</strong></div><div><span>Amount per Check</span><strong id="contractCalcPayment">$0.00</strong></div></div></div><button class="primary-btn" style="margin-top:14px" onclick="addContract()">＋ Add Contract</button></section>
 <section class="panel" id="contractsPanel" style="width:100%;max-width:100%;"><div class="section-head"><h2>Active Contracts</h2></div><div class="scroll"><table><thead><tr><th>Name</th><th>Day Opened</th><th>Invested</th><th>Paid</th><th>Break-Even</th><th>Amount / Check</th><th>Expected Payments</th><th>Payments Left</th><th>Status</th><th>Actions</th></tr></thead><tbody id="contracts"></tbody></table></div></section>
 <section class="panel side-card" id="completedPanel"><h2>Completed Contracts</h2><div class="completed-count" id="completedCount">0 contracts completed</div><button class="primary-btn" style="width:100%" onclick="document.getElementById('completedPanel').scrollIntoView({behavior:'smooth'})">View Completed</button><div class="scroll" style="margin-top:12px"><table><thead><tr><th>Contract</th><th>Day Opened</th><th>Day Closed</th><th>Invested</th><th>Received</th><th>Remaining Payment</th><th>Gain / Loss</th><th>Status</th><th>Action</th></tr></thead><tbody id="completedContracts"></tbody></table></div></section>
@@ -1999,6 +2001,74 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
       <section class="report-box"><div class="report-box-title"><span>⇩</span><div><h3>Export</h3><p class="muted">Download your reports and data.</p></div></div><div class="export-grid"><button class="primary-btn" type="button" onclick="exportFullReport()">Export Full Report</button><button class="primary-btn" type="button" onclick="exportCSV()">Export Payments CSV</button><button class="secondary" type="button" onclick="exportContractsCSV()">Export Contracts CSV</button><button class="secondary" type="button" onclick="window.print()">Print Report / PDF</button></div></section>
     </div>
   </div>
+</section>
+
+<section class="panel hidden" id="settingsPanel">
+  <div class="section-head"><div><h2>Settings</h2><p class="muted" style="margin:-8px 0 0">Account and application preferences.</p></div></div>
+  <div class="settings-grid">
+    <div class="settings-card"><h3>Signed-in Account</h3><p id="settingsAccountEmail">Not signed in</p></div>
+    <div class="settings-card"><h3>Automatic Data Refresh</h3><p class="settings-status">Enabled</p><p style="margin-top:8px">FundLedger checks for updated data whenever you return to the app.</p></div>
+    <div class="settings-card"><h3>Date Issued</h3><p class="settings-status">Local date enabled</p><p style="margin-top:8px">New payments use the current date from this device.</p></div>
+    <div class="settings-card"><h3>Data Storage</h3><p>Your contracts and payments are securely associated with your signed-in account.</p></div>
+    <div class="settings-card settings-appearance">
+      <h3>Appearance</h3>
+      <div class="appearance-group">
+        <h4>Dashboard Sections</h4><p>Select which sections appear when you open the Dashboard. Hidden sections can still be opened from the sidebar.</p>
+        <div class="appearance-options">
+          <label class="appearance-option"><span>Summary Boxes</span><input type="checkbox" data-section-toggle="summary" onchange="updateDashboardSectionAppearance(this)"></label>
+          <label class="appearance-option"><span>Add Payment / Check</span><input type="checkbox" data-section-toggle="payments" onchange="updateDashboardSectionAppearance(this)"></label>
+          <label class="appearance-option"><span>Add Contract</span><input type="checkbox" data-section-toggle="addContract" onchange="updateDashboardSectionAppearance(this)"></label>
+          <label class="appearance-option"><span>Active Contracts</span><input type="checkbox" data-section-toggle="activeContracts" onchange="updateDashboardSectionAppearance(this)"></label>
+          <label class="appearance-option"><span>Completed Contracts</span><input type="checkbox" data-section-toggle="completedContracts" onchange="updateDashboardSectionAppearance(this)"></label>
+          <label class="appearance-option"><span>Check History</span><input type="checkbox" data-section-toggle="checkHistory" onchange="updateDashboardSectionAppearance(this)"></label>
+          <label class="appearance-option"><span>Reports</span><input type="checkbox" data-section-toggle="reports" onchange="updateDashboardSectionAppearance(this)"></label>
+        </div>
+      </div>
+      <div class="appearance-group">
+        <h4>Summary Boxes</h4><p>Select the individual summary boxes shown when the Summary Boxes section is enabled.</p>
+        <div class="appearance-options">
+          <label class="appearance-option"><span>Total Invested</span><input type="checkbox" data-summary-toggle="invested" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option"><span>Money Received</span><input type="checkbox" data-summary-toggle="received" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option"><span>Overall Profit</span><input type="checkbox" data-summary-toggle="profit" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option"><span>Active Contracts</span><input type="checkbox" data-summary-toggle="active" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option"><span>All Contracts</span><input type="checkbox" data-summary-toggle="all" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option"><span>Paid in Full</span><input type="checkbox" data-summary-toggle="paid" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option"><span>Default Contracts</span><input type="checkbox" data-summary-toggle="default" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option"><span>Default Loss</span><input type="checkbox" data-summary-toggle="defaultLoss" onchange="updateDashboardAppearance(this)"></label>
+        </div>
+      </div>
+      <div class="appearance-group">
+        <h4>Active Contracts Columns</h4><p>Select which information columns appear in the Active Contracts table.</p>
+        <div class="appearance-options">
+          <label class="appearance-option"><span>Name</span><input type="checkbox" data-active-column-toggle="name" onchange="updateActiveContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Day Opened</span><input type="checkbox" data-active-column-toggle="dayOpened" onchange="updateActiveContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Invested</span><input type="checkbox" data-active-column-toggle="invested" onchange="updateActiveContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Paid</span><input type="checkbox" data-active-column-toggle="paid" onchange="updateActiveContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Break-Even</span><input type="checkbox" data-active-column-toggle="breakEven" onchange="updateActiveContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Amount / Check</span><input type="checkbox" data-active-column-toggle="amountPerCheck" onchange="updateActiveContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Expected Payments</span><input type="checkbox" data-active-column-toggle="expectedPayments" onchange="updateActiveContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Payments Left</span><input type="checkbox" data-active-column-toggle="paymentsLeft" onchange="updateActiveContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Status</span><input type="checkbox" data-active-column-toggle="status" onchange="updateActiveContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Actions</span><input type="checkbox" data-active-column-toggle="actions" onchange="updateActiveContractColumnAppearance(this)"></label>
+        </div>
+      </div>
+      <div class="appearance-group">
+        <h4>Completed Contracts Columns</h4><p>Select which information columns appear in the Completed Contracts table.</p>
+        <div class="appearance-options">
+          <label class="appearance-option"><span>Contract</span><input type="checkbox" data-completed-column-toggle="contract" onchange="updateCompletedContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Day Opened</span><input type="checkbox" data-completed-column-toggle="dayOpened" onchange="updateCompletedContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Day Closed</span><input type="checkbox" data-completed-column-toggle="dayClosed" onchange="updateCompletedContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Invested</span><input type="checkbox" data-completed-column-toggle="invested" onchange="updateCompletedContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Received</span><input type="checkbox" data-completed-column-toggle="received" onchange="updateCompletedContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Remaining Payment</span><input type="checkbox" data-completed-column-toggle="remainingPayment" onchange="updateCompletedContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Gain / Loss</span><input type="checkbox" data-completed-column-toggle="gainLoss" onchange="updateCompletedContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Status</span><input type="checkbox" data-completed-column-toggle="status" onchange="updateCompletedContractColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Action</span><input type="checkbox" data-completed-column-toggle="action" onchange="updateCompletedContractColumnAppearance(this)"></label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="settings-actions"><button class="primary-btn" type="button" onclick="refreshCloudData()">↻ Refresh Data Now</button></div>
 </section>
 
 <section class="panel hidden" id="contactPanel">
@@ -2085,7 +2155,7 @@ let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
 let cloudLoadInFlight=false;
-const EMPTY_DATA={contracts:[],checks:[]};
+const EMPTY_DATA={contracts:[],checks:[],preferences:{dashboardCards:{},dashboardSections:{},activeContractColumns:{},completedContractColumns:{}}};
 let data={contracts:[],checks:[]};
 let cloudDataReady=false;
 function localKey(userId){return "contractChecksIOS:"+userId}
@@ -2160,6 +2230,82 @@ function changeAdminPin(){
  if(!confirm("Change the Admin Dashboard PIN? You will create a new four-digit PIN now."))return;
  localStorage.removeItem(adminPinStorageKey());adminPinUnlocked=false;updateAdminContactVisibility();
 }
+const DASHBOARD_CARD_KEYS=["invested","received","profit","active","all","paid","default","defaultLoss"];
+const DASHBOARD_SECTION_IDS={payments:"checkPanel",addContract:"newContractPanel",activeContracts:"contractsPanel",completedContracts:"completedPanel",checkHistory:"historyPanel",reports:"reportsPanel"};
+const DASHBOARD_SECTION_KEYS=["summary",...Object.keys(DASHBOARD_SECTION_IDS)];
+const ACTIVE_CONTRACT_COLUMN_KEYS=["name","dayOpened","invested","paid","breakEven","amountPerCheck","expectedPayments","paymentsLeft","status","actions"];
+const COMPLETED_CONTRACT_COLUMN_KEYS=["contract","dayOpened","dayClosed","invested","received","remainingPayment","gainLoss","status","action"];
+function dashboardAppearancePreferences(){
+ if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
+ if(!data.preferences.dashboardCards||typeof data.preferences.dashboardCards!=="object")data.preferences.dashboardCards={};
+ return data.preferences.dashboardCards;
+}
+function dashboardSectionPreferences(){
+ if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
+ if(!data.preferences.dashboardSections||typeof data.preferences.dashboardSections!=="object")data.preferences.dashboardSections={};
+ return data.preferences.dashboardSections;
+}
+function activeContractColumnPreferences(){
+ if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
+ if(!data.preferences.activeContractColumns||typeof data.preferences.activeContractColumns!=="object")data.preferences.activeContractColumns={};
+ return data.preferences.activeContractColumns;
+}
+function completedContractColumnPreferences(){
+ if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
+ if(!data.preferences.completedContractColumns||typeof data.preferences.completedContractColumns!=="object")data.preferences.completedContractColumns={};
+ return data.preferences.completedContractColumns;
+}
+function applyActiveContractColumns(){
+ const preferences=activeContractColumnPreferences(),table=$("contractsPanel")?.querySelector("table");
+ ACTIVE_CONTRACT_COLUMN_KEYS.forEach((key,index)=>{
+  if(table)table.querySelectorAll(`tr > *:nth-child(${index+1})`).forEach(cell=>cell.classList.toggle("hidden",preferences[key]===false));
+ });
+ document.querySelectorAll("[data-active-column-toggle]").forEach(input=>{input.checked=preferences[input.dataset.activeColumnToggle]!==false});
+}
+function applyCompletedContractColumns(){
+ const preferences=completedContractColumnPreferences(),table=$("completedPanel")?.querySelector("table");
+ COMPLETED_CONTRACT_COLUMN_KEYS.forEach((key,index)=>{
+  if(table)table.querySelectorAll(`tr > *:nth-child(${index+1})`).forEach(cell=>cell.classList.toggle("hidden",preferences[key]===false));
+ });
+ document.querySelectorAll("[data-completed-column-toggle]").forEach(input=>{input.checked=preferences[input.dataset.completedColumnToggle]!==false});
+}
+function dashboardIsSelected(){return document.querySelector('.nav-item.active')?.getAttribute("href")==="#dashboard"}
+function applyDashboardSections(){
+ const preferences=dashboardSectionPreferences();
+ document.querySelectorAll("[data-section-toggle]").forEach(input=>{input.checked=preferences[input.dataset.sectionToggle]!==false});
+ if(!dashboardIsSelected())return;
+ const summary=$("dashboardSummary");if(summary)summary.classList.toggle("hidden",preferences.summary===false);
+ Object.entries(DASHBOARD_SECTION_IDS).forEach(([key,id])=>{const panel=$(id);if(panel)panel.classList.toggle("hidden",preferences[key]===false)});
+}
+function applyDashboardAppearance(){
+ const preferences=dashboardAppearancePreferences();
+ document.querySelectorAll("[data-summary-key]").forEach(card=>card.classList.toggle("appearance-hidden",preferences[card.dataset.summaryKey]===false));
+ document.querySelectorAll("[data-summary-toggle]").forEach(input=>{input.checked=preferences[input.dataset.summaryToggle]!==false});
+ if(dashboardIsSelected())applyDashboardSections();
+}
+function updateDashboardAppearance(input){
+ const key=input?.dataset?.summaryToggle;if(!DASHBOARD_CARD_KEYS.includes(key))return;
+ dashboardAppearancePreferences()[key]=!!input.checked;applyDashboardAppearance();save();
+}
+function updateDashboardSectionAppearance(input){
+ const key=input?.dataset?.sectionToggle;if(!DASHBOARD_SECTION_KEYS.includes(key))return;
+ dashboardSectionPreferences()[key]=!!input.checked;applyDashboardSections();save();
+}
+function updateActiveContractColumnAppearance(input){
+ const key=input?.dataset?.activeColumnToggle;if(!ACTIVE_CONTRACT_COLUMN_KEYS.includes(key))return;
+ activeContractColumnPreferences()[key]=!!input.checked;applyActiveContractColumns();save();
+}
+function updateCompletedContractColumnAppearance(input){
+ const key=input?.dataset?.completedColumnToggle;if(!COMPLETED_CONTRACT_COLUMN_KEYS.includes(key))return;
+ completedContractColumnPreferences()[key]=!!input.checked;applyCompletedContractColumns();save();
+}
+function updateSettingsPanel(){
+ const email=$("settingsAccountEmail");if(email)email.textContent=currentUser?.email||"Not signed in";
+ applyDashboardAppearance();
+ applyDashboardSections();
+ applyActiveContractColumns();
+ applyCompletedContractColumns();
+}
 function setupNavScrolling(){
   document.querySelectorAll(".nav-item").forEach(item=>{
     item.addEventListener("click",e=>{
@@ -2180,9 +2326,11 @@ function setupNavScrolling(){
       }
       document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
       item.classList.add("active");
+      if(id==="#dashboard")applyDashboardSections();
       if(id!=="#contactPanel")adminPinUnlocked=false;
       updateAdminContactVisibility();
       if(id==="#reportsPanel") renderReports();
+      if(id==="#settingsPanel") updateSettingsPanel();
       if(id==="#contactPanel") loadMyContactMessages();
     });
   });
@@ -2220,6 +2368,7 @@ async function refreshCloudData(options={}){
  }
 }
 async function refreshWhenAppReturns(){
+ setDateIssuedToToday(false);
  if(document.hidden||!currentUser||!supabaseClient||!cloudDataReady||cloudLoadInFlight||foregroundRefreshInFlight)return;
  const now=Date.now();if(now-lastForegroundRefreshAt<3000)return;
  lastForegroundRefreshAt=now;foregroundRefreshInFlight=true;
@@ -2802,7 +2951,7 @@ async function initCloud(){
   sessionData={session:null};
  }
  currentUser=sessionData.session?.user||null;
- if(currentUser){const accessAllowed=await enforceAccountAccess();if(accessAllowed){if($("contactEmail"))$("contactEmail").value=currentUser.email||"";cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showApp();setUserStatus(currentUser);setSyncStatus("Loading cloud data…");await loadCloudData(currentUser?.id);await initAdmin();$("date").value=new Date().toISOString().slice(0,10);render()}}else{cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showAuth();render()}
+ if(currentUser){const accessAllowed=await enforceAccountAccess();if(accessAllowed){if($("contactEmail"))$("contactEmail").value=currentUser.email||"";cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showApp();setUserStatus(currentUser);setSyncStatus("Loading cloud data…");await loadCloudData(currentUser?.id);await initAdmin();setDateIssuedToToday(true);render()}}else{cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showAuth();render()}
  supabaseClient.auth.onAuthStateChange(async (_event,session)=>{
    if(_event==="PASSWORD_RECOVERY"){
     showPasswordRecovery();
@@ -2818,7 +2967,7 @@ async function initCloud(){
     showApp();
     setUserStatus(currentUser);
     setSyncStatus("Loading cloud data…");
-    loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;await initAdmin();$("date").value=new Date().toISOString().slice(0,10);render()});
+    loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;await initAdmin();setDateIssuedToToday(true);render()});
    }else{currentUser=null;isAdmin=false;adminPinUnlocked=false;currentUserRestrictions={login_banned:false,messages_blocked:false};cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));setUserStatus(null);showAuth();render()}
  });
 }
@@ -2893,9 +3042,14 @@ function activateOptionalDate(input){
  if(!input)return;input.type="date";try{if(typeof input.showPicker==="function")input.showPicker()}catch(error){}
 }
 function resetOptionalDate(input){if(input&&!input.value)input.type="text"}
+function setDateIssuedToToday(force=false){
+ const field=$("date");if(!field)return;
+ if(force||!field.value||field.dataset.autoToday==="1"){field.value=localDateString(new Date());field.dataset.autoToday="1"}
+}
 function clearCheckEntry(showMessage=true){
  const fields=["amount","date","dateReceived","checkno"];
  fields.forEach(id=>{const field=$(id);if(field)field.value=""});
+ setDateIssuedToToday(true);
  const optionalDate=$("dateReceived");if(optionalDate)optionalDate.type="text";
  selectedChoiceIds=[];breakdownRows=[];removedBreakdownContracts=new Set();lastDuplicateCheckWarning="";
  renderContractChoices();renderManualBreakdown();
@@ -2913,7 +3067,7 @@ function addCheck(){
  if(new Set(allocations.map(x=>x.contract)).size!==allocations.length){toast("Choose different contracts for each allocation");return}
  let allocated=allocations.reduce((sum,x)=>sum+x.amount,0);
  if(Math.abs(allocated-amount)>.009){toast("Contract allocations must equal the check amount");return}
- let now=Date.now();allocations.forEach((x,index)=>{data.checks.push({id:now+index,contract:x.contract,date,dateReceived:dateReceived||"",amount:x.amount,checkno,verified:false});let c=data.contracts.find(c=>c.name===x.contract);if(c&&Number.isFinite(parseInt(c.paymentsOverride,10)))c.paymentsOverride=Math.max(0,parseInt(c.paymentsOverride,10))+1;});save();selectedChoiceIds=[];breakdownRows=[];removedBreakdownContracts=new Set();lastDuplicateCheckWarning="";$("amount").value="";$("dateReceived").value="";$("dateReceived").type="text";$("checkno").value="";render();toast("Check recorded");
+ let now=Date.now();allocations.forEach((x,index)=>{data.checks.push({id:now+index,contract:x.contract,date,dateReceived:dateReceived||"",amount:x.amount,checkno,verified:false});let c=data.contracts.find(c=>c.name===x.contract);if(c&&Number.isFinite(parseInt(c.paymentsOverride,10)))c.paymentsOverride=Math.max(0,parseInt(c.paymentsOverride,10))+1;});save();selectedChoiceIds=[];breakdownRows=[];removedBreakdownContracts=new Set();lastDuplicateCheckWarning="";$("amount").value="";$("dateReceived").value="";$("dateReceived").type="text";$("checkno").value="";setDateIssuedToToday(true);render();toast("Check recorded");
 }
 function updateBreakdown(){
  let total=parseFloat($("amount").value)||0,assigned=breakdownRows.reduce((sum,x)=>sum+(parseFloat(x.amount)||0),0),remaining=total-assigned;
@@ -3001,7 +3155,7 @@ function closeContract(id){
   : `Close ${contract.name} as paid in full? Its history will be kept, but it will no longer appear in new payment selections.`;
  if(!confirm(message))return;
  contract.closed=true;
- contract.closedDate=new Date().toISOString().slice(0,10);
+ contract.closedDate=localDateString(new Date());
  contract.defaulted=isDefault;
  selectedChoiceIds=selectedChoiceIds.filter(x=>x!==id);
  breakdownRows=breakdownRows.filter(r=>r.contract!==contract.name);
@@ -3139,6 +3293,9 @@ function render(){
  renderCheckHistory();
  renderContractChoices(); renderCompletedContracts(); renderReports();
  updateBreakdown();
+ applyDashboardAppearance();
+ applyActiveContractColumns();
+ applyCompletedContractColumns();
 }
 function renderCompletedContracts(){
  let completed=data.contracts.filter(c=>c.closed); $("completedCount").textContent=`${completed.length} contract${completed.length===1?'':'s'} completed`;
@@ -3166,7 +3323,7 @@ function exportCSV(){
  let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="received-checks.csv";a.click();
 }
 function clearData(){if(confirm(currentUser?"Delete ALL contracts and checks from your cloud account? This cannot be undone.":"Delete all contracts and checks from this device?")){data={contracts:[],checks:[]};save();render();toast("Data deleted")}}
-$("date").value=new Date().toISOString().slice(0,10);
+setDateIssuedToToday(true);
 $("authForm").addEventListener("submit",e=>{e.preventDefault();signIn()});
 $("signUpBtn").addEventListener("click",()=>showSignUpForm());
 $("createAccountBtn").addEventListener("click",()=>signUp());
