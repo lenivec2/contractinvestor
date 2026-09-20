@@ -3105,13 +3105,15 @@ function checkForDuplicateCheck(showWarning=false,saving=false){
  const checkno=$("checkno")?.value||"",date=$("date")?.value||"",amount=parseFloat($("amount")?.value)||0,duplicate=findDuplicateCheck(checkno,date,amount,getAllocations());
  if(!duplicate){lastDuplicateCheckWarning="";return false}
  const warningKey=`${normalizedCheckNumber(checkno)}|${date}|${Math.round(amount*100)}|${duplicate.matchedBy}`;
- if(duplicate.level==="review"){
-  if(saving)return !confirm(`A check with the same Date Issued and amount is already recorded.\n\nDate Issued: ${date}\nAmount: ${money(amount)}\n\nCheck the check number and contract name carefully. Do you still want to save this check?`);
-  if(showWarning&&lastDuplicateCheckWarning!==warningKey)alert(`Possible duplicate check.\n\nA check with the same Date Issued and amount is already recorded. Please check the check number and contract name before saving.`);
-  lastDuplicateCheckWarning=warningKey;return false;
+ if(saving){
+  const saveDuplicate=confirm(`This appears to be a duplicate check.\n\nMatched by: ${duplicate.matchedBy}\nCheck #: ${checkno||duplicate.check.checkno||"Not entered"}\nDate Issued: ${date}\nContract: ${duplicate.check.contract||"Not selected"}\nAmount: ${money(amount)}\n\nAre you sure you want to save this check?`);
+  return !saveDuplicate;
  }
- if(showWarning&&lastDuplicateCheckWarning!==warningKey)alert(`This check was already added.\n\nMatched by: ${duplicate.matchedBy}\nCheck #: ${checkno||duplicate.check.checkno||"Not entered"}\nDate Issued: ${date}\nContract: ${duplicate.check.contract||"Not selected"}\nAmount: ${money(duplicate.check.amount)}\n\nThe duplicate check will not be saved.`);
- lastDuplicateCheckWarning=warningKey;return true;
+ if(showWarning&&lastDuplicateCheckWarning!==warningKey){
+  const message=duplicate.level==="review"?"A check with the same Date Issued and amount is already recorded. Please check the check number and contract name before saving.":`A possible duplicate was found using ${duplicate.matchedBy}. Review the check before saving.`;
+  alert(`Possible duplicate check.\n\n${message}`);
+ }
+ lastDuplicateCheckWarning=warningKey;return false;
 }
 function addCheck(){
  let date=$("date").value,dateReceived=$("dateReceived").value,amount=parseFloat($("amount").value),checkno=$("checkno").value.trim();
