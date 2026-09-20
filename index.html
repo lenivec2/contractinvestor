@@ -3430,6 +3430,8 @@ $("adminLockBtn").addEventListener("click",lockAdminDashboard);
 $("adminChangePinBtn").addEventListener("click",changeAdminPin);
 ["adminPinInput","adminPinConfirm"].forEach(id=>{$(id).addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,4)});$(id).addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminPin()})});
 window.addEventListener("focus",()=>{if(currentUser&&!isAdmin)enforceAccountAccess()});
+const remainingPaymentsLabel=$("cpayments")?.closest(".field")?.querySelector("label");
+if(remainingPaymentsLabel)remainingPaymentsLabel.textContent="# of Remaining Payments";
 setupSummaryCardReordering();
 setupNavScrolling();
 updateHistorySearchInput();
