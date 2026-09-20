@@ -83,7 +83,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   #contractsPanel td:nth-child(4):before{content:'Paid'}
   #contractsPanel td:nth-child(5):before{content:'Break-Even'}
   #contractsPanel td:nth-child(6):before{content:'Amount / Check'}
-  #contractsPanel td:nth-child(7):before{content:'Expected Payments'}
+  #contractsPanel td:nth-child(7):before{content:'# of Remaining Payments'}
   #contractsPanel td:nth-child(8):before{content:'Payments Left'}
   #contractsPanel td:nth-child(9):before{content:'Status'}
   #contractsPanel td:nth-child(10):before{content:'Actions'}
@@ -2176,6 +2176,11 @@ let selectedChoiceIds=[];
 let breakdownRows=[];
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n||0);
+function updateRemainingPaymentLabels(root=document){
+ root.querySelectorAll("label,th,span").forEach(element=>{
+  if(/^expected payments?$/i.test(element.textContent.trim()))element.textContent="# of Remaining Payments";
+ });
+}
 function uniquePaymentCount(checks){
  const identities=(checks||[]).map(check=>{
   const date=String(check.date||"").trim();
@@ -3311,6 +3316,7 @@ function editContract(id){
    <div class="edit-modal-actions"><button type="button" class="secondary" onclick="closeEditContract()">Cancel</button><button type="button" class="primary-btn" onclick="saveEditedContract(${id})">Save Changes</button></div>
  </div>`;
  document.body.appendChild(modal);
+ updateRemainingPaymentLabels(modal);
  setTimeout(()=>document.getElementById('editContractName')?.focus(),0);
 }
 function closeEditContract(){document.getElementById('editContractModal')?.remove()}
@@ -3328,7 +3334,7 @@ function saveEditedContract(id){
  if(!(paid>=0)){toast('Enter a valid paid amount');return}
  if(!(remaining>=0)){toast('Enter a valid remaining amount');return}
  if(!(amount>=0)){toast('Enter a valid amount per check');return}
- if(!Number.isFinite(expected)||expected<0){toast('Enter valid expected payments');return}
+ if(!Number.isFinite(expected)||expected<0){toast('Enter a valid number of remaining payments');return}
  let oldName=contract.name;
  contract.name=name;contract.invested=invested;contract.paidOverride=paid;contract.remainingOverride=remaining;contract.defaultAllocation=amount;contract.expectedPayments=expected;delete contract.paymentsOverride;
  data.checks.forEach(x=>{if(x.contract===oldName)x.contract=name});
@@ -3377,6 +3383,7 @@ function render(){
  applyDashboardAppearance();
  applyActiveContractColumns();
  applyCompletedContractColumns();
+ updateRemainingPaymentLabels();
 }
 function renderCompletedContracts(){
  let completed=data.contracts.filter(c=>c.closed); $("completedCount").textContent=`${completed.length} contract${completed.length===1?'':'s'} completed`;
@@ -3430,8 +3437,9 @@ $("adminLockBtn").addEventListener("click",lockAdminDashboard);
 $("adminChangePinBtn").addEventListener("click",changeAdminPin);
 ["adminPinInput","adminPinConfirm"].forEach(id=>{$(id).addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,4)});$(id).addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminPin()})});
 window.addEventListener("focus",()=>{if(currentUser&&!isAdmin)enforceAccountAccess()});
-const remainingPaymentsLabel=$("cpayments")?.closest(".field")?.querySelector("label");
-if(remainingPaymentsLabel)remainingPaymentsLabel.textContent="# of Remaining Payments";
+updateRemainingPaymentLabels();
+const selectedContractReportLabelObserverTarget=$("selectedContractReport");
+if(selectedContractReportLabelObserverTarget)new MutationObserver(()=>updateRemainingPaymentLabels(selectedContractReportLabelObserverTarget)).observe(selectedContractReportLabelObserverTarget,{childList:true,subtree:true});
 setupSummaryCardReordering();
 setupNavScrolling();
 updateHistorySearchInput();
