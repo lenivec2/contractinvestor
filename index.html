@@ -35,22 +35,28 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 @media(max-width:700px){.auth-brand-love-row{gap:12px}.auth-brand-love{font-size:48px}.auth-brand-heart{font-size:40px}.auth-brand-contracts{font-size:17px;letter-spacing:5px}.auth-brand{margin-bottom:24px}.auth-card{padding:30px 20px}}
 @media(max-width:700px){.app-header{height:64px;padding:0 12px}.brand{font-size:21px}.brand-heart{font-size:30px}.header-actions button{padding:8px 9px;font-size:12px}.sidebar{width:64px;flex-basis:64px;padding:10px 6px}.nav-item{justify-content:center;padding:12px 5px}.nav-item span:last-child{display:inline}.nav-icon{font-size:20px}.content{padding:12px 10px}.summary-grid{grid-template-columns:1fr 1fr;gap:10px}.summary-card{padding:12px;min-height:94px}.summary-value{font-size:18px}.summary-label{font-size:12px;margin-bottom:7px}.summary-icon{width:34px;height:34px;font-size:18px}.panel{padding:14px;margin-bottom:12px}.section-head{align-items:flex-start}.section-head .primary-btn{white-space:nowrap}.row{flex-direction:column}.field{width:100%;min-width:0}.row button{width:100%}.contract{flex-direction:column;align-items:stretch}.contract-actions{display:grid;grid-template-columns:1fr 1fr}.actions{flex-wrap:wrap}.scroll{width:100%}table{min-width:720px}.app-subline{display:block;font-size:10px;color:#a9bdd5}}
 
-.mobile-overlay{display:none}.mobile-overlay.show{display:block;position:fixed;inset:58px 0 0;background:rgba(15,23,42,.35);z-index:20}
+.mobile-overlay{display:none}.mobile-overlay.show{display:block;position:fixed;inset:calc(58px + env(safe-area-inset-top,0px)) 0 0;background:rgba(15,23,42,.35);z-index:20}
 /* Mobile-first responsive layout */
 @media (max-width: 700px){
   html,body{width:100%;max-width:100%;overflow-x:hidden}
   #appScreen{height:100dvh;overflow:hidden}
-  .app-header{height:58px;position:sticky;top:0;padding:0 12px}
+  .app-header{height:calc(58px + env(safe-area-inset-top,0px));position:sticky;top:0;padding:env(safe-area-inset-top,0px) 10px 0;gap:8px;justify-content:flex-start}
   .app-header .brand{font-size:17px}
   .app-header .brand-heart{font-size:18px}
-  .app-shell{height:calc(100dvh - 58px);display:block}
-  .sidebar{position:fixed;top:58px;left:0;bottom:0;width:min(82vw,290px);flex:0 0 min(82vw,290px);padding:14px 10px;z-index:30;transform:translateX(-105%);transition:transform .2s ease;box-shadow:8px 0 24px rgba(0,0,0,.18)}
+  .app-shell{height:calc(100dvh - 58px - env(safe-area-inset-top,0px));display:block}
+  .sidebar{position:fixed;top:calc(58px + env(safe-area-inset-top,0px));left:0;bottom:0;width:min(82vw,290px);flex:0 0 min(82vw,290px);padding:14px 10px calc(14px + env(safe-area-inset-bottom,0px));z-index:30;transform:translateX(-105%);transition:transform .2s ease;box-shadow:8px 0 24px rgba(0,0,0,.18)}
   .sidebar.open{transform:translateX(0)}
   .sidebar .nav-item{justify-content:flex-start;padding:13px 14px;gap:14px}
   .sidebar .nav-item span:last-child{display:inline!important;white-space:normal}
   .sidebar .nav-icon{width:26px;flex:0 0 26px;font-size:21px}
-  .mobile-menu-btn{display:flex!important}
-  .content{height:100%;padding:12px 10px 28px;overflow-y:auto}
+  .mobile-menu-btn{display:flex!important;align-items:center;justify-content:center;flex:0 0 44px;width:44px;height:44px;padding:0}
+  .app-header .brand{flex:1;min-width:0}
+  .app-header .fl-brand-row{gap:6px;white-space:nowrap}
+  .header-actions{display:flex;gap:4px;flex:0 0 auto}
+  .header-actions button{width:40px;height:40px;min-height:40px;padding:0!important;display:grid;place-items:center;font-size:0!important}
+  #refreshBtn::before{content:"↻";font-size:22px;line-height:1}
+  #signOutBtn::before{content:"⇥";font-size:22px;line-height:1}
+  .content{height:100%;padding:12px 10px calc(28px + env(safe-area-inset-bottom,0px));overflow-y:auto}
   .content-inner{width:100%;max-width:none}
   .summary-grid{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
   .summary-card{min-width:0;min-height:82px;padding:12px}
@@ -1938,7 +1944,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   </div>
 </div>
 <div id="appScreen" class="hidden">
-<header class="app-header"><button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open menu">☰</button><div class="brand"><div class="fl-brand-lockup"><div class="fl-brand-row"><span class="fl-logo" aria-hidden="true"><i></i><i></i><i></i></span><span class="fl-wordmark">Fund<span class="ledger">Ledger</span></span></div><div class="fl-tagline">Contract Investments Made Simple</div></div></div><div class="header-actions"><button id="refreshBtn" type="button" onclick="refreshCloudData()">↻ &nbsp;Refresh</button><button onclick="signOut()">⇥ &nbsp;Sign Out</button></div></header>
+<header class="app-header"><button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open menu">☰</button><div class="brand"><div class="fl-brand-lockup"><div class="fl-brand-row"><span class="fl-logo" aria-hidden="true"><i></i><i></i><i></i></span><span class="fl-wordmark">Fund<span class="ledger">Ledger</span></span></div><div class="fl-tagline">Contract Investments Made Simple</div></div></div><div class="header-actions"><button id="refreshBtn" type="button" aria-label="Refresh" title="Refresh" onclick="refreshCloudData()">↻ &nbsp;Refresh</button><button id="signOutBtn" type="button" aria-label="Sign Out" title="Sign Out" onclick="signOut()">⇥ &nbsp;Sign Out</button></div></header>
 <div id="mobileOverlay" class="mobile-overlay" onclick="document.querySelector('.sidebar')?.classList.remove('open');this.classList.remove('show')"></div>
 <div class="app-shell">
 <aside class="sidebar">
