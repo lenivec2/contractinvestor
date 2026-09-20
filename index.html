@@ -1852,7 +1852,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   width:100%!important;
   max-width:100%!important;
   display:grid!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
   gap:12px!important;
   padding:14px!important;
   margin-top:2px!important;
@@ -1885,7 +1885,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 @media (orientation:landscape) and (max-height:600px){
   #newContractPanel > .contract-entry-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-  #newContractPanel .contract-calc-summary{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  #newContractPanel .contract-calc-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important}
   #newContractPanel .contract-calc-summary strong{font-size:14px!important}
 }
 </style>
@@ -3061,7 +3061,14 @@ async function initCloud(){
 }
 function updateContractNumberPlaceholder(){let n=data.contracts.length+1;$("cname").placeholder=`Contract #${n}`}
 function toast(s){$("toast").textContent=s;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",1800)}
+function ensureContractProfitSummary(){
+ const summary=$("contractCalcSummary");if(!summary)return;
+ if(!$("contractCalcProfit")){const box=document.createElement("div");box.innerHTML='<span>Estimated Profit</span><strong id="contractCalcProfit">$0.00</strong>';summary.appendChild(box)}
+ if(!$("contractCalcProfitPercent")){const box=document.createElement("div");box.innerHTML='<span>Estimated Profit (%)</span><strong id="contractCalcProfitPercent">0.00%</strong>';summary.appendChild(box)}
+}
 function updateContractPaymentCalculation(){
+ ensureContractProfitSummary();
+ const invested=Math.max(0,parseFloat($("cinvest")?.value)||0);
  const totalReturn=Math.max(0,parseFloat($("ctotalreturn")?.value)||0);
  const feeInput=parseFloat($("cadminfee")?.value);
  const feePercent=Math.min(100,Math.max(0,Number.isFinite(feeInput)?feeInput:0));
@@ -3069,11 +3076,16 @@ function updateContractPaymentCalculation(){
  const feeAmount=totalReturn*(feePercent/100);
  const netAmount=Math.max(0,totalReturn-feeAmount);
  const amountPerCheck=payments>0?netAmount/payments:0;
+ const estimatedProfit=netAmount-invested;
+ const estimatedProfitPercent=invested>0?(estimatedProfit/invested)*100:0;
  if($("cpreset"))$("cpreset").value=totalReturn>0&&payments>0?amountPerCheck.toFixed(2):"";
  if($("contractCalcTotal"))$("contractCalcTotal").textContent=money(totalReturn);
  if($("contractCalcFee"))$("contractCalcFee").textContent=`${money(feeAmount)} (${feePercent.toFixed(2).replace(/\.00$/,'')}%)`;
  if($("contractCalcNet"))$("contractCalcNet").textContent=money(netAmount);
  if($("contractCalcPayment"))$("contractCalcPayment").textContent=money(amountPerCheck);
+ const profitElement=$("contractCalcProfit"),profitPercentElement=$("contractCalcProfitPercent"),profitColor=estimatedProfit>0?"#07853f":estimatedProfit<0?"#d92d20":"#17365f";
+ if(profitElement){profitElement.textContent=money(estimatedProfit);profitElement.style.color=profitColor}
+ if(profitPercentElement){profitPercentElement.textContent=`${estimatedProfitPercent.toFixed(2)}%`;profitPercentElement.style.color=profitColor}
 }
 function updateContractPaymentOverride(){
  if($("contractCalcPayment"))$("contractCalcPayment").textContent=money(Math.max(0,parseFloat($("cpreset")?.value)||0));
@@ -3445,6 +3457,7 @@ setupNavScrolling();
 updateHistorySearchInput();
 loadPasswordResetCooldown();
 updatePasswordResetCooldown();
+$("cinvest")?.addEventListener("input",updateContractPaymentCalculation);
 updateContractPaymentCalculation();
 render();
 initCloud();
