@@ -111,6 +111,14 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   .edit-modal-actions .primary-btn{width:auto;margin:0}
   @media(max-width:600px){.edit-modal-overlay{padding:12px}.edit-modal{padding:18px}.edit-modal-grid{grid-template-columns:1fr}.edit-modal-actions{flex-direction:column-reverse}.edit-modal-actions button{width:100%}}
 
+  .check-scanner-overlay{position:fixed;inset:0;background:rgba(5,18,36,.92);display:flex;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) 14px calc(16px + env(safe-area-inset-bottom,0px));z-index:10020}
+  .check-scanner-card{width:min(760px,100%);max-height:100%;overflow:auto;background:#fff;border-radius:16px;padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.38)}
+  .check-scanner-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.check-scanner-head h2{margin:0 0 4px}.check-scanner-close{width:42px;height:42px;flex:0 0 42px;border:1px solid #cbd9e8;border-radius:9px;background:#fff;color:#17365f;font-size:25px;line-height:1}
+  .check-camera-wrap{position:relative;overflow:hidden;border-radius:12px;background:#061426;aspect-ratio:2/1}.check-camera-wrap video{display:block;width:100%;height:100%;object-fit:cover}.check-camera-guide{position:absolute;inset:10%;border:3px solid rgba(255,255,255,.92);border-radius:10px;box-shadow:0 0 0 999px rgba(0,0,0,.22);pointer-events:none}.check-camera-guide:after{content:"Keep the entire check inside this frame";position:absolute;left:50%;bottom:-34px;transform:translateX(-50%);background:rgba(0,0,0,.72);color:#fff;padding:6px 10px;border-radius:7px;font-size:12px;white-space:nowrap}
+  .check-scan-status{min-height:22px;margin:12px 0;color:#52657d;font-size:13px;font-weight:650}.check-scan-progress{height:7px;overflow:hidden;border-radius:999px;background:#e6eef8;margin:8px 0 14px}.check-scan-progress>span{display:block;height:100%;width:0;background:#147be8;transition:width .2s ease}.check-scanner-actions{display:flex;gap:10px}.check-scanner-actions button{flex:1}
+  .scan-check-btn{white-space:nowrap}.check-scan-result{margin:10px 0 0;padding:10px 12px;border-radius:8px;background:#eef7ff;color:#17365f;font-size:13px;font-weight:650}
+  @media(max-width:600px){.check-scanner-card{padding:14px}.check-camera-wrap{aspect-ratio:1.65/1}.check-camera-guide{inset:9% 6%}.check-scanner-actions{flex-direction:column-reverse}.check-scanner-actions button{width:100%}.scan-check-btn{width:100%}.check-panel-head{align-items:stretch;flex-direction:column}}
+
 
 /* Refined password reset controls */
 .reset-panel{margin-top:20px!important;border-top:0!important;padding:22px!important;background:#f7faff;border:1px solid #dbe7f4;border-radius:14px;box-shadow:0 6px 18px rgba(18,52,90,.06)}
@@ -1969,7 +1977,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <div class="summary-card default"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Default Contracts</div><div class="summary-value" id="defaultContracts">0</div></div></div></div>
 <div class="summary-card default-loss"><div class="summary-top"><div class="summary-icon">−</div><div><div class="summary-label">Default Loss</div><div class="summary-value" id="defaultLoss">$0.00</div></div></div></div>
 </div>
-<section class="panel" id="checkPanel"><h2>Add Payment / Check</h2><div class="row"><div class="field"><label>Check Amount</label><input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="$0.00" oninput="updateBreakdown()"></div><div class="field"><label>Date Issued</label><input id="date" type="date"></div><div class="field"><label>Date Received <span class="muted">(optional)</span></label><input id="dateReceived" type="date"></div><div class="field"><label>Check #</label><input id="checkno" inputmode="numeric" placeholder="Optional"></div></div><h3>Select contracts for this check</h3><div class="choices" id="contractChoices"></div><h3>Manual Payment Breakdown</h3><div class="manual-box" id="manualBreakdown"></div><p class="muted" id="splitPreview">Select a contract above to open it here, then enter the amount for that contract.</p><button class="primary-btn save-check" onclick="addCheck()">Save Check</button></section>
+<section class="panel" id="checkPanel"><div class="section-head check-panel-head"><div><h2>Add Payment / Check</h2><p class="muted" style="margin:-8px 0 0">Scan a paper check or enter the information manually.</p></div><button class="primary-btn scan-check-btn" type="button" onclick="openCheckScanner()">▣ Live Scan Check</button></div><div class="row"><div class="field"><label>Check Amount</label><input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="$0.00" oninput="updateBreakdown()"></div><div class="field"><label>Date Issued</label><input id="date" type="date"></div><div class="field"><label>Date Received <span class="muted">(optional)</span></label><input id="dateReceived" type="date"></div><div class="field"><label>Check #</label><input id="checkno" inputmode="numeric" placeholder="Optional"></div></div><div id="checkScanResult" class="check-scan-result hidden" role="status"></div><h3>Select contracts for this check</h3><div class="choices" id="contractChoices"></div><h3>Manual Payment Breakdown</h3><div class="manual-box" id="manualBreakdown"></div><p class="muted" id="splitPreview">Select a contract above to open it here, then enter the amount for that contract.</p><button class="primary-btn save-check" onclick="addCheck()">Save Check</button></section>
 <section class="panel" id="newContractPanel"><h2>Add Contract</h2><div class="row contract-entry-grid"><div class="field contract-name-field"><label>Contract name</label><input id="cname" placeholder="Contract #1"></div><div class="field contract-invest-field"><label>Participant Funded Amount</label><input id="cinvest" type="number" inputmode="decimal" min="0" step="0.01" placeholder="5,300"></div><div class="field contract-return-field"><label>Total Return</label><input id="ctotalreturn" type="number" inputmode="decimal" min="0" step="0.01" placeholder="6,900" oninput="updateContractPaymentCalculation()"></div><div class="field contract-fee-field"><label>Admin Fee (%)</label><input id="cadminfee" type="number" inputmode="decimal" min="0" max="100" step="0.01" value="2" oninput="updateContractPaymentCalculation()"></div><div class="field contract-payments-field"><label>Expected payments</label><input id="cpayments" type="number" inputmode="numeric" min="1" step="1" value="34" oninput="updateContractPaymentCalculation()"></div><div class="field contract-amount-field"><label>Amount per Check</label><input id="cpreset" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Calculated automatically" oninput="updateContractPaymentOverride()"></div><div class="field contract-date-field"><label>Contract date</label><input id="cdate" type="date"></div><div class="field contract-check-field"><label>Check #</label><input id="ccheckno" inputmode="numeric" placeholder="Optional"></div><div id="contractCalcSummary" class="contract-calc-summary"><div><span>Total Return</span><strong id="contractCalcTotal">$0.00</strong></div><div class="fee-value"><span>Admin Fee</span><strong id="contractCalcFee">$0.00</strong></div><div><span>Net Return</span><strong id="contractCalcNet">$0.00</strong></div><div><span>Amount per Check</span><strong id="contractCalcPayment">$0.00</strong></div></div></div><button class="primary-btn" style="margin-top:14px" onclick="addContract()">＋ Add Contract</button></section>
 <section class="panel" id="contractsPanel" style="width:100%;max-width:100%;"><div class="section-head"><h2>Active Contracts</h2></div><div class="scroll"><table><thead><tr><th>Name</th><th>Day Opened</th><th>Invested</th><th>Paid</th><th>Break-Even</th><th>Amount / Check</th><th>Expected Payments</th><th>Payments Left</th><th>Status</th><th>Actions</th></tr></thead><tbody id="contracts"></tbody></table></div></section>
 <section class="panel side-card" id="completedPanel"><h2>Completed Contracts</h2><div class="completed-count" id="completedCount">0 contracts completed</div><button class="primary-btn" style="width:100%" onclick="document.getElementById('completedPanel').scrollIntoView({behavior:'smooth'})">View Completed</button><div class="scroll" style="margin-top:12px"><table><thead><tr><th>Contract</th><th>Day Opened</th><th>Day Closed</th><th>Invested</th><th>Received</th><th>Remaining Payment</th><th>Gain / Loss</th><th>Status</th><th>Action</th></tr></thead><tbody id="completedContracts"></tbody></table></div></section>
@@ -2045,7 +2053,18 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </section>
 
 <section class="panel" id="appDataPanel"><h2>App Data</h2><p class="muted">Your contracts are stored under your signed-in account. Other users have separate cloud data.</p></section>
-</div></div></div></main></div></div><div class="toast" id="toast"></div>
+</div></div></div></main></div></div>
+<div id="checkScannerModal" class="check-scanner-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="checkScannerTitle">
+  <div class="check-scanner-card">
+    <div class="check-scanner-head"><div><h2 id="checkScannerTitle">Live Check Scanner</h2><p class="muted" style="margin:0">Use good lighting and keep the complete check flat inside the frame.</p></div><button class="check-scanner-close" type="button" aria-label="Close scanner" onclick="closeCheckScanner()">×</button></div>
+    <div class="check-camera-wrap"><video id="checkScannerVideo" autoplay playsinline muted></video><div class="check-camera-guide"></div></div>
+    <canvas id="checkScannerCanvas" class="hidden"></canvas>
+    <div id="checkScannerStatus" class="check-scan-status">Starting camera…</div>
+    <div class="check-scan-progress" aria-hidden="true"><span id="checkScannerProgress"></span></div>
+    <div class="check-scanner-actions"><button class="secondary" type="button" onclick="closeCheckScanner()">Cancel</button><button id="captureCheckBtn" class="primary-btn" type="button" onclick="scanLiveCheck()">Scan Check</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 <script>
 (function(){
   const btn=document.getElementById('mobileMenuBtn');
@@ -2088,6 +2107,170 @@ let cloudLoadInFlight=false;
 const EMPTY_DATA={contracts:[],checks:[]};
 let data={contracts:[],checks:[]};
 let cloudDataReady=false;
+let checkScanStream=null;
+let checkScanWorker=null;
+let checkScanBusy=false;
+let checkScanRunId=0;
+let tesseractLoadPromise=null;
+function ensureTesseractLoaded(){
+ if(window.Tesseract)return Promise.resolve(window.Tesseract);
+ if(tesseractLoadPromise)return tesseractLoadPromise;
+ tesseractLoadPromise=new Promise((resolve,reject)=>{
+  const script=document.createElement("script");
+  script.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+  script.onload=()=>window.Tesseract?resolve(window.Tesseract):reject(new Error("OCR scanner did not load"));
+  script.onerror=()=>reject(new Error("OCR scanner could not be downloaded"));
+  document.head.appendChild(script);
+ }).catch(error=>{tesseractLoadPromise=null;throw error});
+ return tesseractLoadPromise;
+}
+function setCheckScannerStatus(message,progress){
+ const status=$("checkScannerStatus"),bar=$("checkScannerProgress");
+ if(status)status.textContent=message||"";
+ if(bar&&Number.isFinite(progress))bar.style.width=`${Math.max(0,Math.min(100,progress*100))}%`;
+}
+function stopCheckCamera(){
+ if(checkScanStream){checkScanStream.getTracks().forEach(track=>track.stop());checkScanStream=null}
+ const video=$("checkScannerVideo");if(video)video.srcObject=null;
+}
+async function startCheckCamera(){
+ if(!navigator.mediaDevices?.getUserMedia)throw new Error("Live camera scanning is not supported on this device.");
+ if(!window.isSecureContext)throw new Error("Live scanning requires the secure HTTPS version of FundLedger.");
+ stopCheckCamera();
+ checkScanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false});
+ const video=$("checkScannerVideo");video.srcObject=checkScanStream;
+ await video.play();
+}
+async function openCheckScanner(){
+ const modal=$("checkScannerModal"),button=$("captureCheckBtn"),result=$("checkScanResult");
+ if(!modal)return;
+ if(result)result.classList.add("hidden");
+ modal.classList.remove("hidden");
+ document.body.style.overflow="hidden";
+ if(button){button.disabled=true;button.textContent="Starting Camera…"}
+ setCheckScannerStatus("Allow camera access, then place the entire check inside the frame.",0);
+ try{
+  await startCheckCamera();
+  setCheckScannerStatus("Camera ready. Hold steady and tap Scan Check.",0);
+  if(button){button.disabled=false;button.textContent="Scan Check"}
+ }catch(error){console.error(error);setCheckScannerStatus(error.message||"Unable to open the camera.",0);if(button){button.disabled=true;button.textContent="Camera Unavailable"}}
+}
+function closeCheckScanner(){
+ checkScanRunId++;
+ stopCheckCamera();
+ const worker=checkScanWorker;checkScanWorker=null;
+ if(worker)worker.terminate().catch(()=>{});
+ checkScanBusy=false;
+ const modal=$("checkScannerModal"),button=$("captureCheckBtn");
+ if(modal)modal.classList.add("hidden");
+ if(button){button.disabled=false;button.textContent="Scan Check"}
+ setCheckScannerStatus("",0);
+ document.body.style.overflow="";
+}
+function validDateParts(year,month,day){
+ const d=new Date(Date.UTC(year,month-1,day));
+ return d.getUTCFullYear()===year&&d.getUTCMonth()===month-1&&d.getUTCDate()===day?`${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`:"";
+}
+function parseScannedDate(text){
+ const lines=String(text||"").split(/\n+/).filter(Boolean);
+ const ordered=[...lines.filter(line=>/date/i.test(line)),...lines.filter(line=>!/date/i.test(line))];
+ for(const line of ordered){
+  const numeric=line.match(/\b(0?[1-9]|1[0-2])[\/.-](0?[1-9]|[12]\d|3[01])[\/.-]((?:19|20)?\d{2})\b/);
+  if(numeric){let year=parseInt(numeric[3],10);if(year<100)year+=2000;const iso=validDateParts(year,parseInt(numeric[1],10),parseInt(numeric[2],10));if(iso)return iso}
+  const named=line.match(/\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2})(?:st|nd|rd|th)?[,]?\s+((?:19|20)\d{2})\b/i);
+  if(named){const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};const iso=validDateParts(parseInt(named[3],10),months[named[1].slice(0,3).toLowerCase()],parseInt(named[2],10));if(iso)return iso}
+ }
+ return "";
+}
+function parseScannedAmount(text){
+ const open=data.contracts.filter(c=>!c.closed);
+ const candidates=[];
+ String(text||"").split(/\n+/).forEach((line,lineIndex)=>{
+  const regex=/\$?\s*((?:\d{1,3}(?:,\d{3})+)|\d+)\.([0-9O]{2})\b/g;
+  let match;
+  while((match=regex.exec(line))){
+   const value=parseFloat(match[1].replace(/,/g,"")+"."+match[2].replace(/O/g,"0"));
+   if(!(value>0)||value>100000000)continue;
+   let score=0;
+   if(match[0].includes("$"))score+=8;
+   if(/amount|pay|dollars|total/i.test(line))score+=5;
+   if(open.some(c=>Math.abs((parseFloat(c.defaultAllocation)||0)-value)<=.02))score+=7;
+   if(lineIndex<8)score+=1;
+   candidates.push({value,score});
+  }
+ });
+ candidates.sort((a,b)=>b.score-a.score);
+ return candidates[0]?.value||0;
+}
+function parseScannedCheckNumber(text){
+ const match=String(text||"").match(/\bcheck\s*(?:no\.?|number|#)?\s*[:#-]?\s*([0-9]{3,12})\b/i);
+ return match?match[1]:"";
+}
+function normalizeScanText(value){return String(value||"").toUpperCase().replace(/[^A-Z0-9]+/g," ").replace(/\s+/g," ").trim()}
+function suggestScannedContract(text,amount){
+ const normalized=normalizeScanText(text),open=data.contracts.filter(c=>!c.closed);
+ const ranked=open.map(contract=>{
+  const name=normalizeScanText(contract.name);let score=0;
+  if(name.length>=3&&normalized.includes(name))score+=100;
+  const preset=parseFloat(contract.defaultAllocation)||0;
+  if(amount>0&&preset>0){const difference=Math.abs(preset-amount);if(difference<=.02)score+=50;else if(difference<=1)score+=20}
+  return {contract,score};
+ }).sort((a,b)=>b.score-a.score);
+ if(!ranked.length||ranked[0].score<=0)return {contract:null,ambiguous:false};
+ return {contract:ranked[0].contract,ambiguous:!!ranked[1]&&ranked[1].score===ranked[0].score};
+}
+function applyScannedCheckInformation(text){
+ const amount=parseScannedAmount(text),date=parseScannedDate(text),checkNumber=parseScannedCheckNumber(text),suggestion=suggestScannedContract(text,amount);
+ if(amount>0)$("amount").value=amount.toFixed(2);
+ if(date)$("date").value=date;
+ if(checkNumber)$("checkno").value=checkNumber;
+ let contractName="";
+ if(suggestion.contract&&!suggestion.ambiguous){
+  const contract=suggestion.contract;contractName=contract.name;
+  selectedChoiceIds=[contract.id];
+  breakdownRows=[{contract:contract.name,amount:amount>0?amount.toFixed(2):(contract.defaultAllocation>0?contract.defaultAllocation.toFixed(2):""),manual:false}];
+  removedBreakdownContracts=new Set();renderContractChoices();renderManualBreakdown();
+ }else updateBreakdown();
+ const found=[];
+ if(amount>0)found.push(`amount ${money(amount)}`);
+ if(date)found.push(`date ${date}`);
+ if(checkNumber)found.push(`check #${checkNumber}`);
+ if(contractName)found.push(`contract ${contractName}`);
+ const result=$("checkScanResult");
+ if(result){
+  result.textContent=found.length?`Scanned ${found.join(" • ")}. Review every field before saving.${suggestion.ambiguous?" More than one contract matches, so select the correct contract below.":""}`:"The scan could not read the check clearly. Try again with brighter lighting and keep the check flat.";
+  result.classList.remove("hidden");
+ }
+ return found.length>0;
+}
+async function scanLiveCheck(){
+ if(checkScanBusy)return;
+ const video=$("checkScannerVideo"),canvas=$("checkScannerCanvas"),button=$("captureCheckBtn");
+ if(!video?.videoWidth||!video?.videoHeight){setCheckScannerStatus("Camera is not ready yet.",0);return}
+ checkScanBusy=true;const runId=++checkScanRunId;
+ if(button){button.disabled=true;button.textContent="Scanning…"}
+ try{
+  const maxWidth=1800,scale=Math.min(1,maxWidth/video.videoWidth);
+  canvas.width=Math.round(video.videoWidth*scale);canvas.height=Math.round(video.videoHeight*scale);
+  const context=canvas.getContext("2d",{willReadFrequently:true});context.drawImage(video,0,0,canvas.width,canvas.height);
+  const image=context.getImageData(0,0,canvas.width,canvas.height),pixels=image.data;
+  for(let i=0;i<pixels.length;i+=4){const gray=.299*pixels[i]+.587*pixels[i+1]+.114*pixels[i+2];const adjusted=Math.max(0,Math.min(255,(gray-128)*1.3+128));pixels[i]=pixels[i+1]=pixels[i+2]=adjusted}
+  context.putImageData(image,0,0);
+  setCheckScannerStatus("Loading the on-device scanner…",.05);
+  const Tesseract=await ensureTesseractLoaded();if(runId!==checkScanRunId)return;
+  checkScanWorker=await Tesseract.createWorker("eng",1,{logger:message=>{if(runId!==checkScanRunId)return;const progress=Number.isFinite(message.progress)?message.progress:0;const label=message.status?message.status.replace(/_/g," "):"Scanning check";setCheckScannerStatus(`${label.charAt(0).toUpperCase()+label.slice(1)}…`,Math.max(.08,progress))}});
+  await checkScanWorker.setParameters({preserve_interword_spaces:"1",tessedit_pageseg_mode:"3"});
+  const result=await checkScanWorker.recognize(canvas,{rotateAuto:true});if(runId!==checkScanRunId)return;
+  const worker=checkScanWorker;checkScanWorker=null;await worker.terminate();
+  setCheckScannerStatus("Reading the check information…",1);
+  const found=applyScannedCheckInformation(result?.data?.text||"");
+  if(found){toast("Check scanned — review before saving");closeCheckScanner()}
+  else{setCheckScannerStatus("Nothing clear was detected. Reposition the check and try again.",0);if(button){button.disabled=false;button.textContent="Try Again"}}
+ }catch(error){
+  if(runId===checkScanRunId){console.error(error);setCheckScannerStatus("The check could not be scanned. Check your connection and try again.",0);if(button){button.disabled=false;button.textContent="Try Again"}}
+ }finally{if(runId===checkScanRunId)checkScanBusy=false}
+}
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&!$("checkScannerModal")?.classList.contains("hidden"))closeCheckScanner()});
 function localKey(userId){return "contractChecksIOS:"+userId}
 function loadLocalCache(userId){
   try{const raw=localStorage.getItem(localKey(userId));return raw?JSON.parse(raw):JSON.parse(JSON.stringify(EMPTY_DATA))}
@@ -2854,7 +3037,7 @@ function addCheck(){
  if(new Set(allocations.map(x=>x.contract)).size!==allocations.length){toast("Choose different contracts for each allocation");return}
  let allocated=allocations.reduce((sum,x)=>sum+x.amount,0);
  if(Math.abs(allocated-amount)>.009){toast("Contract allocations must equal the check amount");return}
- let now=Date.now();allocations.forEach((x,index)=>{data.checks.push({id:now+index,contract:x.contract,date,dateReceived:dateReceived||"",amount:x.amount,checkno,verified:false});let c=data.contracts.find(c=>c.name===x.contract);if(c&&Number.isFinite(parseInt(c.paymentsOverride,10)))c.paymentsOverride=Math.max(0,parseInt(c.paymentsOverride,10))+1;});save();selectedChoiceIds=[];breakdownRows=[];removedBreakdownContracts=new Set();$("amount").value="";$("dateReceived").value="";$("checkno").value="";render();toast("Check recorded");
+ let now=Date.now();allocations.forEach((x,index)=>{data.checks.push({id:now+index,contract:x.contract,date,dateReceived:dateReceived||"",amount:x.amount,checkno,verified:false});let c=data.contracts.find(c=>c.name===x.contract);if(c&&Number.isFinite(parseInt(c.paymentsOverride,10)))c.paymentsOverride=Math.max(0,parseInt(c.paymentsOverride,10))+1;});save();selectedChoiceIds=[];breakdownRows=[];removedBreakdownContracts=new Set();$("amount").value="";$("dateReceived").value="";$("checkno").value="";$("checkScanResult")?.classList.add("hidden");render();toast("Check recorded");
 }
 function updateBreakdown(){
  let total=parseFloat($("amount").value)||0,assigned=breakdownRows.reduce((sum,x)=>sum+(parseFloat(x.amount)||0),0),remaining=total-assigned;
