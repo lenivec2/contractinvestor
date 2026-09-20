@@ -1829,23 +1829,23 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 <style id="add-contract-layout-final">
-/* Keep the main amounts prominent, make the fee/payment-count fields compact,
-   and give the calculation results a full readable row. */
+/* Keep every Add Contract input the same size and give the calculation
+   results a full readable row underneath. */
 @media (min-width:701px){
   #newContractPanel > .contract-entry-grid{
     display:grid!important;
-    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
     gap:12px!important;
     align-items:end!important;
   }
   #newContractPanel .contract-name-field,
   #newContractPanel .contract-invest-field,
-  #newContractPanel .contract-return-field{grid-column:span 2!important}
+  #newContractPanel .contract-return-field,
   #newContractPanel .contract-fee-field,
   #newContractPanel .contract-payments-field,
+  #newContractPanel .contract-amount-field,
   #newContractPanel .contract-date-field,
   #newContractPanel .contract-check-field{grid-column:span 1!important}
-  #newContractPanel .contract-amount-field{grid-column:span 2!important}
 }
 #newContractPanel .contract-calc-summary{
   grid-column:1 / -1!important;
@@ -2007,7 +2007,11 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   <div class="section-head"><div><h2>Settings</h2><p class="muted" style="margin:-8px 0 0">Account and application preferences.</p></div></div>
   <div class="settings-grid">
     <div class="settings-card"><h3>Signed-in Account</h3><p id="settingsAccountEmail">Not signed in</p></div>
-    <div class="settings-card"><h3>Automatic Data Refresh</h3><p class="settings-status">Enabled</p><p style="margin-top:8px">FundLedger checks for updated data whenever you return to the app.</p></div>
+    <div class="settings-card">
+      <h3>Automatic Data Refresh</h3>
+      <div class="field" style="margin-top:10px"><label for="automaticDataRefreshSelect">Refresh when returning to the app</label><select id="automaticDataRefreshSelect" onchange="updateAutomaticDataRefresh(this.value)"><option value="enabled">Enabled</option><option value="disabled">Disabled</option></select></div>
+      <p id="automaticDataRefreshHelp" style="margin-top:10px">FundLedger checks for updated data whenever you return to the app.</p>
+    </div>
     <div class="settings-card"><h3>Date Issued</h3><p class="settings-status">Local date enabled</p><p style="margin-top:8px">New payments use the current date from this device.</p></div>
     <div class="settings-card"><h3>Data Storage</h3><p>Your contracts and payments are securely associated with your signed-in account.</p></div>
     <div class="settings-card settings-appearance">
@@ -2155,7 +2159,7 @@ let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
 let cloudLoadInFlight=false;
-const EMPTY_DATA={contracts:[],checks:[],preferences:{dashboardCards:{},dashboardSections:{},activeContractColumns:{},completedContractColumns:{}}};
+const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{},dashboardSections:{},activeContractColumns:{},completedContractColumns:{}}};
 let data={contracts:[],checks:[]};
 let cloudDataReady=false;
 function localKey(userId){return "contractChecksIOS:"+userId}
@@ -2299,8 +2303,17 @@ function updateCompletedContractColumnAppearance(input){
  const key=input?.dataset?.completedColumnToggle;if(!COMPLETED_CONTRACT_COLUMN_KEYS.includes(key))return;
  completedContractColumnPreferences()[key]=!!input.checked;applyCompletedContractColumns();save();
 }
+function automaticDataRefreshEnabled(){return data.preferences?.automaticDataRefresh!==false}
+function updateAutomaticDataRefresh(value){
+ if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
+ data.preferences.automaticDataRefresh=value!=="disabled";
+ updateSettingsPanel();save();toast(data.preferences.automaticDataRefresh?"Automatic refresh enabled":"Automatic refresh disabled");
+}
 function updateSettingsPanel(){
  const email=$("settingsAccountEmail");if(email)email.textContent=currentUser?.email||"Not signed in";
+ const refreshSelect=$("automaticDataRefreshSelect"),refreshHelp=$("automaticDataRefreshHelp"),refreshEnabled=automaticDataRefreshEnabled();
+ if(refreshSelect)refreshSelect.value=refreshEnabled?"enabled":"disabled";
+ if(refreshHelp)refreshHelp.textContent=refreshEnabled?"FundLedger checks for updated data whenever you return to the app.":"Automatic refresh is off. Use the Refresh button whenever you want to check for updated data.";
  applyDashboardAppearance();
  applyDashboardSections();
  applyActiveContractColumns();
@@ -2369,6 +2382,7 @@ async function refreshCloudData(options={}){
 }
 async function refreshWhenAppReturns(){
  setDateIssuedToToday(false);
+ if(!automaticDataRefreshEnabled())return;
  if(document.hidden||!currentUser||!supabaseClient||!cloudDataReady||cloudLoadInFlight||foregroundRefreshInFlight)return;
  const now=Date.now();if(now-lastForegroundRefreshAt<3000)return;
  lastForegroundRefreshAt=now;foregroundRefreshInFlight=true;
