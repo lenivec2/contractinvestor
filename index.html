@@ -2188,13 +2188,16 @@ function setupNavScrolling(){
   });
 }
 
-async function refreshCloudData(){
- if(!currentUser||!supabaseClient){toast("Please sign in first");return}
+let lastForegroundRefreshAt=0;
+let foregroundRefreshInFlight=false;
+async function refreshCloudData(options={}){
+ const silent=options?.silent===true;
+ if(!currentUser||!supabaseClient){if(!silent)toast("Please sign in first");return}
  if(!(await enforceAccountAccess()))return;
  const userId=currentUser.id;
  const btn=$("refreshBtn");
- if(btn){btn.disabled=true;btn.textContent="Refreshing…"}
- setSyncStatus("Refreshing from cloud…");
+ if(btn&&!silent){btn.disabled=true;btn.textContent="Refreshing…"}
+ if(!silent)setSyncStatus("Refreshing from cloud…");
  try{
   // If a recent change is still waiting to be uploaded, save it first so Refresh
   // can never replace newer local data with an older cloud snapshot.
@@ -2207,15 +2210,24 @@ async function refreshCloudData(){
   while(cloudSaveInFlight){await new Promise(resolve=>setTimeout(resolve,50))}
   if(!currentUser||currentUser.id!==userId)return;
   const ok=await loadCloudData(userId);
-  if(ok)toast("Latest data loaded");
+  if(ok){if(silent)setSyncStatus("Updated automatically");else toast("Latest data loaded")}
  }catch(e){
   console.error(e);
   setSyncStatus("Refresh failed");
-  toast("Could not refresh cloud data");
+  if(!silent)toast("Could not refresh cloud data");
  }finally{
-  if(btn){btn.disabled=false;btn.textContent="↻ Refresh"}
+  if(btn&&!silent){btn.disabled=false;btn.textContent="↻ Refresh"}
  }
 }
+async function refreshWhenAppReturns(){
+ if(document.hidden||!currentUser||!supabaseClient||!cloudDataReady||cloudLoadInFlight||foregroundRefreshInFlight)return;
+ const now=Date.now();if(now-lastForegroundRefreshAt<3000)return;
+ lastForegroundRefreshAt=now;foregroundRefreshInFlight=true;
+ try{await refreshCloudData({silent:true})}finally{foregroundRefreshInFlight=false}
+}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshWhenAppReturns()});
+window.addEventListener("pageshow",event=>{if(event.persisted)refreshWhenAppReturns()});
+window.addEventListener("focus",refreshWhenAppReturns);
 function setUserStatus(user){const el=$("userStatus");if(el)el.innerHTML=user?"Signed in as "+escape(user.email||"user")+(isAdmin?" <span class=\"admin-badge\">MASTER ADMIN</span>":""):"Not signed in"}
 function setAuthError(s){const el=$("authError");el.textContent=s||"";el.style.display=s?"block":"none"}
 function showApp(){
