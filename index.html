@@ -836,7 +836,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 
 
-/* Check History mobile responsive fix: prevent search controls from overlapping */
+/* Payment History mobile responsive fix: prevent search controls from overlapping */
 @media (max-width:700px){
   #historyPanel,
   #checkHistoryPanel{
@@ -918,7 +918,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   #checkHistoryPanel tbody td:last-child{
     padding-bottom:0!important;
   }
-  /* Keep Check History Edit/Delete buttons side-by-side on phones. */
+  /* Keep Payment History Edit/Delete buttons side-by-side on phones. */
   #historyPanel tbody td:last-child,
   #checkHistoryPanel tbody td:last-child{
     display:flex!important;
@@ -999,7 +999,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
   #newContractPanel .row > .field{width:100%!important;}
 
-  /* Check History search */
+  /* Payment History search */
   #historyPanel .history-search-box{
     display:grid!important;
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
@@ -1998,7 +1998,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <a class="nav-item" href="#newContractPanel"><span class="nav-icon">＋</span><span>Add Contract</span></a>
 <a class="nav-item" href="#contractsPanel"><span class="nav-icon">▣</span><span>Active Contracts</span></a>
 <a class="nav-item" href="#completedPanel"><span class="nav-icon">✓</span><span>Completed Contracts</span></a>
-<a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Check History</span></a>
+<a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Payment History</span></a>
 <a class="nav-item" href="#reportsPanel"><span class="nav-icon">▥</span><span>Reports</span></a>
 <a class="nav-item" href="#settingsPanel"><span class="nav-icon">⚙</span><span>Settings</span></a>
 <a class="nav-item" href="#contactPanel"><span class="nav-icon">✉</span><span>Contact Us</span></a>
@@ -2021,7 +2021,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <section class="panel side-card" id="completedPanel"><h2>Completed Contracts</h2><div class="completed-count" id="completedCount">0 contracts completed</div><button class="primary-btn" style="width:100%" onclick="document.getElementById('completedPanel').scrollIntoView({behavior:'smooth'})">View Completed</button><div class="scroll" style="margin-top:12px"><table><thead><tr><th data-column-key="contract">Contract</th><th data-column-key="dayOpened">Day Opened</th><th data-column-key="dayClosed">Day Closed</th><th data-column-key="invested">Invested</th><th data-column-key="received">Received</th><th data-column-key="remainingPayment">Remaining Payment</th><th data-column-key="gainLoss">Gain / Loss</th><th data-column-key="status">Status</th><th data-column-key="action">Action</th></tr></thead><tbody id="completedContracts"></tbody></table></div></section>
 <div class="dashboard-grid">
 
-<select id="filter" class="hidden"><option value="">All contracts</option></select><section class="panel" id="historyPanel"><div class="section-head"><h2>Check History</h2><button class="secondary" onclick="exportCSV()">⇩ Export CSV</button></div><div class="history-search-box"><div class="field"><label>Search Check History By</label><select id="historySearchType" onchange="updateHistorySearchInput()"><option value="dateIssued">Payment Date</option><option value="dateReceived">Date Received</option><option value="amount">Check Amount</option><option value="contract">Contract Name</option><option value="checkno">Check Number</option></select></div><div class="field history-search-input"><label id="historySearchLabel">Payment Date</label><input id="historySearch" type="date" oninput="renderCheckHistory()" autocomplete="off"></div><div class="field history-clear-field"><label>&nbsp;</label><button type="button" class="secondary" onclick="clearHistorySearch()">Clear Search</button></div></div><div class="scroll"><table><thead><tr><th data-column-key="sequence">#</th><th data-column-key="dateIssued">Payment Date</th><th data-column-key="dateReceived">Date Received</th><th data-column-key="amount">Check Amount</th><th data-column-key="contract">Contracts</th><th data-column-key="checkno">Check #</th><th data-column-key="actions">Actions</th></tr></thead><tbody id="history"></tbody></table></div></section>
+<select id="filter" class="hidden"><option value="">All contracts</option></select><section class="panel" id="historyPanel"><div class="section-head"><h2>Payment History</h2><button class="secondary" onclick="exportCSV()">⇩ Export CSV</button></div><div class="history-search-box"><div class="field"><label>Search Payment History By</label><select id="historySearchType" onchange="updateHistorySearchInput()"><option value="dateIssued">Payment Date</option><option value="dateReceived">Date Received</option><option value="amount">Check Amount</option><option value="contract">Contract Name / ID</option><option value="checkno">Check Number</option></select></div><div class="field history-search-input"><label id="historySearchLabel">Payment Date</label><input id="historySearch" type="date" oninput="renderCheckHistory()" autocomplete="off"></div><div class="field history-clear-field"><label>&nbsp;</label><button type="button" class="secondary" onclick="clearHistorySearch()">Clear Search</button></div></div><div class="scroll"><table><thead><tr><th data-column-key="sequence">#</th><th data-column-key="dateIssued">Payment Date</th><th data-column-key="dateReceived">Date Received</th><th data-column-key="amount">Check Amount</th><th data-column-key="contract">Contracts</th><th data-column-key="checkno">Check #</th><th data-column-key="actions">Actions</th></tr></thead><tbody id="history"></tbody></table></div></section>
 <section class="panel hidden" id="reportsPanel">
   <div class="section-head report-head"><div><h2>Reports</h2><p class="muted" style="margin:0">View detailed performance, payment activity, and contract results.</p></div><button class="secondary" type="button" onclick="exportFullReport()">⇩ Export Full Report</button></div>
   <div class="report-grid report-kpis">
@@ -2069,7 +2069,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
           <label class="appearance-option"><span>Add Contract</span><input type="checkbox" data-section-toggle="addContract" onchange="updateDashboardSectionAppearance(this)"></label>
           <label class="appearance-option"><span>Active Contracts</span><input type="checkbox" data-section-toggle="activeContracts" onchange="updateDashboardSectionAppearance(this)"></label>
           <label class="appearance-option"><span>Completed Contracts</span><input type="checkbox" data-section-toggle="completedContracts" onchange="updateDashboardSectionAppearance(this)"></label>
-          <label class="appearance-option"><span>Check History</span><input type="checkbox" data-section-toggle="checkHistory" onchange="updateDashboardSectionAppearance(this)"></label>
+          <label class="appearance-option"><span>Payment History</span><input type="checkbox" data-section-toggle="checkHistory" onchange="updateDashboardSectionAppearance(this)"></label>
           <label class="appearance-option"><span>Reports</span><input type="checkbox" data-section-toggle="reports" onchange="updateDashboardSectionAppearance(this)"></label>
         </div>
       </div>
@@ -2117,7 +2117,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
         </div>
       </div>
       <div class="appearance-group">
-        <h4>Check History Columns</h4><p>Select which columns appear in Check History.</p><p class="column-order-hint">Drag to rearrange, or use the arrows.</p>
+        <h4>Payment History Columns</h4><p>Select which columns appear in Payment History.</p><p class="column-order-hint">Drag to rearrange, or use the arrows.</p>
         <div class="appearance-options" id="historyColumnOptions">
           <label class="appearance-option"><span>#</span><input type="checkbox" data-history-column-toggle="sequence" onchange="updateCheckHistoryColumnAppearance(this)"></label>
           <label class="appearance-option"><span>Payment Date</span><input type="checkbox" data-history-column-toggle="dateIssued" onchange="updateCheckHistoryColumnAppearance(this)"></label>
@@ -2380,7 +2380,7 @@ function checkHistoryColumnPreferences(){
 function contractColumnConfig(type){
  if(type==="active")return {keys:ACTIVE_CONTRACT_COLUMN_KEYS,orderKey:"activeContractColumnOrder",panelId:"contractsPanel",optionsId:"activeColumnOptions",toggleAttribute:"data-active-column-toggle",label:"Active"};
  if(type==="completed")return {keys:COMPLETED_CONTRACT_COLUMN_KEYS,orderKey:"completedContractColumnOrder",panelId:"completedPanel",optionsId:"completedColumnOptions",toggleAttribute:"data-completed-column-toggle",label:"Completed"};
- return {keys:CHECK_HISTORY_COLUMN_KEYS,orderKey:"checkHistoryColumnOrder",panelId:"historyPanel",optionsId:"historyColumnOptions",toggleAttribute:"data-history-column-toggle",label:"Check History"};
+ return {keys:CHECK_HISTORY_COLUMN_KEYS,orderKey:"checkHistoryColumnOrder",panelId:"historyPanel",optionsId:"historyColumnOptions",toggleAttribute:"data-history-column-toggle",label:"Payment History"};
 }
 function contractColumnOrderPreferences(type){
  if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
@@ -2782,7 +2782,7 @@ async function renderAdminUser(userId){
    </div>
    <h3>Contracts</h3>
    <div class="scroll"><table class="admin-table"><thead><tr><th>Contract</th><th>Investment</th><th>Received</th><th>Status</th></tr></thead><tbody>${contracts.map(c=>{const xs=checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+(parseFloat(x.amount)||0),0);return `<tr><td><b>${escape(c.name)}</b></td><td>${money(c.invested)}</td><td>${money(rec)}</td><td>${c.closed?(c.defaulted?"Default":"Paid in Full"):"Open"}</td></tr>`}).join("")||'<tr><td colspan="4" class="muted">No contracts.</td></tr>'}</tbody></table></div>
-   <h3 style="margin-top:18px">Check History</h3>
+   <h3 style="margin-top:18px">Payment History</h3>
    <div class="scroll"><table class="admin-table"><thead><tr><th>Payment Date</th><th>Date Received</th><th>Contract</th><th>Check #</th><th>Amount</th><th>Verified</th></tr></thead><tbody>${checks.map(x=>`<tr><td>${escape(x.date||"")}</td><td>${escape(x.dateReceived||"")||"—"}</td><td>${escape(x.contract||"")}</td><td>${escape(x.checkno||"")||"—"}</td><td>${money(x.amount)}</td><td>${x.verified?"Yes":"No"}</td></tr>`).join("")||'<tr><td colspan="6" class="muted">No checks.</td></tr>'}</tbody></table></div>`;
  }catch(e){console.error(e);box.innerHTML='<div class="muted">Unable to load this user\'s dashboard. Please run the updated Admin SQL setup.</div>';summary.textContent="Could not load data for "+(user?.email||userId);toast("Could not load user data")}
 }
@@ -3481,7 +3481,7 @@ function editContract(id){
  modal.innerHTML=`<div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="editContractTitle">
    <div class="edit-modal-head"><h2 id="editContractTitle">Edit Contract</h2><button type="button" class="edit-modal-close" onclick="closeEditContract()">×</button></div>
    <div class="edit-modal-grid">
-     <div class="field"><label>Contract Name</label><input id="editContractName" type="text" value="${escape(contract.name)}"></div>
+     <div class="field"><label>Contract Name / ID</label><input id="editContractName" type="text" value="${escape(contract.name)}"></div>
      <div class="field"><label>Invested</label><input id="editContractInvested" type="number" inputmode="decimal" step="0.01" value="${escape(contract.invested??0)}"></div>
      <div class="field"><label>Paid</label><input id="editContractPaid" type="number" inputmode="decimal" step="0.01" value="${paid.toFixed(2)}"></div>
      <div class="field"><label>Remaining</label><input id="editContractRemaining" type="number" inputmode="decimal" step="0.01" value="${remaining.toFixed(2)}"></div>
@@ -3529,7 +3529,7 @@ function renderContractChoices(){
  let open=data.contracts.filter(c=>!c.closed);
  $("contractChoices").innerHTML=open.length?open.map(c=>`<button type="button" class="choice ${selectedChoiceIds.includes(c.id)?'selected':''}" onclick="toggleContractChoice(${c.id})">${escape(c.name)}</button>`).join(''):'<span class="muted">No open contracts.</span>';
 }
-function updateHistorySearchInput(){let type=$("historySearchType")?.value||'dateIssued',input=$("historySearch"),label=$("historySearchLabel");if(!input)return;let config={dateIssued:['Payment Date','date','Search by payment date'],dateReceived:['Date Received','date','Search by date received'],amount:['Check Amount','number','Search by check amount'],contract:['Contract Name','search','Search by contract name'],checkno:['Check Number','search','Search by check number']}[type]||['Payment Date','date','Search'];label.textContent=config[0];input.type=config[1];input.placeholder=config[2];input.step=config[1]==='number'?'0.01':undefined;if(config[1]!=='number')input.removeAttribute('step');renderCheckHistory()}
+function updateHistorySearchInput(){let type=$("historySearchType")?.value||'dateIssued',input=$("historySearch"),label=$("historySearchLabel");if(!input)return;let config={dateIssued:['Payment Date','date','Search by payment date'],dateReceived:['Date Received','date','Search by date received'],amount:['Check Amount','number','Search by check amount'],contract:['Contract Name / ID','search','Search by contract name'],checkno:['Check Number','search','Search by check number']}[type]||['Payment Date','date','Search'];label.textContent=config[0];input.type=config[1];input.placeholder=config[2];input.step=config[1]==='number'?'0.01':undefined;if(config[1]!=='number')input.removeAttribute('step');renderCheckHistory()}
 function clearHistorySearch(){let input=$("historySearch");if(input)input.value='';renderCheckHistory()}
 function checkHistorySequence(check){
  const ordered=data.checks.slice().sort((a,b)=>{
