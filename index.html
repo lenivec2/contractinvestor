@@ -88,13 +88,13 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   #contractsPanel td[data-column-key="paymentsLeft"]:before{content:'Payments Left'}
   #contractsPanel td[data-column-key="status"]:before{content:'Status'}
   #contractsPanel td[data-column-key="actions"]:before{content:'Actions'}
-  #historyPanel td:nth-child(1):before{content:'Date Issued'}
-  #historyPanel td:nth-child(2):before{content:'Date Received'}
-  #historyPanel td:nth-child(3):before{content:'Check Amount'}
-  #historyPanel td:nth-child(4):before{content:'Contract'}
-  #historyPanel td:nth-child(5):before{content:'Contract Check #'}
-  #historyPanel td:nth-child(6):before{content:'Check #'}
-  #historyPanel td:nth-child(7):before{content:'Actions'}
+  #historyPanel td[data-column-key="sequence"]:before{content:'#'}
+  #historyPanel td[data-column-key="dateIssued"]:before{content:'Date Issued'}
+  #historyPanel td[data-column-key="dateReceived"]:before{content:'Date Received'}
+  #historyPanel td[data-column-key="amount"]:before{content:'Check Amount'}
+  #historyPanel td[data-column-key="contract"]:before{content:'Contract'}
+  #historyPanel td[data-column-key="checkno"]:before{content:'Check #'}
+  #historyPanel td[data-column-key="actions"]:before{content:'Actions'}
   #contractsPanel td:last-child,#historyPanel td:last-child{padding-bottom:0}
   #contractsPanel td:first-child,#historyPanel td:first-child{font-size:15px;font-weight:700;padding-top:0}
   .dashboard-grid{grid-template-columns:1fr!important;gap:0}
@@ -1931,6 +1931,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </style>
 <style id="summary-reorder-styles">
 .summary-card[draggable="true"]{cursor:grab}.summary-card.summary-dragging{opacity:.5;outline:2px dashed #147be8}.summary-option-actions{display:flex;align-items:center;gap:7px}.summary-move-btn{width:32px;height:32px;padding:0!important;border:1px solid #cbdced;border-radius:7px;background:#eef5ff;color:#17365f;font-size:17px;font-weight:800;line-height:1}.summary-move-btn:hover{background:#dcecff}.summary-move-btn:disabled{opacity:.35;cursor:not-allowed}
+#dashboardSummary .summary-card{position:relative;padding-right:43px!important}.summary-close-btn{position:absolute;top:7px;right:7px;width:27px!important;height:27px!important;min-height:27px!important;padding:0!important;border:1px solid #cbdced;border-radius:50%;background:#f7faff;color:#52657d;font-size:19px;font-weight:800;line-height:23px;display:grid;place-items:center;z-index:3;cursor:pointer}.summary-close-btn:hover,.summary-close-btn:focus{background:#ffe8ea;border-color:#ef9aa3;color:#c8283b;outline:none}
 .column-order-option[draggable="true"]{cursor:grab}.column-order-option.column-dragging{opacity:.5;outline:2px dashed #147be8}.column-order-actions{display:flex;align-items:center;gap:7px}.column-order-hint{margin-top:7px!important;color:#147be8!important;font-weight:700}th[data-column-key][draggable="true"]{cursor:grab}th[data-column-key].column-dragging{opacity:.5;background:#dcecff}
 </style>
 </head>
@@ -2020,7 +2021,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <section class="panel side-card" id="completedPanel"><h2>Completed Contracts</h2><div class="completed-count" id="completedCount">0 contracts completed</div><button class="primary-btn" style="width:100%" onclick="document.getElementById('completedPanel').scrollIntoView({behavior:'smooth'})">View Completed</button><div class="scroll" style="margin-top:12px"><table><thead><tr><th data-column-key="contract">Contract</th><th data-column-key="dayOpened">Day Opened</th><th data-column-key="dayClosed">Day Closed</th><th data-column-key="invested">Invested</th><th data-column-key="received">Received</th><th data-column-key="remainingPayment">Remaining Payment</th><th data-column-key="gainLoss">Gain / Loss</th><th data-column-key="status">Status</th><th data-column-key="action">Action</th></tr></thead><tbody id="completedContracts"></tbody></table></div></section>
 <div class="dashboard-grid">
 
-<select id="filter" class="hidden"><option value="">All contracts</option></select><section class="panel" id="historyPanel"><div class="section-head"><h2>Check History</h2><button class="secondary" onclick="exportCSV()">⇩ Export CSV</button></div><div class="history-search-box"><div class="field"><label>Search Check History By</label><select id="historySearchType" onchange="updateHistorySearchInput()"><option value="dateIssued">Date Issued</option><option value="dateReceived">Date Received</option><option value="amount">Check Amount</option><option value="contract">Contract Name</option><option value="checkno">Check Number</option></select></div><div class="field history-search-input"><label id="historySearchLabel">Date Issued</label><input id="historySearch" type="date" oninput="renderCheckHistory()" autocomplete="off"></div><div class="field history-clear-field"><label>&nbsp;</label><button type="button" class="secondary" onclick="clearHistorySearch()">Clear Search</button></div></div><div class="scroll"><table><thead><tr><th>Date Issued</th><th>Date Received</th><th>Check Amount</th><th>Contracts</th><th>Contract Check #</th><th>Check #</th><th>Actions</th></tr></thead><tbody id="history"></tbody></table></div></section>
+<select id="filter" class="hidden"><option value="">All contracts</option></select><section class="panel" id="historyPanel"><div class="section-head"><h2>Check History</h2><button class="secondary" onclick="exportCSV()">⇩ Export CSV</button></div><div class="history-search-box"><div class="field"><label>Search Check History By</label><select id="historySearchType" onchange="updateHistorySearchInput()"><option value="dateIssued">Date Issued</option><option value="dateReceived">Date Received</option><option value="amount">Check Amount</option><option value="contract">Contract Name</option><option value="checkno">Check Number</option></select></div><div class="field history-search-input"><label id="historySearchLabel">Date Issued</label><input id="historySearch" type="date" oninput="renderCheckHistory()" autocomplete="off"></div><div class="field history-clear-field"><label>&nbsp;</label><button type="button" class="secondary" onclick="clearHistorySearch()">Clear Search</button></div></div><div class="scroll"><table><thead><tr><th data-column-key="sequence">#</th><th data-column-key="dateIssued">Date Issued</th><th data-column-key="dateReceived">Date Received</th><th data-column-key="amount">Check Amount</th><th data-column-key="contract">Contracts</th><th data-column-key="checkno">Check #</th><th data-column-key="actions">Actions</th></tr></thead><tbody id="history"></tbody></table></div></section>
 <section class="panel hidden" id="reportsPanel">
   <div class="section-head report-head"><div><h2>Reports</h2><p class="muted" style="margin:0">View detailed performance, payment activity, and contract results.</p></div><button class="secondary" type="button" onclick="exportFullReport()">⇩ Export Full Report</button></div>
   <div class="report-grid report-kpis">
@@ -2115,6 +2116,18 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
           <label class="appearance-option"><span>Action</span><input type="checkbox" data-completed-column-toggle="action" onchange="updateCompletedContractColumnAppearance(this)"></label>
         </div>
       </div>
+      <div class="appearance-group">
+        <h4>Check History Columns</h4><p>Select which columns appear in Check History.</p><p class="column-order-hint">Drag to rearrange, or use the arrows.</p>
+        <div class="appearance-options" id="historyColumnOptions">
+          <label class="appearance-option"><span>#</span><input type="checkbox" data-history-column-toggle="sequence" onchange="updateCheckHistoryColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Date Issued</span><input type="checkbox" data-history-column-toggle="dateIssued" onchange="updateCheckHistoryColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Date Received</span><input type="checkbox" data-history-column-toggle="dateReceived" onchange="updateCheckHistoryColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Check Amount</span><input type="checkbox" data-history-column-toggle="amount" onchange="updateCheckHistoryColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Contracts</span><input type="checkbox" data-history-column-toggle="contract" onchange="updateCheckHistoryColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Check #</span><input type="checkbox" data-history-column-toggle="checkno" onchange="updateCheckHistoryColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Actions</span><input type="checkbox" data-history-column-toggle="actions" onchange="updateCheckHistoryColumnAppearance(this)"></label>
+        </div>
+      </div>
     </div>
   </div>
   <div class="settings-actions"><button class="primary-btn" type="button" onclick="refreshCloudData()">↻ Refresh Data Now</button></div>
@@ -2204,7 +2217,7 @@ let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
 let cloudLoadInFlight=false;
-const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{},activeContractColumns:{},completedContractColumns:{},activeContractColumnOrder:[],completedContractColumnOrder:[]}};
+const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{},activeContractColumns:{},completedContractColumns:{},checkHistoryColumns:{},activeContractColumnOrder:[],completedContractColumnOrder:[],checkHistoryColumnOrder:[]}};
 let data={contracts:[],checks:[]};
 let cloudDataReady=false;
 function localKey(userId){return "contractChecksIOS:"+userId}
@@ -2295,10 +2308,12 @@ function changeAdminPin(){
  localStorage.removeItem(adminPinStorageKey());adminPinUnlocked=false;updateAdminContactVisibility();
 }
 const DASHBOARD_CARD_KEYS=["invested","received","profit","active","all","paid","default","defaultLoss"];
+const DASHBOARD_CARD_LABELS={invested:"Total Invested",received:"Money Received",profit:"Overall Profit",active:"Active Contracts",all:"All Contracts",paid:"Paid in Full",default:"Default Contracts",defaultLoss:"Default Loss"};
 const DASHBOARD_SECTION_IDS={payments:"checkPanel",addContract:"newContractPanel",activeContracts:"contractsPanel",completedContracts:"completedPanel",checkHistory:"historyPanel",reports:"reportsPanel"};
 const DASHBOARD_SECTION_KEYS=["summary",...Object.keys(DASHBOARD_SECTION_IDS)];
 const ACTIVE_CONTRACT_COLUMN_KEYS=["name","dayOpened","invested","paid","breakEven","remainingBalance","amountPerCheck","expectedPayments","paymentsLeft","status","actions"];
 const COMPLETED_CONTRACT_COLUMN_KEYS=["contract","dayOpened","dayClosed","invested","received","remainingPayment","gainLoss","status","action"];
+const CHECK_HISTORY_COLUMN_KEYS=["sequence","dateIssued","dateReceived","amount","contract","checkno","actions"];
 function dashboardAppearancePreferences(){
  if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
  if(!data.preferences.dashboardCards||typeof data.preferences.dashboardCards!=="object")data.preferences.dashboardCards={};
@@ -2357,10 +2372,15 @@ function completedContractColumnPreferences(){
  if(!data.preferences.completedContractColumns||typeof data.preferences.completedContractColumns!=="object")data.preferences.completedContractColumns={};
  return data.preferences.completedContractColumns;
 }
+function checkHistoryColumnPreferences(){
+ if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
+ if(!data.preferences.checkHistoryColumns||typeof data.preferences.checkHistoryColumns!=="object")data.preferences.checkHistoryColumns={};
+ return data.preferences.checkHistoryColumns;
+}
 function contractColumnConfig(type){
- return type==="active"
-  ?{keys:ACTIVE_CONTRACT_COLUMN_KEYS,orderKey:"activeContractColumnOrder",panelId:"contractsPanel",optionsId:"activeColumnOptions",toggleAttribute:"data-active-column-toggle"}
-  :{keys:COMPLETED_CONTRACT_COLUMN_KEYS,orderKey:"completedContractColumnOrder",panelId:"completedPanel",optionsId:"completedColumnOptions",toggleAttribute:"data-completed-column-toggle"};
+ if(type==="active")return {keys:ACTIVE_CONTRACT_COLUMN_KEYS,orderKey:"activeContractColumnOrder",panelId:"contractsPanel",optionsId:"activeColumnOptions",toggleAttribute:"data-active-column-toggle",label:"Active"};
+ if(type==="completed")return {keys:COMPLETED_CONTRACT_COLUMN_KEYS,orderKey:"completedContractColumnOrder",panelId:"completedPanel",optionsId:"completedColumnOptions",toggleAttribute:"data-completed-column-toggle",label:"Completed"};
+ return {keys:CHECK_HISTORY_COLUMN_KEYS,orderKey:"checkHistoryColumnOrder",panelId:"historyPanel",optionsId:"historyColumnOptions",toggleAttribute:"data-history-column-toggle",label:"Check History"};
 }
 function contractColumnOrderPreferences(type){
  if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
@@ -2391,7 +2411,7 @@ function moveContractColumn(type,key,direction){
  const config=contractColumnConfig(type),order=contractColumnOrderPreferences(type).slice(),from=order.indexOf(key),to=from+direction;
  if(from<0||to<0||to>=order.length)return;
  [order[from],order[to]]=[order[to],order[from]];data.preferences[config.orderKey]=order;
- applyContractColumnOptionOrder(type);applyContractTableColumnOrder(type);save();toast(`${type==="active"?"Active":"Completed"} column order saved`);
+ applyContractColumnOptionOrder(type);applyContractTableColumnOrder(type);save();toast(`${config.label} column order saved`);
 }
 let draggedContractColumnType="",draggedContractColumnKey="";
 function reorderContractColumn(type,draggedKey,targetKey,placeAfter){
@@ -2399,7 +2419,7 @@ function reorderContractColumn(type,draggedKey,targetKey,placeAfter){
  const config=contractColumnConfig(type),order=contractColumnOrderPreferences(type).slice(),from=order.indexOf(draggedKey);if(from<0)return;
  order.splice(from,1);let to=order.indexOf(targetKey);if(to<0)return;if(placeAfter)to++;
  order.splice(to,0,draggedKey);data.preferences[config.orderKey]=order;
- applyContractColumnOptionOrder(type);applyContractTableColumnOrder(type);save();toast(`${type==="active"?"Active":"Completed"} column order saved`);
+ applyContractColumnOptionOrder(type);applyContractTableColumnOrder(type);save();toast(`${config.label} column order saved`);
 }
 function setupContractColumnOption(option,type,key){
  option.classList.add("column-order-option");option.draggable=true;option.title="Drag to rearrange";
@@ -2438,6 +2458,12 @@ function applyCompletedContractColumns(){
  COMPLETED_CONTRACT_COLUMN_KEYS.forEach(key=>{if(table)table.querySelectorAll(`[data-column-key="${key}"]`).forEach(cell=>cell.classList.toggle("hidden",preferences[key]===false))});
  document.querySelectorAll("[data-completed-column-toggle]").forEach(input=>{input.checked=preferences[input.dataset.completedColumnToggle]!==false});
 }
+function applyCheckHistoryColumns(){
+ const preferences=checkHistoryColumnPreferences(),table=$("historyPanel")?.querySelector("table");
+ applyContractTableColumnOrder("history");applyContractColumnOptionOrder("history");
+ CHECK_HISTORY_COLUMN_KEYS.forEach(key=>{if(table)table.querySelectorAll(`[data-column-key="${key}"]`).forEach(cell=>cell.classList.toggle("hidden",preferences[key]===false))});
+ document.querySelectorAll("[data-history-column-toggle]").forEach(input=>{input.checked=preferences[input.dataset.historyColumnToggle]!==false});
+}
 function dashboardIsSelected(){return document.querySelector('.nav-item.active')?.getAttribute("href")==="#dashboard"}
 function applyDashboardSections(){
  const preferences=dashboardSectionPreferences();
@@ -2462,12 +2488,24 @@ function updateSummaryGridLayout(){
  if(count>1&&count%columns===1)visibleCards[visibleCards.length-1].style.gridColumn="1 / -1";
 }
 function applyDashboardAppearance(){
+ setupSummaryCloseButtons();
  const preferences=dashboardAppearancePreferences();
  document.querySelectorAll("[data-summary-key]").forEach(card=>card.classList.toggle("appearance-hidden",preferences[card.dataset.summaryKey]===false));
  document.querySelectorAll("[data-summary-toggle]").forEach(input=>{input.checked=preferences[input.dataset.summaryToggle]!==false});
  applyDashboardCardOrder();
  updateSummaryGridLayout();
  if(dashboardIsSelected())applyDashboardSections();
+}
+function setupSummaryCloseButtons(){
+ document.querySelectorAll("#dashboardSummary [data-summary-key]").forEach(card=>{
+  if(card.querySelector(".summary-close-btn"))return;
+  const key=card.dataset.summaryKey,button=document.createElement("button");button.type="button";button.className="summary-close-btn";button.textContent="×";button.draggable=false;
+  button.setAttribute("aria-label",`Hide ${DASHBOARD_CARD_LABELS[key]||"summary box"}`);button.title="Hide this summary box";
+  button.addEventListener("pointerdown",event=>event.stopPropagation());
+  button.addEventListener("dragstart",event=>{event.preventDefault();event.stopPropagation()});
+  button.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();dashboardAppearancePreferences()[key]=false;applyDashboardAppearance();save();toast(`${DASHBOARD_CARD_LABELS[key]||"Summary box"} hidden. To add it back, go to Settings → Summary Boxes.`,4500)});
+  card.appendChild(button);
+ });
 }
 function updateDashboardAppearance(input){
  const key=input?.dataset?.summaryToggle;if(!DASHBOARD_CARD_KEYS.includes(key))return;
@@ -2485,6 +2523,10 @@ function updateCompletedContractColumnAppearance(input){
  const key=input?.dataset?.completedColumnToggle;if(!COMPLETED_CONTRACT_COLUMN_KEYS.includes(key))return;
  completedContractColumnPreferences()[key]=!!input.checked;applyCompletedContractColumns();save();
 }
+function updateCheckHistoryColumnAppearance(input){
+ const key=input?.dataset?.historyColumnToggle;if(!CHECK_HISTORY_COLUMN_KEYS.includes(key))return;
+ checkHistoryColumnPreferences()[key]=!!input.checked;applyCheckHistoryColumns();save();
+}
 function automaticDataRefreshEnabled(){return data.preferences?.automaticDataRefresh!==false}
 function updateAutomaticDataRefresh(value){
  if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
@@ -2500,6 +2542,7 @@ function updateSettingsPanel(){
  applyDashboardSections();
  applyActiveContractColumns();
  applyCompletedContractColumns();
+ applyCheckHistoryColumns();
 }
 function setupNavScrolling(){
   document.querySelectorAll(".nav-item").forEach(item=>{
@@ -3169,10 +3212,12 @@ async function initCloud(){
  });
 }
 function updateContractNumberPlaceholder(){let n=data.contracts.length+1;$("cname").placeholder=`Contract #${n}`}
-function toast(s){$("toast").textContent=s;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",1800)}
+let toastTimer=null;
+function toast(s,duration=1800){const element=$("toast");if(!element)return;clearTimeout(toastTimer);element.textContent=s;element.style.display="block";toastTimer=setTimeout(()=>element.style.display="none",duration)}
 function ensureContractProfitSummary(){
  const summary=$("contractCalcSummary");if(!summary)return;
  if(!$("contractCalcProfit")){const box=document.createElement("div");box.className="estimated-profit-box";box.innerHTML='<span>Estimated Profit</span><div class="estimated-profit-values"><strong id="contractCalcProfit">$0.00</strong><strong id="contractCalcProfitPercent">(0.00%)</strong></div>';summary.appendChild(box)}
+ if(!$("contractCalcProfitPerCheck")){const box=document.createElement("div");box.className="estimated-profit-box";box.innerHTML='<span>Profit per Check</span><strong id="contractCalcProfitPerCheck">$0.00</strong>';summary.appendChild(box)}
 }
 function updateContractPaymentCalculation(){
  ensureContractProfitSummary();
@@ -3186,6 +3231,7 @@ function updateContractPaymentCalculation(){
  const amountPerCheck=payments>0?netAmount/payments:0;
  const estimatedProfit=netAmount-invested;
  const estimatedProfitPercent=invested>0?(estimatedProfit/invested)*100:0;
+ const profitPerCheck=payments>0?estimatedProfit/payments:0;
  if($("cpreset"))$("cpreset").value=totalReturn>0&&payments>0?amountPerCheck.toFixed(2):"";
  if($("contractCalcTotal"))$("contractCalcTotal").textContent=money(totalReturn);
  if($("contractCalcFee"))$("contractCalcFee").textContent=`${money(feeAmount)} (${feePercent.toFixed(2).replace(/\.00$/,'')}%)`;
@@ -3194,6 +3240,7 @@ function updateContractPaymentCalculation(){
  const profitElement=$("contractCalcProfit"),profitPercentElement=$("contractCalcProfitPercent"),profitColor=estimatedProfit>0?"#07853f":estimatedProfit<0?"#d92d20":"#17365f";
  if(profitElement){profitElement.textContent=money(estimatedProfit);profitElement.style.color=profitColor}
  if(profitPercentElement){profitPercentElement.textContent=`(${estimatedProfitPercent.toFixed(2)}%)`;profitPercentElement.style.color=profitColor}
+ const profitPerCheckElement=$("contractCalcProfitPerCheck");if(profitPerCheckElement){profitPerCheckElement.textContent=money(profitPerCheck);profitPerCheckElement.style.color=profitColor}
 }
 function updateContractPaymentOverride(){
  if($("contractCalcPayment"))$("contractCalcPayment").textContent=money(Math.max(0,parseFloat($("cpreset")?.value)||0));
@@ -3484,14 +3531,14 @@ function renderContractChoices(){
 }
 function updateHistorySearchInput(){let type=$("historySearchType")?.value||'dateIssued',input=$("historySearch"),label=$("historySearchLabel");if(!input)return;let config={dateIssued:['Date Issued','date','Search by date issued'],dateReceived:['Date Received','date','Search by date received'],amount:['Check Amount','number','Search by check amount'],contract:['Contract Name','search','Search by contract name'],checkno:['Check Number','search','Search by check number']}[type]||['Date Issued','date','Search'];label.textContent=config[0];input.type=config[1];input.placeholder=config[2];input.step=config[1]==='number'?'0.01':undefined;if(config[1]!=='number')input.removeAttribute('step');renderCheckHistory()}
 function clearHistorySearch(){let input=$("historySearch");if(input)input.value='';renderCheckHistory()}
-function contractCheckSequence(check){
- const contract=String(check?.contract||""),ordered=data.checks.filter(item=>String(item.contract||"")===contract).slice().sort((a,b)=>{
+function checkHistorySequence(check){
+ const ordered=data.checks.slice().sort((a,b)=>{
   const aDate=String(a.dateReceived||a.date||""),bDate=String(b.dateReceived||b.date||"");if(aDate!==bDate)return aDate.localeCompare(bDate);
   return String(a.id??"").localeCompare(String(b.id??""),undefined,{numeric:true});
  });
  const index=ordered.findIndex(item=>item===check||(check?.id!=null&&String(item.id)===String(check.id)));return index>=0?index+1:1;
 }
-function renderCheckHistory(){let f=$("filter")?.value||'',historyChecks=data.checks.filter(x=>!f||x.contract===f),historyType=$("historySearchType")?.value||'dateIssued',historyTerm=$("historySearch")?.value||'';if(historyTerm){let term=historyTerm.trim().toLowerCase();historyChecks=historyChecks.filter(x=>{let value=historyType==='dateReceived'?(x.dateReceived||''):historyType==='amount'?String(parseFloat(x.amount)||0):historyType==='contract'?String(x.contract||''):historyType==='checkno'?String(x.checkno||''):String(x.date||'');return value.toLowerCase().includes(term)})}$("history").innerHTML=historyChecks.map(x=>`<tr><td>${escape(x.date||"")}</td><td>${escape(x.dateReceived||"")||'—'}</td><td>${money(x.amount)}</td><td>${escape(x.contract||"")}</td><td><b>#${contractCheckSequence(x)}</b></td><td>${escape(x.checkno)||'—'}</td><td><div class="actions"><button class="table-action" onclick="editCheck(${x.id})">Edit</button><button class="danger" onclick="deleteCheck(${x.id})">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No checks match your search.</td></tr>'}
+function renderCheckHistory(){let f=$("filter")?.value||'',historyChecks=data.checks.filter(x=>!f||x.contract===f),historyType=$("historySearchType")?.value||'dateIssued',historyTerm=$("historySearch")?.value||'';if(historyTerm){let term=historyTerm.trim().toLowerCase();historyChecks=historyChecks.filter(x=>{let value=historyType==='dateReceived'?(x.dateReceived||''):historyType==='amount'?String(parseFloat(x.amount)||0):historyType==='contract'?String(x.contract||''):historyType==='checkno'?String(x.checkno||''):String(x.date||'');return value.toLowerCase().includes(term)})}$("history").innerHTML=historyChecks.map(x=>`<tr><td data-column-key="sequence"><b>#${checkHistorySequence(x)}</b></td><td data-column-key="dateIssued">${escape(x.date||"")}</td><td data-column-key="dateReceived">${escape(x.dateReceived||"")||'—'}</td><td data-column-key="amount">${money(x.amount)}</td><td data-column-key="contract">${escape(x.contract||"")}</td><td data-column-key="checkno">${escape(x.checkno)||'—'}</td><td data-column-key="actions"><div class="actions"><button class="table-action" onclick="editCheck(${x.id})">Edit</button><button class="danger" onclick="deleteCheck(${x.id})">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No checks match your search.</td></tr>';applyCheckHistoryColumns()}
 function render(){
  updateContractNumberPlaceholder();
  let open=data.contracts.filter(c=>!c.closed),filterOpts=open.map(c=>`<option>${escape(c.name)}</option>`).join("");
@@ -3538,11 +3585,11 @@ function runPaymentReport(){let from=$('paymentFrom')?.value||'',to=$('paymentTo
 function renderPaymentReport(){let today=localDateString(new Date());if(!$('paymentFrom').value||!$('paymentTo').value){let d=new Date();d=new Date(d.getFullYear(),d.getMonth(),1);$('paymentFrom').value=localDateString(d);$('paymentTo').value=today}runPaymentReport()}
 function renderReports(){let open=data.contracts.filter(c=>!c.closed),received=data.checks.reduce((a,x)=>a+(parseFloat(x.amount)||0),0),invested=data.contracts.reduce((a,c)=>a+(parseFloat(c.invested)||0),0),profit=received-invested,defaults=data.contracts.filter(c=>c.closed&&c.defaulted),defaultLoss=defaults.reduce((sum,c)=>sum+Math.max(0,(parseFloat(c.invested)||0)-data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0)),0),completed=data.contracts.filter(c=>c.closed&&!c.defaulted),owed=data.contracts.filter(c=>!c.closed&&Math.max(0,(parseFloat(c.invested)||0)-data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0))>.009);$('reportInvested').textContent=money(invested);$('reportReceived').textContent=money(received);$('reportProfit').textContent=money(profit);$('reportProfit').classList.toggle('gain',profit>0);$('reportProfit').classList.toggle('loss',profit<0);$('reportAllContracts').textContent=data.contracts.length;$('reportOpenContracts').textContent=open.length;$('reportPaidInFull').textContent=completed.length;$('reportDefaultContracts').textContent=defaults.length;$('reportDefaultLoss').textContent=money(defaultLoss);$('flowInvested').textContent=money(invested);$('flowReceived').textContent=money(received);$('flowOutstanding').textContent=money(Math.max(0,invested-received));$('flowProfit').textContent=money(profit);$('flowProfit').classList.toggle('gain',profit>0);$('flowProfit').classList.toggle('loss',profit<0);$('perfAll').textContent=data.contracts.length;$('perfActive').textContent=open.length;$('perfCompleted').textContent=completed.length;$('perfDefault').textContent=defaults.length;$('perfDefaultLoss').textContent=money(defaultLoss);$('perfOwed').textContent=owed.length;renderPaymentReport();updateReportContractOptions();if(!$('reportFrom').value||!$('reportTo').value){let today=localDateString(new Date());$('reportFrom').value=today.slice(0,8)+'01';$('reportTo').value=today}runDateReport()}
 function exportContractsCSV(){let rows=[['Contract','Opened','Closed','Invested','Received','Remaining','Profit/Loss','Status']];data.contracts.forEach(c=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',c.invested,rec,Math.max(0,(parseFloat(c.invested)||0)-rec),rec-(parseFloat(c.invested)||0),c.closed?(c.defaulted?'Default':'Completed'):'Active'])});downloadCSV(rows,'contracts-report.csv')}
-function exportFullReport(){let rows=[['FundLedger Full Report'],[],['Metric','Value'],['Total Investment',$('reportInvested')?.textContent||''],['Money Received',$('reportReceived')?.textContent||''],['Overall Profit/Loss',$('reportProfit')?.textContent||''],['Active Contracts',$('reportOpenContracts')?.textContent||''],['All Contracts',$('reportAllContracts')?.textContent||''],['Paid in Full',$('reportPaidInFull')?.textContent||''],['Default Contracts',$('reportDefaultContracts')?.textContent||''],['Default Loss',$('reportDefaultLoss')?.textContent||''],[],['Contracts'],['Contract','Opened','Closed','Invested','Received','Remaining','Profit/Loss','Status']];data.contracts.forEach(c=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',c.invested,rec,Math.max(0,(parseFloat(c.invested)||0)-rec),rec-(parseFloat(c.invested)||0),c.closed?(c.defaulted?'Default':'Completed'):'Active'])});rows.push([],['Payments'],['Date Issued','Date Received','Contract','Contract Check #','Check #','Amount','Verified']);data.checks.forEach(x=>rows.push([x.date||'',x.dateReceived||'',x.contract||'',`#${contractCheckSequence(x)}`,x.checkno||'',x.amount||0,x.verified?'Yes':'No']));downloadCSV(rows,'fundledger-full-report.csv')}
+function exportFullReport(){let rows=[['FundLedger Full Report'],[],['Metric','Value'],['Total Investment',$('reportInvested')?.textContent||''],['Money Received',$('reportReceived')?.textContent||''],['Overall Profit/Loss',$('reportProfit')?.textContent||''],['Active Contracts',$('reportOpenContracts')?.textContent||''],['All Contracts',$('reportAllContracts')?.textContent||''],['Paid in Full',$('reportPaidInFull')?.textContent||''],['Default Contracts',$('reportDefaultContracts')?.textContent||''],['Default Loss',$('reportDefaultLoss')?.textContent||''],[],['Contracts'],['Contract','Opened','Closed','Invested','Received','Remaining','Profit/Loss','Status']];data.contracts.forEach(c=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.amount)||0),0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',c.invested,rec,Math.max(0,(parseFloat(c.invested)||0)-rec),rec-(parseFloat(c.invested)||0),c.closed?(c.defaulted?'Default':'Completed'):'Active'])});rows.push([],['Payments'],['#','Date Issued','Date Received','Contract','Check #','Amount','Verified']);data.checks.forEach(x=>rows.push([`#${checkHistorySequence(x)}`,x.date||'',x.dateReceived||'',x.contract||'',x.checkno||'',x.amount||0,x.verified?'Yes':'No']));downloadCSV(rows,'fundledger-full-report.csv')}
 function downloadCSV(rows,name){let csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function exportCSV(){
- let rows=[["Date Issued","Date Received","Contract","Contract Check #","Check #","Check Amount","Verified"]];
- data.checks.forEach(x=>rows.push([x.date,x.dateReceived||"",x.contract,`#${contractCheckSequence(x)}`,x.checkno,x.amount,x.verified?"Yes":"No"]));
+ let rows=[["#","Date Issued","Date Received","Contract","Check #","Check Amount","Verified"]];
+ data.checks.forEach(x=>rows.push([`#${checkHistorySequence(x)}`,x.date,x.dateReceived||"",x.contract,x.checkno,x.amount,x.verified?"Yes":"No"]));
  let csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n");
  let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="received-checks.csv";a.click();
 }
