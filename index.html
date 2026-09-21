@@ -2197,6 +2197,7 @@ const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n||0);
 function updateRemainingPaymentLabels(root=document){
  root.querySelectorAll("label,th,span").forEach(element=>{
+  if(element.matches("label")&&element.querySelector("input,select,textarea"))return;
   if(/^expected payments?$/i.test(element.textContent.trim()))element.textContent="# of Remaining Payments";
  });
 }
