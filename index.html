@@ -2190,6 +2190,29 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #newContractPanel .contract-calc-summary > div.result-card-touch-dragging{touch-action:none;outline:2px solid #2f80ed;outline-offset:2px}
 @media (hover:none),(max-width:700px){#newContractPanel .result-reorder-controls{opacity:1}#newContractPanel .contract-calc-summary > div{padding-right:34px!important}}
 </style>
+<style id="active-contracts-compact-columns-v2">
+/* Compact Active Contracts layout: keep summary on the right while bringing table columns closer. */
+#contractsPanel .scroll{overflow-x:auto!important}
+#contractsPanel table{width:100%!important;min-width:900px!important;table-layout:auto!important;border-collapse:collapse!important}
+#contractsPanel th,#contractsPanel td{padding:10px 7px!important;vertical-align:middle!important}
+#contractsPanel th{font-size:12px!important;line-height:1.2!important}
+#contractsPanel td{font-size:13px!important;line-height:1.25!important}
+#contractsPanel .active-select-col{width:34px!important;min-width:34px!important;max-width:34px!important;padding-left:8px!important;padding-right:4px!important}
+#contractsPanel th[data-column-key="name"],#contractsPanel td[data-column-key="name"]{min-width:105px!important;width:13%!important}
+#contractsPanel th[data-column-key="dayOpened"],#contractsPanel td[data-column-key="dayOpened"]{min-width:82px!important;width:10%!important}
+#contractsPanel th[data-column-key="invested"],#contractsPanel td[data-column-key="invested"]{min-width:82px!important;width:10%!important}
+#contractsPanel th[data-column-key="paid"],#contractsPanel td[data-column-key="paid"]{min-width:82px!important;width:10%!important}
+#contractsPanel th[data-column-key="breakEven"],#contractsPanel td[data-column-key="breakEven"]{min-width:86px!important;width:10%!important}
+#contractsPanel th[data-column-key="remainingBalance"],#contractsPanel td[data-column-key="remainingBalance"]{min-width:100px!important;width:12%!important}
+#contractsPanel th[data-column-key="amountPerCheck"],#contractsPanel td[data-column-key="amountPerCheck"]{min-width:88px!important;width:10%!important}
+#contractsPanel th[data-column-key="expectedPayments"],#contractsPanel td[data-column-key="expectedPayments"]{min-width:72px!important;width:8%!important}
+#contractsPanel th[data-column-key="paymentsLeft"],#contractsPanel td[data-column-key="paymentsLeft"]{min-width:82px!important;width:9%!important}
+#contractsPanel .active-contracts-head{gap:10px!important;margin-bottom:10px!important}
+#contractsPanel .active-contract-actions{gap:7px!important}
+#contractsPanel .active-contract-search{margin-bottom:10px!important}
+#contractsPanel .active-contract-footer{padding:10px 8px!important}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
