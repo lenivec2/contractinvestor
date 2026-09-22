@@ -3740,6 +3740,44 @@ initCloud();
 })();
 </script>
 
+
+<style id="admin-fee-remaining-boxes-final">
+/* Make the Admin Fee and Expected Payments boxes themselves narrower. */
+@media (min-width:701px){
+  #newContractPanel .contract-fee-field,
+  #newContractPanel .contract-payments-field{
+    width:180px !important;
+    min-width:180px !important;
+    max-width:180px !important;
+    flex:0 0 180px !important;
+    justify-self:start !important;
+  }
+  #newContractPanel #cadminfee,
+  #newContractPanel #cpayments{
+    width:180px !important;
+    min-width:180px !important;
+    max-width:180px !important;
+    box-sizing:border-box !important;
+  }
+}
+@media (max-width:700px){
+  #newContractPanel .contract-fee-field,
+  #newContractPanel .contract-payments-field{
+    width:140px !important;
+    min-width:140px !important;
+    max-width:140px !important;
+    flex:0 0 140px !important;
+  }
+  #newContractPanel #cadminfee,
+  #newContractPanel #cpayments{
+    width:140px !important;
+    min-width:140px !important;
+    max-width:140px !important;
+    box-sizing:border-box !important;
+  }
+}
+</style>
+
 </body></html>
 <style id="add-contract-small-fee-payments">
 /* Compact fields requested for Add Contract: Admin Fee and number of remaining/expected payments. */
