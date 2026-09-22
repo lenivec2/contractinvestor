@@ -4250,6 +4250,26 @@ initCloud();
 </script>
 
 
+<style id="active-contracts-safe-responsive-layout">
+#contractsPanel.panel.page-summary-layout{width:100%!important;max-width:100%!important}
+#contractsPanel .page-main-content{min-width:0!important}
+#contractsPanel .page-main-content>.scroll{overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;border:1px solid #e1eaf4;border-radius:10px}
+#contractsPanel .page-main-content>.scroll table{display:table!important;width:100%!important;min-width:1030px!important;border-collapse:collapse!important}
+#contractsPanel .page-main-content>.scroll thead{display:table-header-group!important}
+#contractsPanel .page-main-content>.scroll tbody{display:table-row-group!important}
+#contractsPanel .page-main-content>.scroll tr{display:table-row!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#contractsPanel .page-main-content>.scroll th,#contractsPanel .page-main-content>.scroll td{display:table-cell!important;white-space:normal!important;word-break:normal!important;vertical-align:middle!important;padding:10px 9px!important;text-align:left!important;border-bottom:1px solid #e7edf5!important}
+#contractsPanel .page-main-content>.scroll td:before{display:none!important;content:none!important}
+#contractsPanel .page-main-content>.scroll th{background:#eef6ff!important;color:#17365f!important;font-size:12px!important;line-height:1.25!important;font-weight:800!important}
+#contractsPanel .page-main-content>.scroll td{font-size:12px!important;color:#243c5a!important}
+#contractsPanel td[data-column-key="actions"],#contractsPanel th[data-column-key="actions"]{position:sticky!important;right:0!important;background:#fff!important;z-index:3!important;min-width:150px!important;box-shadow:-5px 0 8px rgba(21,52,88,.05)}
+#contractsPanel th[data-column-key="actions"]{background:#eef6ff!important;z-index:4!important}
+#contractsPanel .page-summary-side{min-width:280px!important}
+@media (min-width:1180px){#contractsPanel.panel.page-summary-layout:not(.hidden){grid-template-columns:minmax(0,1fr) 285px!important;gap:14px!important}}
+@media (max-width:1179px){#contractsPanel.panel.page-summary-layout:not(.hidden){display:flex!important;flex-direction:column!important}#contractsPanel.panel.page-summary-layout>.page-summary-side{display:flex!important;position:static!important;margin-top:14px!important;width:100%!important;min-width:0!important}#contractsPanel .page-main-content>.scroll table{min-width:900px!important}}
+@media (max-width:700px){#contractsPanel .page-main-content>.scroll table{min-width:820px!important}#contractsPanel .page-main-content>.scroll th,#contractsPanel .page-main-content>.scroll td{padding:8px 7px!important;font-size:11px!important}#contractsPanel td[data-column-key="actions"],#contractsPanel th[data-column-key="actions"]{min-width:135px!important}}
+</style>
+</body></html>
 
 <style id="projected-results-visibility-upgrade">
 /* Stronger visual hierarchy for Projected Results */
@@ -4454,7 +4474,7 @@ initCloud();
 (function(){
  const specs={
   checkPanel:{title:'Payment Summary',rows:[['Payment Amount','psPayAmount'],['Total Allocated','psAllocated'],['Unallocated Amount','psUnallocated'],['Difference','psDifference'],['Contracts Selected','psSelected'],['Status','psPayStatus']]},
-  contractsPanel:{title:'Active Contracts Summary',rows:[['Active Contracts','psActiveCount'],['Total Funded','psActiveFunded'],['Amount Received','psActiveReceived'],['Remaining Receivable','psActiveRemaining'],['Projected Profit','psActiveProfit']]},
+  contractsPanel:{title:'Active Contracts Summary',rows:[['Active Contracts','psActiveCount'],['Total Cost','psActiveFunded'],['Amount Received','psActiveReceived'],['Remaining Receivable','psActiveRemaining'],['Projected Profit','psActiveProfit']]},
   completedPanel:{title:'Completed Contracts Summary',rows:[['Completed Contracts','psCompletedCount'],['Total Funded','psCompletedFunded'],['Amount Received','psCompletedReceived'],['Profit / Loss','psCompletedProfit'],['Defaulted','psCompletedDefaulted']]},
   historyPanel:{title:'Payment History Summary',rows:[['Payments Shown','psHistoryCount'],['Amount Shown','psHistoryAmount'],['All Payments','psHistoryAllCount'],['Total Payments Received','psHistoryAllAmount'],['Contracts Paid','psHistoryContracts']]},
   reportsPanel:{title:'Report Summary',rows:[['Total Funded','psReportFunded'],['Payments Received','psReportReceived'],['Realized Profit / Loss','psReportProfit'],['Active Contracts','psReportActive'],['Completed Contracts','psReportCompleted'],['Defaulted Contracts','psReportDefaulted']]}
@@ -4465,7 +4485,7 @@ initCloud();
  function receivedFor(name){return (data.checks||[]).filter(x=>x.contract===name).reduce((s,x)=>s+(parseFloat(x.paymentAmount)||0),0)}
  function update(){if(typeof data!=='object')return;
   const pay=parseFloat(document.getElementById('amount')?.value)||0;let allocated=0;document.querySelectorAll('#manualBreakdown input[type="number"]').forEach(i=>allocated+=parseFloat(i.value)||0);if(!allocated){const sa=parseFloat(document.getElementById('summaryAllocated')?.textContent?.replace(/[^0-9.-]/g,''));if(Number.isFinite(sa))allocated=sa}const diff=pay-allocated;set('psPayAmount',m(pay));set('psAllocated',m(allocated));set('psUnallocated',m(Math.max(0,diff)),Math.abs(diff)<.005?'good':(diff>0?'warn':''));set('psDifference',(allocated-pay>0?'+':'')+m(allocated-pay),Math.abs(diff)<.005?'good':'warn');set('psSelected',String((typeof breakdownRows!=='undefined'?breakdownRows.filter(r=>r.contract).length:document.querySelectorAll('#contractChoices input:checked').length)||0));set('psPayStatus',pay>0&&Math.abs(diff)<.005?'Ready to save':(diff<-.005?'Over allocated':diff>.005?'Under allocated':'Allocation incomplete'),pay>0&&Math.abs(diff)<.005?'good':'warn');
-  const active=(data.contracts||[]).filter(c=>!c.closed);let af=0,ar=0,arem=0,ap=0;active.forEach(c=>{const f=parseFloat(c.fundedAmount)||0,r=receivedFor(c.name),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),cnt=(data.checks||[]).filter(x=>x.contract===c.name).length,left=Math.max(0,expected-cnt),rem=expected?left*(parseFloat(c.paymentAmount)||0):Math.max(0,f-r);af+=f;ar+=r;arem+=rem;const net=(parseFloat(c.netAmount)||parseFloat(c.totalReturn)||0);ap+=net-f-(parseFloat(c.referralFee)||0)});set('psActiveCount',String(active.length));set('psActiveFunded',m(af));set('psActiveReceived',m(ar));set('psActiveRemaining',m(arem));set('psActiveProfit',m(ap),ap>=0?'good':'warn');
+  const active=(data.contracts||[]).filter(c=>!c.closed);let af=0,ar=0,arem=0,ap=0;active.forEach(c=>{const base=parseFloat(c.fundedAmount)||0,fee=parseFloat(c.referralFee)||0,f=base+fee,r=receivedFor(c.name),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),cnt=(data.checks||[]).filter(x=>x.contract===c.name).length,left=Math.max(0,expected-cnt),rem=expected?left*(parseFloat(c.paymentAmount)||0):Math.max(0,f-r);af+=f;ar+=r;arem+=rem;const net=(parseFloat(c.netAmount)||parseFloat(c.totalReturn)||0);ap+=net-f-(parseFloat(c.referralFee)||0)});set('psActiveCount',String(active.length));set('psActiveFunded',m(af));set('psActiveReceived',m(ar));set('psActiveRemaining',m(arem));set('psActiveProfit',m(ap),ap>=0?'good':'warn');
   const completed=(data.contracts||[]).filter(c=>c.closed);let cf=0,cr=0;completed.forEach(c=>{cf+=parseFloat(c.fundedAmount)||0;cr+=receivedFor(c.name)});const cp=cr-cf;set('psCompletedCount',String(completed.length));set('psCompletedFunded',m(cf));set('psCompletedReceived',m(cr));set('psCompletedProfit',m(cp),cp>=0?'good':'warn');set('psCompletedDefaulted',String(completed.filter(c=>c.defaulted).length));
   const histRows=[...document.querySelectorAll('#history tr')].filter(r=>r.querySelector('td[data-column-key="amount"]'));let ha=0;histRows.forEach(r=>ha+=parseFloat(r.querySelector('td[data-column-key="amount"]')?.textContent.replace(/[^0-9.-]/g,''))||0);const allAmt=(data.checks||[]).reduce((s,x)=>s+(parseFloat(x.paymentAmount)||0),0);set('psHistoryCount',String(histRows.length));set('psHistoryAmount',m(ha));set('psHistoryAllCount',String((data.checks||[]).length));set('psHistoryAllAmount',m(allAmt));set('psHistoryContracts',String(new Set((data.checks||[]).map(x=>x.contract).filter(Boolean)).size));
   const totalFunded=(data.contracts||[]).reduce((s,c)=>s+(parseFloat(c.fundedAmount)||0),0),profit=allAmt-totalFunded;set('psReportFunded',m(totalFunded));set('psReportReceived',m(allAmt));set('psReportProfit',m(profit),profit>=0?'good':'warn');set('psReportActive',String(active.length));set('psReportCompleted',String(completed.filter(c=>!c.defaulted).length));set('psReportDefaulted',String(completed.filter(c=>c.defaulted).length));
@@ -4516,53 +4536,3 @@ initCloud();
   padding-bottom:0;
 }
 </style>
-<style id="active-contracts-reference-layout-fix">
-/* Active Contracts: reference-style table + summary, with responsive horizontal scrolling. */
-#contractsPanel.panel.page-summary-layout{width:100%!important;max-width:100%!important}
-#contractsPanel .page-main-content{min-width:0!important}
-#contractsPanel .page-main-content>.scroll{overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;border:1px solid #e1eaf4;border-radius:10px}
-#contractsPanel .page-main-content>.scroll table{display:table!important;width:100%!important;min-width:1030px!important;border-collapse:collapse!important}
-#contractsPanel .page-main-content>.scroll thead{display:table-header-group!important}
-#contractsPanel .page-main-content>.scroll tbody{display:table-row-group!important}
-#contractsPanel .page-main-content>.scroll tr{display:table-row!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important}
-#contractsPanel .page-main-content>.scroll th,#contractsPanel .page-main-content>.scroll td{display:table-cell!important;white-space:normal!important;word-break:normal!important;vertical-align:middle!important;padding:10px 9px!important;text-align:left!important;border-bottom:1px solid #e7edf5!important}
-#contractsPanel .page-main-content>.scroll td:before{display:none!important;content:none!important}
-#contractsPanel .page-main-content>.scroll th{background:#eef6ff!important;color:#17365f!important;font-size:12px!important;line-height:1.25!important;font-weight:800!important}
-#contractsPanel .page-main-content>.scroll td{font-size:12px!important;color:#243c5a!important}
-#contractsPanel td[data-column-key="actions"],#contractsPanel th[data-column-key="actions"]{position:sticky!important;right:0!important;background:#fff!important;z-index:3!important;min-width:122px!important;box-shadow:-5px 0 8px rgba(21,52,88,.05)}
-#contractsPanel th[data-column-key="actions"]{background:#eef6ff!important;z-index:4!important}
-#contractsPanel .page-summary-side{min-width:280px!important}
-#contractsPanel .page-summary-card{border-radius:10px!important}
-#contractsPanel .page-summary-card h3{font-size:14px!important}
-@media (min-width:1180px){#contractsPanel.panel.page-summary-layout:not(.hidden){grid-template-columns:minmax(0,1fr) 285px!important;gap:14px!important}}
-@media (max-width:1179px){
- #contractsPanel.panel.page-summary-layout:not(.hidden){display:flex!important;flex-direction:column!important}
- #contractsPanel.panel.page-summary-layout>.page-summary-side{display:flex!important;position:static!important;margin-top:14px!important;width:100%!important;min-width:0!important}
- #contractsPanel .page-main-content>.scroll table{min-width:900px!important}
-}
-@media (max-width:700px){
- #contractsPanel .page-main-content>.scroll table{min-width:820px!important}
- #contractsPanel .page-main-content>.scroll th,#contractsPanel .page-main-content>.scroll td{padding:8px 7px!important;font-size:11px!important}
- #contractsPanel td[data-column-key="actions"],#contractsPanel th[data-column-key="actions"]{min-width:105px!important}
-}
-</style>
-<script id="active-contracts-total-cost-summary-fix">
-(function(){
- function moneyTC(n){return (Number(n)||0).toLocaleString(undefined,{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2})}
- function updateActiveTotalCost(){
-  if(typeof data!=='object')return;
-  const active=(data.contracts||[]).filter(c=>!c.closed);
-  let total=0;
-  active.forEach(c=>{total+=(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0)});
-  const el=document.getElementById('psActiveFunded');if(el)el.textContent=moneyTC(total);
- }
- function renameSummary(){const e=document.getElementById('psActiveFunded');const row=e?.closest('.page-summary-row');const label=row?.querySelector('span');if(label)label.textContent='Total Cost'}
- const obs=new MutationObserver(()=>{renameSummary();updateActiveTotalCost()});
- document.addEventListener('DOMContentLoaded',()=>{renameSummary();updateActiveTotalCost();const p=document.getElementById('contractsPanel');if(p)obs.observe(p,{childList:true,subtree:true});});
- document.addEventListener('click',()=>setTimeout(()=>{renameSummary();updateActiveTotalCost()},20));
- document.addEventListener('change',()=>setTimeout(updateActiveTotalCost,20));
- setTimeout(()=>{renameSummary();updateActiveTotalCost()},100);
-})();
-</script>
-
-</body></html>
