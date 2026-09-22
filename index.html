@@ -2064,6 +2064,18 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
+
+<style id="fundledger-date-check-size-order-final">
+/* Final Add Contract layout: smaller Contract Start Date, wider Check #. */
+@media (min-width:701px){
+  #newContractPanel .contract-date-field{grid-column:7 / span 2!important;grid-row:2!important;}
+  #newContractPanel .contract-check-field{grid-column:9 / span 4!important;grid-row:2!important;}
+  #newContractPanel .contract-date-field,
+  #newContractPanel .contract-check-field{width:auto!important;min-width:0!important;max-width:none!important;justify-self:stretch!important;}
+  #newContractPanel #cdate,
+  #newContractPanel #ccheckno{width:100%!important;min-width:0!important;max-width:none!important;box-sizing:border-box!important;}
+}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
