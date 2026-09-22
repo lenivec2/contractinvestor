@@ -3823,17 +3823,30 @@ function syncBreakdownRows(){
  let open=data.contracts.filter(c=>!c.closed);
  breakdownRows=breakdownRows.filter(r=>!r.contract || open.some(c=>c.name===r.contract));
 }
+function syncContractChoiceButtonsFromBreakdown(){
+ const selectedNames=new Set(breakdownRows.map(r=>r.contract).filter(Boolean));
+ selectedChoiceIds=data.contracts.filter(c=>!c.closed&&selectedNames.has(c.name)).map(c=>c.id);
+ renderContractChoices();
+}
 function changeBreakdownContract(i,name){
  if(i<0||i>=breakdownRows.length)return;
- if(breakdownRows.some((r,idx)=>idx!==i&&r.contract===name)){toast("That contract is already selected");renderManualBreakdown();return;}
+ if(name&&breakdownRows.some((r,idx)=>idx!==i&&r.contract===name)){toast("That contract is already selected");renderManualBreakdown();return;}
  let old=breakdownRows[i].contract;
  breakdownRows[i].contract=name;
  let c=data.contracts.find(c=>c.name===name);
- if(!name){ breakdownRows[i].amount=''; updateBreakdown(); renderManualBreakdown(); return; }
- if(c&&(!breakdownRows[i].amount || breakdownRows[i].amount==='0')) breakdownRows[i].amount=(breakdownRows[i].manual ? '' : (c.paymentAmount>0?c.paymentAmount.toFixed(2):''));
+ if(!name){
+  breakdownRows[i].amount='';
+  if(old)removedBreakdownContracts.add(old);
+  syncContractChoiceButtonsFromBreakdown();
+  renderManualBreakdown();
+  return;
+ }
+ // Switching the contract also switches to that contract's normal payment amount.
+ breakdownRows[i].amount=c&&c.paymentAmount>0?c.paymentAmount.toFixed(2):'';
  removedBreakdownContracts.delete(name);
- if(old!==name) removedBreakdownContracts.add(old);
- updateBreakdown();
+ if(old&&old!==name)removedBreakdownContracts.add(old);
+ syncContractChoiceButtonsFromBreakdown();
+ renderManualBreakdown();
 }
 function renderManualBreakdown(){
  syncBreakdownRows();
@@ -4478,7 +4491,7 @@ initCloud();
 (function(){
  const specs={
   checkPanel:{title:'Payment Summary',rows:[['Payment Amount','psPayAmount'],['Total Allocated','psAllocated'],['Unallocated Amount','psUnallocated'],['Difference','psDifference'],['Contracts Selected','psSelected'],['Status','psPayStatus']]},
-  contractsPanel:{title:'Active Contracts Summary',rows:[['Active Contracts','psActiveCount'],['Total Cost','psActiveFunded'],['Amount Received','psActiveReceived'],['Remaining Receivable','psActiveRemaining'],['Projected Profit','psActiveProfit']]},
+  contractsPanel:{title:'Active Contracts Summary',rows:[['Active Contracts','psActiveCount'],['Total Cost','psActiveFunded'],['Upfront Referral Fees','psActiveReferral'],['Administrative Fees','psActiveAdmin'],['Amount Received','psActiveReceived'],['Remaining Receivable','psActiveRemaining'],['Projected Profit','psActiveProfit']]},
   completedPanel:{title:'Completed Contracts Summary',rows:[['Completed Contracts','psCompletedCount'],['Total Funded','psCompletedFunded'],['Amount Received','psCompletedReceived'],['Profit / Loss','psCompletedProfit'],['Defaulted','psCompletedDefaulted']]},
   historyPanel:{title:'Payment History Summary',rows:[['Payments Shown','psHistoryCount'],['Amount Shown','psHistoryAmount'],['All Payments','psHistoryAllCount'],['Total Payments Received','psHistoryAllAmount'],['Contracts Paid','psHistoryContracts']]},
   reportsPanel:{title:'Report Summary',rows:[['Total Funded','psReportFunded'],['Payments Received','psReportReceived'],['Realized Profit / Loss','psReportProfit'],['Active Contracts','psReportActive'],['Completed Contracts','psReportCompleted'],['Defaulted Contracts','psReportDefaulted']]}
@@ -4488,8 +4501,8 @@ initCloud();
  function set(id,v,cls){const e=document.getElementById(id);if(!e)return;e.textContent=v;const r=e.closest('.page-summary-row');if(r){r.classList.remove('good','warn');if(cls)r.classList.add(cls)}}
  function receivedFor(name){return (data.checks||[]).filter(x=>x.contract===name).reduce((s,x)=>s+(parseFloat(x.paymentAmount)||0),0)}
  function update(){if(typeof data!=='object')return;
-  const pay=parseFloat(document.getElementById('amount')?.value)||0;let allocated=0;document.querySelectorAll('#manualBreakdown input[type="number"]').forEach(i=>allocated+=parseFloat(i.value)||0);if(!allocated){const sa=parseFloat(document.getElementById('summaryAllocated')?.textContent?.replace(/[^0-9.-]/g,''));if(Number.isFinite(sa))allocated=sa}const diff=pay-allocated;set('psPayAmount',m(pay));set('psAllocated',m(allocated));set('psUnallocated',m(Math.max(0,diff)),Math.abs(diff)<.005?'good':(diff>0?'warn':''));set('psDifference',(allocated-pay>0?'+':'')+m(allocated-pay),Math.abs(diff)<.005?'good':'warn');set('psSelected',String((typeof breakdownRows!=='undefined'?breakdownRows.filter(r=>r.contract).length:document.querySelectorAll('#contractChoices input:checked').length)||0));set('psPayStatus',pay>0&&Math.abs(diff)<.005?'Ready to save':(diff<-.005?'Over allocated':diff>.005?'Under allocated':'Allocation incomplete'),pay>0&&Math.abs(diff)<.005?'good':'warn');
-  const active=(data.contracts||[]).filter(c=>!c.closed);let af=0,ar=0,arem=0,ap=0;active.forEach(c=>{const base=parseFloat(c.fundedAmount)||0,fee=parseFloat(c.referralFee)||0,totalCost=base+fee,r=receivedFor(c.name),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),cnt=(data.checks||[]).filter(x=>x.contract===c.name).length,left=Math.max(0,expected-cnt),rem=left*(parseFloat(c.paymentAmount)||0),projected=(r+rem)-totalCost;af+=totalCost;ar+=r;arem+=rem;ap+=projected});set('psActiveCount',String(active.length));set('psActiveFunded',m(af));set('psActiveReceived',m(ar));set('psActiveRemaining',m(arem));set('psActiveProfit',m(ap),ap>=0?'good':'warn');
+  const pay=parseFloat(document.getElementById('amount')?.value)||0;let allocated=0;document.querySelectorAll('#manualBreakdown input[type="number"]').forEach(i=>allocated+=parseFloat(i.value)||0);if(!allocated){const sa=parseFloat(document.getElementById('summaryAllocated')?.textContent?.replace(/[^0-9.-]/g,''));if(Number.isFinite(sa))allocated=sa}const diff=pay-allocated;set('psPayAmount',m(pay));set('psAllocated',m(allocated));set('psUnallocated',m(Math.max(0,diff)),Math.abs(diff)<.005?'good':(diff>0?'warn':''));set('psDifference',(allocated-pay>0?'+':'')+m(allocated-pay),Math.abs(diff)<.005?'good':'warn');set('psSelected',String((typeof breakdownRows!=='undefined'?breakdownRows.filter(r=>r.contract).length:document.querySelectorAll('#contractChoices input:checked').length)||0));set('psPayStatus',pay<=0?'Enter payment':(Math.abs(diff)<.005?'Ready to save':(diff<-.005?'Over allocated':'Under allocated')),pay<=0?'':(Math.abs(diff)<.005?'good':'warn'));
+  const active=(data.contracts||[]).filter(c=>!c.closed);let af=0,arf=0,aadm=0,ar=0,arem=0,ap=0;active.forEach(c=>{const base=parseFloat(c.fundedAmount)||0,fee=parseFloat(c.referralFee)||0,totalCost=base+fee,r=receivedFor(c.name),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),cnt=(data.checks||[]).filter(x=>x.contract===c.name).length,left=Math.max(0,expected-cnt),rem=left*(parseFloat(c.paymentAmount)||0),projected=(r+rem)-totalCost,gross=parseFloat(c.totalReturn)||0,adminStored=parseFloat(c.adminFeeAmount),adminPct=parseFloat(c.adminFeePercent)||0,admin=Number.isFinite(adminStored)?adminStored:gross*(adminPct/100);af+=totalCost;arf+=fee;aadm+=admin;ar+=r;arem+=rem;ap+=projected});set('psActiveCount',String(active.length));set('psActiveFunded',m(af));set('psActiveReferral',m(arf),'warn');set('psActiveAdmin',m(aadm),'warn');set('psActiveReceived',m(ar));set('psActiveRemaining',m(arem));set('psActiveProfit',m(ap),ap>=0?'good':'warn');
   const completed=(data.contracts||[]).filter(c=>c.closed);let cf=0,cr=0;completed.forEach(c=>{cf+=parseFloat(c.fundedAmount)||0;cr+=receivedFor(c.name)});const cp=cr-cf;set('psCompletedCount',String(completed.length));set('psCompletedFunded',m(cf));set('psCompletedReceived',m(cr));set('psCompletedProfit',m(cp),cp>=0?'good':'warn');set('psCompletedDefaulted',String(completed.filter(c=>c.defaulted).length));
   const histRows=[...document.querySelectorAll('#history tr')].filter(r=>r.querySelector('td[data-column-key="amount"]'));let ha=0;histRows.forEach(r=>ha+=parseFloat(r.querySelector('td[data-column-key="amount"]')?.textContent.replace(/[^0-9.-]/g,''))||0);const allAmt=(data.checks||[]).reduce((s,x)=>s+(parseFloat(x.paymentAmount)||0),0);set('psHistoryCount',String(histRows.length));set('psHistoryAmount',m(ha));set('psHistoryAllCount',String((data.checks||[]).length));set('psHistoryAllAmount',m(allAmt));set('psHistoryContracts',String(new Set((data.checks||[]).map(x=>x.contract).filter(Boolean)).size));
   const totalFunded=(data.contracts||[]).reduce((s,c)=>s+(parseFloat(c.fundedAmount)||0),0),profit=allAmt-totalFunded;set('psReportFunded',m(totalFunded));set('psReportReceived',m(allAmt));set('psReportProfit',m(profit),profit>=0?'good':'warn');set('psReportActive',String(active.length));set('psReportCompleted',String(completed.filter(c=>!c.defaulted).length));set('psReportDefaulted',String(completed.filter(c=>c.defaulted).length));
