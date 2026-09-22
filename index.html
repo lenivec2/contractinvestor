@@ -2009,6 +2009,41 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #newContractPanel .contract-amount-field input{display:block!important;width:100%!important;min-height:48px!important;}
 @media(max-width:700px){#newContractPanel .contract-entry-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}#newContractPanel .contract-name-field,#newContractPanel .contract-invest-field,#newContractPanel .contract-referral-field,#newContractPanel .contract-return-field,#newContractPanel .contract-fee-field,#newContractPanel .contract-payments-field,#newContractPanel .contract-amount-field,#newContractPanel .contract-date-field,#newContractPanel .contract-check-field{grid-column:auto!important;grid-row:auto!important;}#newContractPanel .contract-check-field{grid-column:1 / -1!important;}}
 </style>
+
+<style id="fundledger-compact-contract-financial-fields">
+/* Compact Add Contract financial inputs so Administrative Fee, Payments Remaining,
+   Payment Amount and Check # sit together on the same row. */
+@media (min-width:701px){
+  #newContractPanel .contract-entry-grid{
+    grid-template-columns:repeat(12,minmax(0,1fr))!important;
+    column-gap:10px!important;
+  }
+  #newContractPanel .contract-name-field{grid-column:1 / span 3!important;grid-row:1!important;}
+  #newContractPanel .contract-invest-field{grid-column:4 / span 3!important;grid-row:1!important;}
+  #newContractPanel .contract-referral-field{grid-column:7 / span 3!important;grid-row:1!important;}
+  #newContractPanel .contract-return-field{grid-column:10 / span 3!important;grid-row:1!important;}
+
+  #newContractPanel .contract-fee-field{grid-column:1 / span 2!important;grid-row:2!important;}
+  #newContractPanel .contract-payments-field{grid-column:3 / span 2!important;grid-row:2!important;}
+  #newContractPanel .contract-amount-field{grid-column:5 / span 2!important;grid-row:2!important;}
+  #newContractPanel .contract-check-field{grid-column:7 / span 2!important;grid-row:2!important;}
+  #newContractPanel .contract-date-field{grid-column:9 / span 4!important;grid-row:2!important;}
+
+  #newContractPanel .contract-fee-field,
+  #newContractPanel .contract-payments-field,
+  #newContractPanel .contract-amount-field,
+  #newContractPanel .contract-check-field{
+    width:auto!important;min-width:0!important;max-width:none!important;
+    flex:initial!important;justify-self:stretch!important;
+  }
+  #newContractPanel #cadminfee,
+  #newContractPanel #cpayments,
+  #newContractPanel #cpreset,
+  #newContractPanel #ccheckno{
+    width:100%!important;min-width:0!important;max-width:none!important;box-sizing:border-box!important;
+  }
+}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
