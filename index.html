@@ -4009,3 +4009,56 @@ initCloud();
 
 </body></html>
 
+<style id="projected-results-visibility-upgrade">
+/* Stronger visual hierarchy for Projected Results */
+#newContractPanel .results-heading{
+  background:#eef8f1!important;
+  border:1px solid #cbe9d4!important;
+  color:#155f2d!important;
+  padding:10px 12px!important;
+}
+#newContractPanel .results-heading:hover{background:#e6f5eb!important}
+#newContractPanel .results-heading::before{
+  content:"3";
+  display:inline-grid;
+  place-items:center;
+  width:24px;height:24px;
+  flex:0 0 24px;
+  border-radius:50%;
+  background:#2f9855;
+  color:#fff;
+  font-size:13px;
+  font-weight:800;
+}
+#newContractPanel .results-heading>span{margin-right:auto;font-weight:800}
+#newContractPanel .contract-calc-summary{
+  background:#f5fbf7!important;
+  border:1px solid #d4eadb!important;
+}
+#newContractPanel .contract-calc-summary .fee-value{
+  background:#fff1f1!important;
+  border:1.5px solid #ef7777!important;
+  box-shadow:0 1px 4px rgba(190,35,35,.08)!important;
+}
+#newContractPanel .contract-calc-summary .fee-value span,
+#newContractPanel .contract-calc-summary .fee-value strong{color:#c92020!important}
+#newContractPanel .contract-calc-summary .fee-value span::before{
+  content:"!";
+  display:inline-grid;
+  place-items:center;
+  width:18px;height:18px;
+  margin-right:7px;
+  border-radius:50%;
+  background:#d92d20;
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+}
+#newContractPanel .contract-calc-summary .estimated-profit-box{
+  background:#ebf9ef!important;
+  border:1.5px solid #7bcf98!important;
+  box-shadow:0 1px 4px rgba(22,128,67,.08)!important;
+}
+#newContractPanel .contract-calc-summary .estimated-profit-box > span,
+#newContractPanel .contract-calc-summary .estimated-profit-box strong{color:#087a35!important}
+</style>
