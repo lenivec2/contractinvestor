@@ -4418,3 +4418,33 @@ initCloud();
  const oldRender=window.render;if(typeof oldRender==='function')window.render=function(){const r=oldRender.apply(this,arguments);setTimeout(update,0);return r};setTimeout(update,0);
 })();
 </script>
+
+<style id="projected-results-responsive-card-fix">
+/* Responsive to the actual Projected Results width, not only the browser width. */
+#newContractPanel .contract-calc-summary{
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr))!important;
+  gap:10px!important;
+}
+#newContractPanel .contract-calc-summary > div{
+  min-width:145px!important;
+}
+#newContractPanel .contract-calc-summary strong{
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+}
+#newContractPanel .contract-calc-summary .estimated-profit-values{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:baseline!important;
+}
+@media(max-width:600px){
+  #newContractPanel .contract-calc-summary{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+  }
+  #newContractPanel .contract-calc-summary > div{min-width:0!important;}
+}
+@media(max-width:340px){
+  #newContractPanel .contract-calc-summary{grid-template-columns:1fr!important;}
+}
+</style>
