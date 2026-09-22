@@ -3954,12 +3954,15 @@ function editContract(id){
    <div class="edit-modal-head"><h2 id="editContractTitle">Edit Contract</h2><button type="button" class="edit-modal-close" onclick="closeEditContract()">×</button></div>
    <div class="edit-modal-grid">
      <div class="field"><label>Contract Name / ID</label><input id="editContractName" type="text" value="${escape(contract.name)}"></div>
-     <div class="field"><label>Funded Amount</label><input id="editContractInvested" type="number" inputmode="decimal" step="0.01" value="${escape(contract.fundedAmount??0)}"></div>
+     <div class="field"><label>Participant Funded Amount</label><input id="editContractInvested" type="number" inputmode="decimal" min="0" step="0.01" value="${escape(contract.fundedAmount??0)}" oninput="updateEditContractCalculatedFields()"></div>
+     <div class="field"><label>Upfront Referral Fee</label><input id="editContractReferral" type="number" inputmode="decimal" min="0" step="0.01" value="${escape(contract.referralFee??0)}" oninput="updateEditContractCalculatedFields()"></div>
+     <div class="field"><label>Total Cost <span class="muted" style="font-weight:500">(Auto-calculated)</span></label><input id="editContractTotalCost" type="text" value="${money((parseFloat(contract.fundedAmount)||0)+(parseFloat(contract.referralFee)||0))}" readonly title="Participant Funded Amount + Upfront Referral Fee"></div>
      <div class="field"><label>Amount Received</label><input id="editContractPaid" type="number" inputmode="decimal" step="0.01" value="${paid.toFixed(2)}"></div>
      <div class="field"><label>Remaining Receivable</label><input id="editContractRemaining" type="number" inputmode="decimal" step="0.01" value="${remaining.toFixed(2)}"></div>
      <div class="field"><label>Payment Amount</label><input id="editContractAmount" type="number" inputmode="decimal" step="0.01" value="${escape(contract.paymentAmount??0)}"></div>
-     <div class="field"><label>Total Expected Payments</label><input id="editContractExpected" type="number" inputmode="numeric" min="0" step="1" value="${expected}"></div>
+     <div class="field"><label>Total Expected Payments</label><input id="editContractExpected" type="number" inputmode="numeric" min="0" step="1" value="${expected}" oninput="updateEditContractCalculatedFields()"></div>
      <div class="field"><label>Recorded Payments</label><input id="editContractPayments" type="number" inputmode="numeric" value="${payments}" readonly></div>
+     <div class="field"><label>Payments Remaining <span class="muted" style="font-weight:500">(Auto-calculated)</span></label><input id="editContractPaymentsRemaining" type="number" value="${Math.max(0,expected-payments)}" readonly></div>
    </div>
    <div class="edit-modal-actions"><button type="button" class="secondary" onclick="closeEditContract()">Cancel</button><button type="button" class="primary-btn" onclick="saveEditedContract(${id})">Save Changes</button></div>
  </div>`;
@@ -3967,24 +3970,34 @@ function editContract(id){
  updateRemainingPaymentLabels(modal);
  setTimeout(()=>document.getElementById('editContractName')?.focus(),0);
 }
+function updateEditContractCalculatedFields(){
+ const funded=Math.max(0,parseFloat(document.getElementById('editContractInvested')?.value)||0);
+ const referral=Math.max(0,parseFloat(document.getElementById('editContractReferral')?.value)||0);
+ const total=document.getElementById('editContractTotalCost');if(total)total.value=money(funded+referral);
+ const expected=Math.max(0,parseInt(document.getElementById('editContractExpected')?.value||'0',10)||0);
+ const recorded=Math.max(0,parseInt(document.getElementById('editContractPayments')?.value||'0',10)||0);
+ const left=document.getElementById('editContractPaymentsRemaining');if(left)left.value=Math.max(0,expected-recorded);
+}
 function closeEditContract(){document.getElementById('editContractModal')?.remove()}
 function saveEditedContract(id){
  let contract=data.contracts.find(c=>c.id===id);if(!contract)return;
  let name=(document.getElementById('editContractName')?.value||'').trim();
  let invested=parseFloat(document.getElementById('editContractInvested')?.value||'');
+ let referral=parseFloat(document.getElementById('editContractReferral')?.value||'');
  let paid=parseFloat(document.getElementById('editContractPaid')?.value||'');
  let remaining=parseFloat(document.getElementById('editContractRemaining')?.value||'');
  let amount=parseFloat(document.getElementById('editContractAmount')?.value||'');
  let expected=parseInt(document.getElementById('editContractExpected')?.value||'',10);
  if(!name){toast('Enter a contract name');return}
  if(data.contracts.some(c=>c.id!==id&&c.name.toLowerCase()===name.toLowerCase())){toast('Contract already exists');return}
- if(!(invested>=0)){toast('Enter a valid funded amount');return}
+ if(!(invested>=0)){toast('Enter a valid participant funded amount');return}
+ if(!(referral>=0)){toast('Enter a valid upfront referral fee');return}
  if(!(paid>=0)){toast('Enter a valid amount received');return}
  if(!(remaining>=0)){toast('Enter a valid remaining receivable');return}
  if(!(amount>=0)){toast('Enter a valid payment received');return}
  if(!Number.isFinite(expected)||expected<0){toast('Enter a valid number of remaining payments');return}
  let oldName=contract.name;
- contract.name=name;contract.fundedAmount=invested;contract.amountReceivedOverride=paid;contract.remainingReceivableOverride=remaining;contract.paymentAmount=amount;contract.totalExpectedPayments=expected;delete contract.paymentsOverride;
+ contract.name=name;contract.fundedAmount=invested;contract.referralFee=referral;contract.amountReceivedOverride=paid;contract.remainingReceivableOverride=remaining;contract.paymentAmount=amount;contract.totalExpectedPayments=expected;delete contract.paymentsOverride;
  data.checks.forEach(x=>{if(x.contract===oldName)x.contract=name});
  breakdownRows.forEach(r=>{if(r.contract===oldName)r.contract=name});
  selectedChoiceIds=selectedChoiceIds.map(x=>x===id?x:x);
@@ -4024,7 +4037,7 @@ function render(){
    let expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),paidCount=uniquePaymentCount(xs),left=Math.max(0,expected-paidCount);
    let paid=rec;
    let breakEven=Math.max(0,(parseFloat(c.fundedAmount)||0)-rec),remainingBalance=left*(parseFloat(c.paymentAmount)||0);
-   return `<tr class="contract-row"><td data-column-key="name">${escape(c.name)}</td><td data-column-key="dayOpened">${escape(c.openedDate||c.date||'—')}</td><td data-column-key="invested">${money(c.fundedAmount)}</td><td data-column-key="paid">${money(paid)}</td><td data-column-key="breakEven"><span class="${breakEven>0.009?'break-even-needed':'break-even-zero'}">${money(breakEven)}</span></td><td data-column-key="remainingBalance">${money(remainingBalance)}</td><td data-column-key="amountPerCheck">${c.paymentAmount>0?money(c.paymentAmount):'—'}</td><td data-column-key="expectedPayments">${expected||'—'}</td><td data-column-key="paymentsLeft">${expected?left:'—'}</td><td data-column-key="status"><span class="status">Active</span></td><td data-column-key="actions"><div class="actions"><button class="table-action" type="button" onclick="editContract(${c.id})">Edit</button><button class="warning" type="button" onclick="closeContract(${c.id})">Close / Default</button><button class="danger" type="button" onclick="removeContract(${c.id})">Delete</button></div></td></tr>`;
+   return `<tr class="contract-row"><td data-column-key="name">${escape(c.name)}</td><td data-column-key="dayOpened">${escape(c.openedDate||c.date||'—')}</td><td data-column-key="invested">${money((parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0))}</td><td data-column-key="paid">${money(paid)}</td><td data-column-key="breakEven"><span class="${breakEven>0.009?'break-even-needed':'break-even-zero'}">${money(breakEven)}</span></td><td data-column-key="remainingBalance">${money(remainingBalance)}</td><td data-column-key="amountPerCheck">${c.paymentAmount>0?money(c.paymentAmount):'—'}</td><td data-column-key="expectedPayments">${expected||'—'}</td><td data-column-key="paymentsLeft">${expected?left:'—'}</td><td data-column-key="status"><span class="status">Active</span></td><td data-column-key="actions"><div class="actions"><button class="table-action" type="button" onclick="editContract(${c.id})">Edit</button><button class="warning" type="button" onclick="closeContract(${c.id})">Close / Default</button><button class="danger" type="button" onclick="removeContract(${c.id})">Delete</button></div></td></tr>`;
  }).join('')||'<tr><td colspan="11" class="empty">No active contracts yet.</td></tr>';
  $("contracts").innerHTML=contractRows;
  let received=data.checks.reduce((a,x)=>a+x.paymentAmount,0), invested=data.contracts.reduce((a,c)=>a+c.fundedAmount,0);
@@ -4042,7 +4055,7 @@ function render(){
 }
 function renderCompletedContracts(){
  let completed=data.contracts.filter(c=>c.closed); $("completedCount").textContent=`${completed.length} contract${completed.length===1?'':'s'} completed`;
- let rows=completed.map(c=>{let xs=data.checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+x.paymentAmount,0),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),paidCount=uniquePaymentCount(xs),left=Math.max(0,expected-paidCount),remainingPayment=expected>0?left*(parseFloat(c.paymentAmount)||0):Math.max(0,(parseFloat(c.fundedAmount)||0)-rec),delta=rec-(parseFloat(c.fundedAmount)||0),resultClass=delta>0.009?'gain':delta<-0.009?'loss':'even',resultText=delta>0.009?`Gain ${money(delta)}`:delta<-0.009?`Loss ${money(-delta)}`:'$0.00';return `<tr><td data-column-key="contract"><b>${escape(c.name)}</b></td><td data-column-key="dayOpened">${escape(c.openedDate||c.date||"—")}</td><td data-column-key="dayClosed">${escape(c.closedDate||"—")}</td><td data-column-key="invested">${money(c.fundedAmount)}</td><td data-column-key="received">${money(rec)}</td><td data-column-key="remainingPayment">${money(remainingPayment)}</td><td data-column-key="gainLoss"><span class="${resultClass}">${resultText}</span></td><td data-column-key="status"><span class="status completed">${c.defaulted?"Default":"Completed"}</span></td><td data-column-key="action"><button class="table-action" onclick="restoreContract(${c.id})">Restore</button></td></tr>`}).join('');
+ let rows=completed.map(c=>{let xs=data.checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+x.paymentAmount,0),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),paidCount=uniquePaymentCount(xs),left=Math.max(0,expected-paidCount),remainingPayment=expected>0?left*(parseFloat(c.paymentAmount)||0):Math.max(0,(parseFloat(c.fundedAmount)||0)-rec),delta=rec-(parseFloat(c.fundedAmount)||0),resultClass=delta>0.009?'gain':delta<-0.009?'loss':'even',resultText=delta>0.009?`Gain ${money(delta)}`:delta<-0.009?`Loss ${money(-delta)}`:'$0.00';return `<tr><td data-column-key="contract"><b>${escape(c.name)}</b></td><td data-column-key="dayOpened">${escape(c.openedDate||c.date||"—")}</td><td data-column-key="dayClosed">${escape(c.closedDate||"—")}</td><td data-column-key="invested">${money((parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0))}</td><td data-column-key="received">${money(rec)}</td><td data-column-key="remainingPayment">${money(remainingPayment)}</td><td data-column-key="gainLoss"><span class="${resultClass}">${resultText}</span></td><td data-column-key="status"><span class="status completed">${c.defaulted?"Default":"Completed"}</span></td><td data-column-key="action"><button class="table-action" onclick="restoreContract(${c.id})">Restore</button></td></tr>`}).join('');
  $("completedContracts").innerHTML=rows||'<tr><td colspan="9" class="empty">No completed contracts.</td></tr>';
 }
 function escape(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
