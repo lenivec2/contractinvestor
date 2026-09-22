@@ -1934,6 +1934,25 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #dashboardSummary .summary-card{position:relative;padding-right:43px!important}.summary-close-btn{position:absolute;top:7px;right:7px;width:27px!important;height:27px!important;min-height:27px!important;padding:0!important;border:1px solid #cbdced;border-radius:50%;background:#f7faff;color:#52657d;font-size:19px;font-weight:800;line-height:23px;display:grid;place-items:center;z-index:3;cursor:pointer}.summary-close-btn:hover,.summary-close-btn:focus{background:#ffe8ea;border-color:#ef9aa3;color:#c8283b;outline:none}
 .column-order-option[draggable="true"]{cursor:grab}.column-order-option.column-dragging{opacity:.5;outline:2px dashed #147be8}.column-order-actions{display:flex;align-items:center;gap:7px}.column-order-hint{margin-top:7px!important;color:#147be8!important;font-weight:700}th[data-column-key][draggable="true"]{cursor:grab}th[data-column-key].column-dragging{opacity:.5;background:#dcecff}
 </style>
+
+<style id="admin-fee-remaining-payments-smaller-final">
+/* Make only Admin Fee and Expected/Remaining Payments inputs narrower. */
+#newContractPanel .contract-fee-field > input,
+#newContractPanel .contract-payments-field > input{
+  width:120px !important;
+  max-width:120px !important;
+  min-width:120px !important;
+  box-sizing:border-box !important;
+}
+@media (max-width:700px){
+  #newContractPanel .contract-fee-field > input,
+  #newContractPanel .contract-payments-field > input{
+    width:105px !important;
+    max-width:105px !important;
+    min-width:105px !important;
+  }
+}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
