@@ -1953,6 +1953,41 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
+<style id="add-contract-one-third-fee-payments">
+/* Admin Fee and # of Remaining Payments: one-third the width of Contract Name. */
+@media (min-width:701px){
+  #newContractPanel .contract-fee-field,
+  #newContractPanel .contract-payments-field{
+    width:160px!important;
+    min-width:160px!important;
+    max-width:160px!important;
+    flex:0 0 160px!important;
+    justify-self:start!important;
+  }
+  #newContractPanel #cadminfee,
+  #newContractPanel #cpayments{
+    width:160px!important;
+    min-width:160px!important;
+    max-width:160px!important;
+    box-sizing:border-box!important;
+  }
+}
+@media (max-width:700px){
+  #newContractPanel .contract-fee-field,
+  #newContractPanel .contract-payments-field{
+    width:120px!important;
+    min-width:120px!important;
+    max-width:120px!important;
+  }
+  #newContractPanel #cadminfee,
+  #newContractPanel #cpayments{
+    width:120px!important;
+    min-width:120px!important;
+    max-width:120px!important;
+    box-sizing:border-box!important;
+  }
+}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -3741,63 +3776,7 @@ initCloud();
 </script>
 
 
-<style id="admin-fee-remaining-boxes-final">
-/* Make the Admin Fee and Expected Payments boxes themselves narrower. */
-@media (min-width:701px){
-  #newContractPanel .contract-fee-field,
-  #newContractPanel .contract-payments-field{
-    width:180px !important;
-    min-width:180px !important;
-    max-width:180px !important;
-    flex:0 0 180px !important;
-    justify-self:start !important;
-  }
-  #newContractPanel #cadminfee,
-  #newContractPanel #cpayments{
-    width:180px !important;
-    min-width:180px !important;
-    max-width:180px !important;
-    box-sizing:border-box !important;
-  }
-}
-@media (max-width:700px){
-  #newContractPanel .contract-fee-field,
-  #newContractPanel .contract-payments-field{
-    width:140px !important;
-    min-width:140px !important;
-    max-width:140px !important;
-    flex:0 0 140px !important;
-  }
-  #newContractPanel #cadminfee,
-  #newContractPanel #cpayments{
-    width:140px !important;
-    min-width:140px !important;
-    max-width:140px !important;
-    box-sizing:border-box !important;
-  }
-}
-</style>
+
 
 </body></html>
-<style id="add-contract-small-fee-payments">
-/* Compact fields requested for Add Contract: Admin Fee and number of remaining/expected payments. */
-#newContractPanel .contract-fee-field,
-#newContractPanel .contract-payments-field{
-  justify-self:start!important;
-  width:100%!important;
-}
-#newContractPanel .contract-fee-field input,
-#newContractPanel .contract-payments-field input{
-  width:78px!important;
-  max-width:78px!important;
-  min-width:78px!important;
-}
-@media (max-width:700px){
-  #newContractPanel .contract-fee-field input,
-  #newContractPanel .contract-payments-field input{
-    width:78px!important;
-    max-width:78px!important;
-    min-width:78px!important;
-  }
-}
-</style>
+
