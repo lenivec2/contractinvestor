@@ -2172,6 +2172,8 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #newContractPanel .contract-calc-summary > div:hover .result-reorder-controls,#newContractPanel .contract-calc-summary > div:focus-within .result-reorder-controls{opacity:1}
 #newContractPanel .result-reorder-btn{border:0;background:rgba(255,255,255,.9);color:#49647f;border-radius:5px;width:24px;height:24px;line-height:20px;padding:0;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 #newContractPanel .result-reorder-btn:hover{background:#eef6ff;color:#1769d2}
+#newContractPanel .contract-calc-summary > div{touch-action:pan-y;-webkit-user-select:none;user-select:none}
+#newContractPanel .contract-calc-summary > div.result-card-touch-dragging{touch-action:none;outline:2px solid #2f80ed;outline-offset:2px}
 @media (hover:none),(max-width:700px){#newContractPanel .result-reorder-controls{opacity:1}#newContractPanel .contract-calc-summary > div{padding-right:34px!important}}
 </style>
 </head>
@@ -2457,7 +2459,7 @@ let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
 let cloudLoadInFlight=false;
-const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{},activeContractColumns:{},completedContractColumns:{},checkHistoryColumns:{},activeContractColumnOrder:[],completedContractColumnOrder:[],checkHistoryColumnOrder:[]}};
+const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{},activeContractColumns:{},completedContractColumns:{},checkHistoryColumns:{},activeContractColumnOrder:[],completedContractColumnOrder:[],checkHistoryColumnOrder:[],projectedResultsOrder:[]}};
 let data={contracts:[],checks:[]};
 // Data-model compatibility layer: converts legacy FundLedger field names to the
 // current terminology when old local/cloud records are loaded. New saves use
@@ -3523,15 +3525,26 @@ function projectedResultCardKey(card){
  const key=known.find(id=>ids.includes(id))||('card_'+[...card.parentElement.children].indexOf(card));
  card.dataset.resultCardKey=key;return key;
 }
+function projectedResultsOrderPreference(){
+ if(!data.preferences||typeof data.preferences!=='object')data.preferences={};
+ let order=Array.isArray(data.preferences.projectedResultsOrder)?data.preferences.projectedResultsOrder.slice():[];
+ // One-time migration from the earlier device-only preference.
+ if(!order.length){try{const old=JSON.parse(localStorage.getItem(projectedResultsStorageKey())||'[]');if(Array.isArray(old)&&old.length){order=old;data.preferences.projectedResultsOrder=old.slice();save();}}catch(e){}}
+ return order;
+}
 function saveProjectedResultsOrder(){
  const summary=$("contractCalcSummary");if(!summary)return;
  const order=[...summary.children].map(projectedResultCardKey);
+ if(!data.preferences||typeof data.preferences!=='object')data.preferences={};
+ data.preferences.projectedResultsOrder=order;
+ // Keep a local copy for instant startup, but cloud preferences are authoritative across devices.
  try{localStorage.setItem(projectedResultsStorageKey(),JSON.stringify(order))}catch(e){}
+ save();
 }
 function applyProjectedResultsOrder(){
  const summary=$("contractCalcSummary");if(!summary)return;
- let order=[];try{order=JSON.parse(localStorage.getItem(projectedResultsStorageKey())||'[]')}catch(e){}
- if(!Array.isArray(order)||!order.length)return;
+ const order=projectedResultsOrderPreference();
+ if(!order.length)return;
  const cards=[...summary.children], byKey=new Map(cards.map(c=>[projectedResultCardKey(c),c]));
  order.forEach(k=>{const c=byKey.get(k);if(c)summary.appendChild(c)});
 }
@@ -3540,6 +3553,33 @@ function moveProjectedResultCard(card,direction){
  const cards=[...summary.children],i=cards.indexOf(card),j=i+direction;if(j<0||j>=cards.length)return;
  if(direction<0)summary.insertBefore(card,cards[j]);else summary.insertBefore(cards[j],card);
  saveProjectedResultsOrder();card.focus?.();
+}
+let projectedTouchDrag=null;
+function projectedCardFromPoint(x,y){
+ const el=document.elementFromPoint(x,y);return el?.closest?.('#contractCalcSummary > div')||null;
+}
+function beginProjectedTouchDrag(card,e){
+ if(e.pointerType==='mouse'||e.target.closest('.result-reorder-controls'))return;
+ projectedTouchDrag={card,pointerId:e.pointerId,startX:e.clientX,startY:e.clientY,active:false,timer:setTimeout(()=>{
+  if(!projectedTouchDrag||projectedTouchDrag.card!==card)return;
+  projectedTouchDrag.active=true;card.classList.add('result-card-dragging','result-card-touch-dragging');
+  try{card.setPointerCapture(e.pointerId)}catch(_){}
+  if(navigator.vibrate)try{navigator.vibrate(15)}catch(_){}
+ },350)};
+}
+function moveProjectedTouchDrag(card,e){
+ const d=projectedTouchDrag;if(!d||d.card!==card||d.pointerId!==e.pointerId)return;
+ if(!d.active){if(Math.hypot(e.clientX-d.startX,e.clientY-d.startY)>12){clearTimeout(d.timer);projectedTouchDrag=null;}return;}
+ e.preventDefault();
+ const target=projectedCardFromPoint(e.clientX,e.clientY);if(!target||target===card)return;
+ const r=target.getBoundingClientRect();
+ const after=(e.clientY>r.top+r.height/2)||(Math.abs(e.clientY-(r.top+r.height/2))<r.height*.35&&e.clientX>r.left+r.width/2);
+ const summary=$("contractCalcSummary");summary.insertBefore(card,after?target.nextSibling:target);
+}
+function endProjectedTouchDrag(card,e){
+ const d=projectedTouchDrag;if(!d||d.card!==card||d.pointerId!==e.pointerId)return;
+ clearTimeout(d.timer);if(d.active){e.preventDefault();card.classList.remove('result-card-dragging','result-card-touch-dragging');saveProjectedResultsOrder();}
+ projectedTouchDrag=null;
 }
 function initProjectedResultsReorder(){
  const summary=$("contractCalcSummary");if(!summary)return;
@@ -3557,10 +3597,13 @@ function initProjectedResultsReorder(){
   card.addEventListener('dragover',e=>{e.preventDefault();if(!card.classList.contains('result-card-dragging'))card.classList.add('result-card-drop-target');e.dataTransfer.dropEffect='move'});
   card.addEventListener('dragleave',()=>card.classList.remove('result-card-drop-target'));
   card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('result-card-drop-target');const key=e.dataTransfer.getData('text/plain');const dragged=[...summary.children].find(c=>projectedResultCardKey(c)===key);if(!dragged||dragged===card)return;const r=card.getBoundingClientRect();const after=(e.clientY>r.top+r.height/2)||(Math.abs(e.clientY-(r.top+r.height/2))<r.height*.35&&e.clientX>r.left+r.width/2);summary.insertBefore(dragged,after?card.nextSibling:card);saveProjectedResultsOrder()});
+  card.addEventListener('pointerdown',e=>beginProjectedTouchDrag(card,e));
+  card.addEventListener('pointermove',e=>moveProjectedTouchDrag(card,e));
+  card.addEventListener('pointerup',e=>endProjectedTouchDrag(card,e));
+  card.addEventListener('pointercancel',e=>endProjectedTouchDrag(card,e));
  });
  applyProjectedResultsOrder();
 }
-
 function updateContractPaymentCalculation(){
  ensureContractProfitSummary();
  initProjectedResultsReorder();
