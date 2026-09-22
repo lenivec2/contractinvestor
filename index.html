@@ -2506,7 +2506,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
           <label class="appearance-option" data-summary-option="defaultLoss"><span>Default Loss</span><input type="checkbox" data-summary-toggle="defaultLoss" onchange="updateDashboardAppearance(this)"></label>
         </div>
       </div></details>
-<details class="appearance-group settings-native-dropdown"><summary>Add Contract Fields</summary><div class="settings-native-dropdown-content"><div class="muted" style="margin-bottom:10px">Select which boxes appear on the Add Contract form.</div><div class="add-contract-toggle-grid"><label class="add-contract-toggle-card"><span>Contract Name / ID</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="contractName" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Contract Type</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="contractType" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Custom Contract Type</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="customContractType" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Contract Start Date</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="startDate" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>End / Maturity Date</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="maturityDate" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Payment Frequency</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="paymentFrequency" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Revenue Share %</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="revenueShare" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Interest Rate %</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="interestRate" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Upfront Referral Fee</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="referralFee" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Administrative Fee</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="adminFee" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Funding Check #</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="fundingCheck" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Notes</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="notes" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label></div></div></details>
+<details class="appearance-group settings-native-dropdown"><summary>Add Contract Fields</summary><div class="settings-native-dropdown-content"><div class="muted" style="margin-bottom:10px">Select which boxes appear on the Add Contract form.</div><div class="add-contract-toggle-grid"><label class="add-contract-toggle-card"><span>Contract Type</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="contractType" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Custom Contract Type</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="customContractType" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Contract Start Date</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="startDate" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>End / Maturity Date</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="maturityDate" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Payment Frequency</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="paymentFrequency" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Revenue Share %</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="revenueShare" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Interest Rate %</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="interestRate" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Upfront Referral Fee</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="referralFee" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Administrative Fee</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="adminFee" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Funding Check #</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="fundingCheck" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label><label class="add-contract-toggle-card"><span>Notes</span><span class="switch"><input type="checkbox" data-add-contract-field-toggle="notes" checked onchange="updateAddContractFieldVisibility(this)"><span class="slider"></span></span></label></div></div></details>
       <details class="appearance-group settings-native-dropdown"><summary>Active Contracts Columns</summary><div class="settings-native-dropdown-content">
         <p>Select which information columns appear in the Active Contracts table.</p><p class="settings-tip">Drag column headers directly on this table to rearrange them.</p>
         <div class="appearance-options" id="activeColumnOptions">
@@ -4844,7 +4844,6 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 (function(){
  const KEY="fundledgerAddContractFieldVisibility";
  const targets={
-  contractName:["#cname"],
   contractType:["#ctype"],
   customContractType:["#ccustomtype"],
   startDate:["#cdate"],
@@ -4891,5 +4890,31 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
  window.addEventListener("pageshow",enforce);
 })();
 </script>
+
+<script id="contract-name-always-on">
+(function(){
+ const KEY="fundledgerAddContractFieldVisibility";
+ function fix(){
+   try{
+     const p=JSON.parse(localStorage.getItem(KEY)||"{}");
+     if(Object.prototype.hasOwnProperty.call(p,"contractName")){
+       delete p.contractName;
+       localStorage.setItem(KEY,JSON.stringify(p));
+     }
+   }catch(e){}
+   const el=document.getElementById("cname");
+   if(el){
+     const box=el.closest(".field")||el.closest(".form-group")||el.closest(".input-group")||el.parentElement;
+     if(box){
+       box.style.removeProperty("display");
+       delete box.dataset.settingsHidden;
+     }
+   }
+ }
+ document.addEventListener("DOMContentLoaded",fix);
+ window.addEventListener("pageshow",fix);
+})();
+</script>
+
 </body>
 </html>
