@@ -2618,6 +2618,20 @@ function initSupabaseClient(){
     return false;
   }
 }
+async function ensureSupabaseClient(){
+  if(supabaseClient)return true;
+  if(initSupabaseClient())return true;
+  // The fallback CDN is injected by the script tag's onerror handler. Give it time to load.
+  for(let i=0;i<25;i++){
+    await new Promise(resolve=>setTimeout(resolve,200));
+    if(window.supabase&&typeof window.supabase.createClient==="function"){
+      setAuthError("");
+      return initSupabaseClient();
+    }
+  }
+  setAuthError("The sign-in service could not load. Check your internet connection and try again.");
+  return false;
+}
 let currentUser=null;
 let isAdmin=false;
 let adminUsers=[];
@@ -3303,7 +3317,7 @@ function startPasswordResetCooldown(){
 }
 async function sendPasswordReset(){
  setAuthError("");
- if(!supabaseClient&&!initSupabaseClient())return;
+ if(!supabaseClient&&!(await ensureSupabaseClient()))return;
  updatePasswordResetCooldown();
  if(passwordResetCooldownUntil>Date.now())return;
  const email=$("resetEmail").value.trim();
@@ -3329,7 +3343,7 @@ async function sendPasswordReset(){
 }
 async function updatePassword(){
  setRecoveryError("");
- if(!supabaseClient&&!initSupabaseClient())return;
+ if(!supabaseClient&&!(await ensureSupabaseClient()))return;
  const password=$("newPassword").value;
  const confirm=$("confirmPassword").value;
  if(password.length<6){setRecoveryError("Password must be at least 6 characters.");return}
@@ -3361,7 +3375,7 @@ function showSignInForm(){
 }
 async function signIn(){
  setAuthError("");
- if(!supabaseClient&&!initSupabaseClient())return;
+ if(!supabaseClient&&!(await ensureSupabaseClient()))return;
  const email=$("authEmail").value.trim(),password=$("authPassword").value;
  if(!email||!password){setAuthError("Enter your email and password.");return}
  setAuthBusy(true);
@@ -3375,7 +3389,7 @@ async function signIn(){
 }
 async function signUp(){
  setAuthError("");
- if(!supabaseClient&&!initSupabaseClient())return;
+ if(!supabaseClient&&!(await ensureSupabaseClient()))return;
  const email=$("signUpEmail").value.trim(),password=$("signUpPassword").value,confirm=$("signUpConfirmPassword").value;
  if(!email||!password||!confirm){setAuthError("Enter your email, password, and confirm your password.");return}
  if(password.length<6){setAuthError("Password must be at least 6 characters.");return}
@@ -3653,7 +3667,7 @@ async function deleteAllContactMessages(){
   }
 }
 async function initCloud(){
- if(!supabaseClient&&!initSupabaseClient())return;
+ if(!supabaseClient&&!(await ensureSupabaseClient()))return;
  // Refresh the session so changes to auth.app_metadata (such as the Master Admin role)
  // are included in the JWT used by the app and by Supabase RLS policies.
  let sessionData;
