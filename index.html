@@ -2111,6 +2111,56 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #newContractPanel #addContractBtn:disabled{opacity:.5;cursor:not-allowed;filter:saturate(.6)}
 @media(max-width:700px){#newContractPanel .contract-grid-heading{grid-column:1/-1!important;grid-row:auto!important}.details-heading,.funding-heading,.results-heading{grid-row:auto!important}}
 </style>
+
+<style id="compact-flexible-projected-results">
+/* Compact Projected Results cards that safely adapt to longer values */
+#newContractPanel .contract-calc-summary{
+  grid-template-columns:repeat(7,minmax(0,1fr))!important;
+  gap:8px!important;
+  padding:9px!important;
+  align-items:stretch!important;
+}
+#newContractPanel .contract-calc-summary > div{
+  min-width:0!important;
+  padding:8px 10px!important;
+  min-height:68px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+}
+#newContractPanel .contract-calc-summary span{
+  font-size:clamp(10px,.78vw,12px)!important;
+  line-height:1.2!important;
+  overflow-wrap:anywhere!important;
+}
+#newContractPanel .contract-calc-summary strong{
+  font-size:clamp(13px,1.15vw,17px)!important;
+  line-height:1.15!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+#newContractPanel .contract-calc-summary .estimated-profit-values{
+  gap:4px 6px!important;
+  flex-wrap:wrap!important;
+}
+#newContractPanel .contract-calc-summary .estimated-profit-values strong{
+  white-space:normal!important;
+}
+@media(max-width:1200px){
+  #newContractPanel .contract-calc-summary{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+@media(max-width:850px){
+  #newContractPanel .contract-calc-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:600px){
+  #newContractPanel .contract-calc-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #newContractPanel .contract-calc-summary > div{min-height:64px!important}
+}
+@media(max-width:380px){
+  #newContractPanel .contract-calc-summary{grid-template-columns:1fr!important}
+}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
