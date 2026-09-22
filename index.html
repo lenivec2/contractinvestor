@@ -3550,7 +3550,7 @@ function render(){
  let contractRows=open.map(c=>{
    let xs=data.checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+(parseFloat(x.amount)||0),0);
    let expected=Math.max(0,parseInt(c.expectedPayments,10)||0),paidCount=uniquePaymentCount(xs),left=Math.max(0,expected-paidCount);
-   let paid=Number.isFinite(parseFloat(c.paidOverride))?parseFloat(c.paidOverride):rec;
+   let paid=rec;
    let breakEven=Math.max(0,(parseFloat(c.invested)||0)-rec),remainingBalance=left*(parseFloat(c.defaultAllocation)||0);
    return `<tr class="contract-row"><td data-column-key="name">${escape(c.name)}</td><td data-column-key="dayOpened">${escape(c.openedDate||c.date||'—')}</td><td data-column-key="invested">${money(c.invested)}</td><td data-column-key="paid">${money(paid)}</td><td data-column-key="breakEven"><span class="${breakEven>0.009?'break-even-needed':'break-even-zero'}">${money(breakEven)}</span></td><td data-column-key="remainingBalance">${money(remainingBalance)}</td><td data-column-key="amountPerCheck">${c.defaultAllocation>0?money(c.defaultAllocation):'—'}</td><td data-column-key="expectedPayments">${expected||'—'}</td><td data-column-key="paymentsLeft">${expected?left:'—'}</td><td data-column-key="status"><span class="status">Active</span></td><td data-column-key="actions"><div class="actions"><button class="table-action" type="button" onclick="editContract(${c.id})">Edit</button><button class="warning" type="button" onclick="closeContract(${c.id})">Close / Default</button><button class="danger" type="button" onclick="removeContract(${c.id})">Delete</button></div></td></tr>`;
  }).join('')||'<tr><td colspan="11" class="empty">No active contracts yet.</td></tr>';
