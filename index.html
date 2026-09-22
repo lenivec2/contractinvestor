@@ -2161,6 +2161,19 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   #newContractPanel .contract-calc-summary{grid-template-columns:1fr!important}
 }
 </style>
+
+<style id="draggable-projected-results">
+/* User-reorderable Projected Results cards */
+#newContractPanel .contract-calc-summary > div{position:relative;cursor:grab;transition:box-shadow .15s ease,transform .15s ease,opacity .15s ease}
+#newContractPanel .contract-calc-summary > div:active{cursor:grabbing}
+#newContractPanel .contract-calc-summary > div.result-card-dragging{opacity:.48;box-shadow:0 6px 18px rgba(20,45,80,.18)!important}
+#newContractPanel .contract-calc-summary > div.result-card-drop-target{outline:2px dashed #2f80ed;outline-offset:2px}
+#newContractPanel .result-reorder-controls{position:absolute;top:4px;right:4px;display:flex;gap:2px;opacity:0;transition:opacity .15s ease}
+#newContractPanel .contract-calc-summary > div:hover .result-reorder-controls,#newContractPanel .contract-calc-summary > div:focus-within .result-reorder-controls{opacity:1}
+#newContractPanel .result-reorder-btn{border:0;background:rgba(255,255,255,.9);color:#49647f;border-radius:5px;width:24px;height:24px;line-height:20px;padding:0;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+#newContractPanel .result-reorder-btn:hover{background:#eef6ff;color:#1769d2}
+@media (hover:none),(max-width:700px){#newContractPanel .result-reorder-controls{opacity:1}#newContractPanel .contract-calc-summary > div{padding-right:34px!important}}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -3498,8 +3511,59 @@ function validateReferralFeeField(){
  field.setCustomValidity("");
  return true;
 }
+
+function projectedResultsStorageKey(){
+ const uid=(currentUser&&currentUser.id)?currentUser.id:'local';
+ return 'fundledger_projected_results_order_'+uid;
+}
+function projectedResultCardKey(card){
+ if(card.dataset.resultCardKey)return card.dataset.resultCardKey;
+ const ids=[...card.querySelectorAll('[id]')].map(el=>el.id);
+ const known=['contractCalcTotal','contractCalcFee','contractCalcNet','contractCalcPayment','contractCalcCostBasis','contractCalcProfit','contractCalcProfitPerPayment'];
+ const key=known.find(id=>ids.includes(id))||('card_'+[...card.parentElement.children].indexOf(card));
+ card.dataset.resultCardKey=key;return key;
+}
+function saveProjectedResultsOrder(){
+ const summary=$("contractCalcSummary");if(!summary)return;
+ const order=[...summary.children].map(projectedResultCardKey);
+ try{localStorage.setItem(projectedResultsStorageKey(),JSON.stringify(order))}catch(e){}
+}
+function applyProjectedResultsOrder(){
+ const summary=$("contractCalcSummary");if(!summary)return;
+ let order=[];try{order=JSON.parse(localStorage.getItem(projectedResultsStorageKey())||'[]')}catch(e){}
+ if(!Array.isArray(order)||!order.length)return;
+ const cards=[...summary.children], byKey=new Map(cards.map(c=>[projectedResultCardKey(c),c]));
+ order.forEach(k=>{const c=byKey.get(k);if(c)summary.appendChild(c)});
+}
+function moveProjectedResultCard(card,direction){
+ const summary=$("contractCalcSummary");if(!summary||!card)return;
+ const cards=[...summary.children],i=cards.indexOf(card),j=i+direction;if(j<0||j>=cards.length)return;
+ if(direction<0)summary.insertBefore(card,cards[j]);else summary.insertBefore(cards[j],card);
+ saveProjectedResultsOrder();card.focus?.();
+}
+function initProjectedResultsReorder(){
+ const summary=$("contractCalcSummary");if(!summary)return;
+ [...summary.children].forEach(card=>{
+  projectedResultCardKey(card); card.draggable=true; card.tabIndex=card.tabIndex<0?0:card.tabIndex;
+  if(!card.querySelector('.result-reorder-controls')){
+   const controls=document.createElement('div');controls.className='result-reorder-controls';controls.setAttribute('aria-label','Reorder result card');
+   const prev=document.createElement('button');prev.type='button';prev.className='result-reorder-btn';prev.textContent='‹';prev.title='Move earlier';prev.setAttribute('aria-label','Move this result earlier');
+   const next=document.createElement('button');next.type='button';next.className='result-reorder-btn';next.textContent='›';next.title='Move later';next.setAttribute('aria-label','Move this result later');
+   prev.addEventListener('click',e=>{e.stopPropagation();moveProjectedResultCard(card,-1)});next.addEventListener('click',e=>{e.stopPropagation();moveProjectedResultCard(card,1)});controls.append(prev,next);card.appendChild(controls);
+  }
+  if(card.dataset.dragReady)return;card.dataset.dragReady='1';
+  card.addEventListener('dragstart',e=>{card.classList.add('result-card-dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',projectedResultCardKey(card))});
+  card.addEventListener('dragend',()=>{card.classList.remove('result-card-dragging');[...summary.children].forEach(c=>c.classList.remove('result-card-drop-target'));saveProjectedResultsOrder()});
+  card.addEventListener('dragover',e=>{e.preventDefault();if(!card.classList.contains('result-card-dragging'))card.classList.add('result-card-drop-target');e.dataTransfer.dropEffect='move'});
+  card.addEventListener('dragleave',()=>card.classList.remove('result-card-drop-target'));
+  card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('result-card-drop-target');const key=e.dataTransfer.getData('text/plain');const dragged=[...summary.children].find(c=>projectedResultCardKey(c)===key);if(!dragged||dragged===card)return;const r=card.getBoundingClientRect();const after=(e.clientY>r.top+r.height/2)||(Math.abs(e.clientY-(r.top+r.height/2))<r.height*.35&&e.clientX>r.left+r.width/2);summary.insertBefore(dragged,after?card.nextSibling:card);saveProjectedResultsOrder()});
+ });
+ applyProjectedResultsOrder();
+}
+
 function updateContractPaymentCalculation(){
  ensureContractProfitSummary();
+ initProjectedResultsReorder();
  const invested=Math.max(0,parseFloat($("cinvest")?.value)||0);
  const referralFee=Math.max(0,parseFloat($("creferral")?.value)||0);
  const totalReturn=Math.max(0,parseFloat($("ctotalreturn")?.value)||0);
