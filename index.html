@@ -4311,7 +4311,7 @@ initCloud();
 <style id="wide-add-contract-workspace">
 /* Wide desktop Add Contract workspace: use the screen without stretching the form. */
 @media (min-width: 1180px){
-  #newContractPanel{
+  #newContractPanel:not(.hidden){
     display:grid!important;
     grid-template-columns:minmax(0, 1fr) 300px!important;
     grid-template-areas:
@@ -4380,5 +4380,39 @@ initCloud();
  }
  const old=window.updateContractPaymentCalculation; if(typeof old==='function')window.updateContractPaymentCalculation=function(){const r=old.apply(this,arguments);updateSide();return r};
  ensureSide();
+})();
+</script>
+<style id="page-specific-summary-panels">
+@media (min-width:1180px){
+  .panel.page-summary-layout:not(.hidden){display:grid!important;grid-template-columns:minmax(0,1fr) 300px!important;gap:18px!important;align-items:start!important}
+  .panel.page-summary-layout>.page-main-content{min-width:0!important}
+  .panel.page-summary-layout>.page-summary-side{display:flex!important;flex-direction:column;gap:14px;position:sticky;top:12px}
+}
+@media (max-width:1179px){.panel.page-summary-layout>.page-summary-side{display:none!important}}
+.page-summary-side{display:none}.page-summary-card{border:1px solid #d6e4f3;border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 1px 3px rgba(14,49,91,.05)}
+.page-summary-card h3{margin:0;padding:11px 13px;background:#edf5ff;color:#17365f;font-size:14px;font-weight:800;border-bottom:1px solid #d6e4f3}.page-summary-list{padding:5px 12px 9px}.page-summary-row{display:flex;justify-content:space-between;gap:12px;padding:8px 1px;border-bottom:1px solid #e8eef5;font-size:12px;color:#425a78}.page-summary-row:last-child{border-bottom:0}.page-summary-row strong{color:#17365f;text-align:right;overflow-wrap:anywhere}.page-summary-row.good strong{color:#07853f}.page-summary-row.warn strong{color:#c92020}
+</style>
+<script id="page-specific-summary-panels-js">
+(function(){
+ const specs={
+  checkPanel:{title:'Payment Summary',rows:[['Payment Amount','psPayAmount'],['Total Allocated','psAllocated'],['Unallocated','psUnallocated'],['Contracts Selected','psSelected'],['Status','psPayStatus']]},
+  contractsPanel:{title:'Active Contracts Summary',rows:[['Active Contracts','psActiveCount'],['Total Funded','psActiveFunded'],['Amount Received','psActiveReceived'],['Remaining Receivable','psActiveRemaining'],['Projected Profit','psActiveProfit']]},
+  completedPanel:{title:'Completed Contracts Summary',rows:[['Completed Contracts','psCompletedCount'],['Total Funded','psCompletedFunded'],['Amount Received','psCompletedReceived'],['Profit / Loss','psCompletedProfit'],['Defaulted','psCompletedDefaulted']]},
+  historyPanel:{title:'Payment History Summary',rows:[['Payments Shown','psHistoryCount'],['Amount Shown','psHistoryAmount'],['All Payments','psHistoryAllCount'],['Total Payments Received','psHistoryAllAmount'],['Contracts Paid','psHistoryContracts']]},
+  reportsPanel:{title:'Report Summary',rows:[['Total Funded','psReportFunded'],['Payments Received','psReportReceived'],['Realized Profit / Loss','psReportProfit'],['Active Contracts','psReportActive'],['Completed Contracts','psReportCompleted'],['Defaulted Contracts','psReportDefaulted']]}
+ };
+ function m(n){return (Number(n)||0).toLocaleString(undefined,{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2})}
+ function wrapPanel(id,spec){const p=document.getElementById(id);if(!p||p.classList.contains('page-summary-layout'))return;const main=document.createElement('div');main.className='page-main-content';while(p.firstChild)main.appendChild(p.firstChild);const side=document.createElement('aside');side.className='page-summary-side';side.innerHTML='<section class="page-summary-card"><h3>'+spec.title+'</h3><div class="page-summary-list">'+spec.rows.map(r=>'<div class="page-summary-row"><span>'+r[0]+'</span><strong id="'+r[1]+'">—</strong></div>').join('')+'</div></section>';p.append(main,side);p.classList.add('page-summary-layout')}
+ function set(id,v,cls){const e=document.getElementById(id);if(!e)return;e.textContent=v;const r=e.closest('.page-summary-row');if(r){r.classList.remove('good','warn');if(cls)r.classList.add(cls)}}
+ function receivedFor(name){return (data.checks||[]).filter(x=>x.contract===name).reduce((s,x)=>s+(parseFloat(x.paymentAmount)||0),0)}
+ function update(){if(typeof data!=='object')return;
+  const pay=parseFloat(document.getElementById('amount')?.value)||0;let allocated=0;document.querySelectorAll('#manualBreakdown input[type="number"]').forEach(i=>allocated+=parseFloat(i.value)||0);if(!allocated){const sa=parseFloat(document.getElementById('summaryAllocated')?.textContent?.replace(/[^0-9.-]/g,''));if(Number.isFinite(sa))allocated=sa}const diff=pay-allocated;set('psPayAmount',m(pay));set('psAllocated',m(allocated));set('psUnallocated',m(Math.abs(diff)),Math.abs(diff)<.005?'good':'warn');set('psSelected',String(document.querySelectorAll('#contractChoices input:checked').length||0));set('psPayStatus',pay>0&&Math.abs(diff)<.005?'Ready to save':'Allocation incomplete',pay>0&&Math.abs(diff)<.005?'good':'warn');
+  const active=(data.contracts||[]).filter(c=>!c.closed);let af=0,ar=0,arem=0,ap=0;active.forEach(c=>{const f=parseFloat(c.fundedAmount)||0,r=receivedFor(c.name),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),cnt=(data.checks||[]).filter(x=>x.contract===c.name).length,left=Math.max(0,expected-cnt),rem=expected?left*(parseFloat(c.paymentAmount)||0):Math.max(0,f-r);af+=f;ar+=r;arem+=rem;const net=(parseFloat(c.netAmount)||parseFloat(c.totalReturn)||0);ap+=net-f-(parseFloat(c.referralFee)||0)});set('psActiveCount',String(active.length));set('psActiveFunded',m(af));set('psActiveReceived',m(ar));set('psActiveRemaining',m(arem));set('psActiveProfit',m(ap),ap>=0?'good':'warn');
+  const completed=(data.contracts||[]).filter(c=>c.closed);let cf=0,cr=0;completed.forEach(c=>{cf+=parseFloat(c.fundedAmount)||0;cr+=receivedFor(c.name)});const cp=cr-cf;set('psCompletedCount',String(completed.length));set('psCompletedFunded',m(cf));set('psCompletedReceived',m(cr));set('psCompletedProfit',m(cp),cp>=0?'good':'warn');set('psCompletedDefaulted',String(completed.filter(c=>c.defaulted).length));
+  const histRows=[...document.querySelectorAll('#history tr')].filter(r=>r.querySelector('td[data-column-key="amount"]'));let ha=0;histRows.forEach(r=>ha+=parseFloat(r.querySelector('td[data-column-key="amount"]')?.textContent.replace(/[^0-9.-]/g,''))||0);const allAmt=(data.checks||[]).reduce((s,x)=>s+(parseFloat(x.paymentAmount)||0),0);set('psHistoryCount',String(histRows.length));set('psHistoryAmount',m(ha));set('psHistoryAllCount',String((data.checks||[]).length));set('psHistoryAllAmount',m(allAmt));set('psHistoryContracts',String(new Set((data.checks||[]).map(x=>x.contract).filter(Boolean)).size));
+  const totalFunded=(data.contracts||[]).reduce((s,c)=>s+(parseFloat(c.fundedAmount)||0),0),profit=allAmt-totalFunded;set('psReportFunded',m(totalFunded));set('psReportReceived',m(allAmt));set('psReportProfit',m(profit),profit>=0?'good':'warn');set('psReportActive',String(active.length));set('psReportCompleted',String(completed.filter(c=>!c.defaulted).length));set('psReportDefaulted',String(completed.filter(c=>c.defaulted).length));
+ }
+ Object.entries(specs).forEach(([id,s])=>wrapPanel(id,s));document.addEventListener('input',()=>setTimeout(update,0));document.addEventListener('change',()=>setTimeout(update,0));document.addEventListener('click',()=>setTimeout(update,30));
+ const oldRender=window.render;if(typeof oldRender==='function')window.render=function(){const r=oldRender.apply(this,arguments);setTimeout(update,0);return r};setTimeout(update,0);
 })();
 </script>
