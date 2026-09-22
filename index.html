@@ -3918,6 +3918,16 @@ function clearCheckEntry(showMessage=true){
 function clearPaymentRequiredError(field){ const star=$(field+"RequiredStar"); if(star)star.classList.remove("show"); }
 function validatePaymentRequiredFields(){ const amount=parseFloat($("amount")?.value),date=$("date")?.value||""; const missingAmount=!(amount>0),missingDate=!date; const a=$("amountRequiredStar"),d=$("dateRequiredStar"); if(a)a.classList.toggle("show",missingAmount); if(d)d.classList.toggle("show",missingDate); return !(missingAmount||missingDate); }
 function addCheck(){
+ const revenueShareContract=selectedRevenueShareContract();
+ if(revenueShareContract){
+   const periodRevenue=parseFloat($("periodRevenue")?.value)||0;
+   if(!(periodRevenue>0)){
+     alert("Enter Period Revenue for this Revenue Share payment.");
+     $("periodRevenue")?.focus();
+     return;
+   }
+ }
+
  let date=$("date").value,dateReceived=$("dateReceived").value,amount=parseFloat($("amount").value),checkno=$("checkno").value.trim();
  validatePaymentRequiredFields();
  let allocations=getAllocations();
@@ -4301,6 +4311,7 @@ function render(){
  applyDashboardAppearance();
  applyActiveContractColumns();
  applyCompletedContractColumns();
+ applyContractFieldAppearance();
  updateRemainingPaymentLabels();
 }
 let selectedCompletedContractId=null;
@@ -4588,8 +4599,6 @@ function promptOtherContractType(){
 }
 document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 </script>
-</body></html>
-
 <style id="projected-results-visibility-upgrade">
 /* Stronger visual hierarchy for Projected Results */
 #newContractPanel .results-heading{
@@ -4883,3 +4892,6 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
   padding-bottom:0;
 }
 </style>
+
+</body>
+</html>
