@@ -159,6 +159,18 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #newContractPanel .results-heading:focus-visible{outline:2px solid #2f80ed;outline-offset:2px}
 #newContractPanel .projected-results-toggle{border:0;background:transparent;color:#6b7f99;font-size:16px;line-height:1;padding:2px 6px;cursor:pointer}
 #newContractPanel .results-heading.results-collapsed + #contractCalcSummary{display:none!important}
+
+/* FundLedger simplified Settings UX */
+.settings-appearance .appearance-option{cursor:pointer;min-height:48px}
+.settings-appearance .appearance-option input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:42px;height:24px;border-radius:999px;background:#cbd5e1;position:relative;flex:0 0 auto;transition:.18s ease;border:0;cursor:pointer}
+.settings-appearance .appearance-option input[type="checkbox"]::after{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.18s ease}
+.settings-appearance .appearance-option input[type="checkbox"]:checked{background:#16a34a}
+.settings-appearance .appearance-option input[type="checkbox"]:checked::after{transform:translateX(18px)}
+.settings-appearance .appearance-option input[type="checkbox"]:focus-visible{outline:3px solid rgba(20,123,232,.25);outline-offset:2px}
+.settings-tip{margin:10px 0 0;padding:9px 11px;border-radius:8px;background:#eef6ff;color:#24527a;font-size:13px;font-weight:650}
+.settings-reset-card{margin-top:22px;padding-top:20px;border-top:1px solid #dce8f5;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.settings-reset-card p{margin:4px 0 0}
+@media(max-width:600px){.settings-reset-card .danger-btn,.settings-reset-card button{width:100%}}
 </style>
 
 <style id="mobile-sidebar-final-fix">
@@ -2316,20 +2328,20 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
         </div>
       </div>
       <div class="appearance-group">
-        <h4>Summary Boxes</h4><p>Select which boxes appear. Drag boxes on the Dashboard or use the arrows here to change their order.</p>
+        <h4>Summary Boxes</h4><p>Select which boxes appear on the Dashboard.</p><p class="settings-tip">Drag the summary boxes directly on the Dashboard to rearrange them.</p>
         <div class="appearance-options" id="summaryBoxOptions">
-          <label class="appearance-option" data-summary-option="invested"><span>Total Funded</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="invested" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Total Funded up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('invested',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Total Funded down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('invested',1)">↓</button></span></label>
-          <label class="appearance-option" data-summary-option="received"><span>Total Payments Received</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="received" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Total Payments Received up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('received',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Total Payments Received down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('received',1)">↓</button></span></label>
-          <label class="appearance-option" data-summary-option="profit"><span>Realized Profit</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="profit" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Realized Profit up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('profit',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Realized Profit down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('profit',1)">↓</button></span></label>
-          <label class="appearance-option" data-summary-option="active"><span>Active Contracts</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="active" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Active Contracts up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('active',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Active Contracts down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('active',1)">↓</button></span></label>
-          <label class="appearance-option" data-summary-option="all"><span>Total Contracts</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="all" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Total Contracts up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('all',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Total Contracts down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('all',1)">↓</button></span></label>
-          <label class="appearance-option" data-summary-option="paid"><span>Completed Contracts</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="paid" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Completed Contracts up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('paid',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Completed Contracts down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('paid',1)">↓</button></span></label>
-          <label class="appearance-option" data-summary-option="default"><span>Defaulted Contracts</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="default" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Defaulted Contracts up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('default',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Defaulted Contracts down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('default',1)">↓</button></span></label>
-          <label class="appearance-option" data-summary-option="defaultLoss"><span>Default Loss</span><span class="summary-option-actions"><input type="checkbox" data-summary-toggle="defaultLoss" onchange="updateDashboardAppearance(this)"><button class="summary-move-btn" type="button" aria-label="Move Default Loss up" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('defaultLoss',-1)">↑</button><button class="summary-move-btn" type="button" aria-label="Move Default Loss down" onclick="event.preventDefault();event.stopPropagation();moveSummaryCard('defaultLoss',1)">↓</button></span></label>
+          <label class="appearance-option" data-summary-option="invested"><span>Total Funded</span><input type="checkbox" data-summary-toggle="invested" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option" data-summary-option="received"><span>Total Payments Received</span><input type="checkbox" data-summary-toggle="received" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option" data-summary-option="profit"><span>Realized Profit</span><input type="checkbox" data-summary-toggle="profit" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option" data-summary-option="active"><span>Active Contracts</span><input type="checkbox" data-summary-toggle="active" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option" data-summary-option="all"><span>Total Contracts</span><input type="checkbox" data-summary-toggle="all" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option" data-summary-option="paid"><span>Completed Contracts</span><input type="checkbox" data-summary-toggle="paid" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option" data-summary-option="default"><span>Defaulted Contracts</span><input type="checkbox" data-summary-toggle="default" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option" data-summary-option="defaultLoss"><span>Default Loss</span><input type="checkbox" data-summary-toggle="defaultLoss" onchange="updateDashboardAppearance(this)"></label>
         </div>
       </div>
       <div class="appearance-group">
-        <h4>Active Contracts Columns</h4><p>Select which information columns appear in the Active Contracts table.</p><p class="column-order-hint">Drag to rearrange, or use the arrows.</p>
+        <h4>Active Contracts Columns</h4><p>Select which information columns appear in the Active Contracts table.</p><p class="settings-tip">Drag column headers directly on this table to rearrange them.</p>
         <div class="appearance-options" id="activeColumnOptions">
           <label class="appearance-option"><span>Contract Name / ID</span><input type="checkbox" data-active-column-toggle="name" onchange="updateActiveContractColumnAppearance(this)"></label>
           <label class="appearance-option"><span>Day Opened</span><input type="checkbox" data-active-column-toggle="dayOpened" onchange="updateActiveContractColumnAppearance(this)"></label>
@@ -2345,7 +2357,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
         </div>
       </div>
       <div class="appearance-group">
-        <h4>Completed Contracts Columns</h4><p>Select which information columns appear in the Completed Contracts table.</p><p class="column-order-hint">Drag to rearrange, or use the arrows.</p>
+        <h4>Completed Contracts Columns</h4><p>Select which information columns appear in the Completed Contracts table.</p><p class="settings-tip">Drag column headers directly on this table to rearrange them.</p>
         <div class="appearance-options" id="completedColumnOptions">
           <label class="appearance-option"><span>Contract Name / ID</span><input type="checkbox" data-completed-column-toggle="contract" onchange="updateCompletedContractColumnAppearance(this)"></label>
           <label class="appearance-option"><span>Day Opened</span><input type="checkbox" data-completed-column-toggle="dayOpened" onchange="updateCompletedContractColumnAppearance(this)"></label>
@@ -2359,7 +2371,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
         </div>
       </div>
       <div class="appearance-group">
-        <h4>Payment History Columns</h4><p>Select which columns appear in Payment History.</p><p class="column-order-hint">Drag to rearrange, or use the arrows.</p>
+        <h4>Payment History Columns</h4><p>Select which columns appear in Payment History.</p><p class="settings-tip">Drag column headers directly in Payment History to rearrange them.</p>
         <div class="appearance-options" id="historyColumnOptions">
           <label class="appearance-option"><span>#</span><input type="checkbox" data-history-column-toggle="sequence" onchange="updateCheckHistoryColumnAppearance(this)"></label>
           <label class="appearance-option"><span>Payment Date</span><input type="checkbox" data-history-column-toggle="dateIssued" onchange="updateCheckHistoryColumnAppearance(this)"></label>
@@ -2369,6 +2381,10 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
           <label class="appearance-option"><span>Check #</span><input type="checkbox" data-history-column-toggle="checkno" onchange="updateCheckHistoryColumnAppearance(this)"></label>
           <label class="appearance-option"><span>Actions</span><input type="checkbox" data-history-column-toggle="actions" onchange="updateCheckHistoryColumnAppearance(this)"></label>
         </div>
+      </div>
+      <div class="settings-reset-card">
+        <div><h4 style="margin:0">Reset Layout</h4><p>Restore dashboard boxes and table columns to their default visibility and order.</p></div>
+        <button class="danger-btn" type="button" onclick="restoreDefaultLayout()">↻ Restore Default Layout</button>
       </div>
     </div>
   </div>
@@ -2668,7 +2684,6 @@ function applyContractColumnOptionOrder(type){
  order.forEach((key,index)=>{
   const input=container.querySelector(`[${config.toggleAttribute}="${key}"]`),option=input?.closest("label");if(!option)return;
   setupContractColumnOption(option,type,key);container.appendChild(option);
-  const buttons=option.querySelectorAll(".column-order-actions .summary-move-btn");if(buttons[0])buttons[0].disabled=index===0;if(buttons[1])buttons[1].disabled=index===order.length-1;
  });
 }
 function moveContractColumn(type,key,direction){
@@ -2686,18 +2701,11 @@ function reorderContractColumn(type,draggedKey,targetKey,placeAfter){
  applyContractColumnOptionOrder(type);applyContractTableColumnOrder(type);save();toast(`${config.label} column order saved`);
 }
 function setupContractColumnOption(option,type,key){
- option.classList.add("column-order-option");option.draggable=true;option.title="Drag to rearrange";
- if(!option.querySelector(".column-order-actions")){
-  const input=option.querySelector("input"),actions=document.createElement("span");actions.className="column-order-actions";
-  if(input)actions.appendChild(input);
-  [-1,1].forEach(direction=>{const button=document.createElement("button");button.className="summary-move-btn";button.type="button";button.textContent=direction<0?"↑":"↓";button.setAttribute("aria-label",`${direction<0?"Move up":"Move down"}`);button.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();moveContractColumn(type,key,direction)});actions.appendChild(button)});
-  option.appendChild(actions);
- }
- if(option.dataset.columnOrderReady)return;option.dataset.columnOrderReady="true";
- option.addEventListener("dragstart",event=>{draggedContractColumnType=type;draggedContractColumnKey=key;option.classList.add("column-dragging");event.dataTransfer.effectAllowed="move";event.dataTransfer.setData("text/plain",`${type}:${key}`)});
- option.addEventListener("dragend",()=>{draggedContractColumnType="";draggedContractColumnKey="";option.classList.remove("column-dragging")});
- option.addEventListener("dragover",event=>{if(draggedContractColumnType===type){event.preventDefault();event.dataTransfer.dropEffect="move"}});
- option.addEventListener("drop",event=>{event.preventDefault();if(draggedContractColumnType!==type)return;const rect=option.getBoundingClientRect(),after=event.clientY>rect.top+rect.height/2||event.clientX>rect.left+rect.width/2;reorderContractColumn(type,draggedContractColumnKey,key,after)});
+ // Settings controls visibility only. Column order is changed directly on the table.
+ option.classList.remove("column-order-option","column-dragging");option.draggable=false;option.removeAttribute("title");
+ const actions=option.querySelector(".column-order-actions");
+ if(actions){const input=actions.querySelector("input");if(input)option.appendChild(input);actions.remove()}
+ option.querySelectorAll(".summary-move-btn").forEach(button=>button.remove());
 }
 function setupContractTableHeaderDragging(type){
  const config=contractColumnConfig(type),table=$(config.panelId)?.querySelector("table");if(!table)return;
@@ -2796,6 +2804,22 @@ function updateAutomaticDataRefresh(value){
  if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
  data.preferences.automaticDataRefresh=value!=="disabled";
  updateSettingsPanel();save();toast(data.preferences.automaticDataRefresh?"Automatic refresh enabled":"Automatic refresh disabled");
+}
+function restoreDefaultLayout(){
+ if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
+ data.preferences.dashboardCards={};
+ data.preferences.dashboardCardOrder=["invested","received","profit","active","all","paid","default","defaultLoss"];
+ data.preferences.dashboardSections={};
+ data.preferences.activeContractColumns={};
+ data.preferences.completedContractColumns={};
+ data.preferences.checkHistoryColumns={};
+ data.preferences.activeContractColumnOrder=[];
+ data.preferences.completedContractColumnOrder=[];
+ data.preferences.checkHistoryColumnOrder=[];
+ data.preferences.projectedResultsOrder=[];
+ applyDashboardAppearance();applyActiveContractColumns();applyCompletedContractColumns();applyCheckHistoryColumns();
+ applyContractTableColumnOrder("active");applyContractTableColumnOrder("completed");applyContractTableColumnOrder("history");
+ updateSettingsPanel();save();toast("Default layout restored");
 }
 function updateSettingsPanel(){
  const email=$("settingsAccountEmail");if(email)email.textContent=currentUser?.email||"Not signed in";
@@ -3466,9 +3490,12 @@ async function initCloud(){
     currentUser=effectiveUser;
     if(!(await enforceAccountAccess()))return;
     if($("contactEmail"))$("contactEmail").value=effectiveUser.email||"";
+    // Auth events such as TOKEN_REFRESHED can fire when the browser is resized,
+    // maximized, restored, or regains focus. Do not reset navigation in those cases.
+    const appAlreadyVisible=!$("appScreen").classList.contains("hidden");
     cloudDataReady=false;
     data=JSON.parse(JSON.stringify(EMPTY_DATA));
-    showApp();
+    if(!appAlreadyVisible)showApp();
     setUserStatus(currentUser);
     setSyncStatus("Loading cloud data…");
     loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;await initAdmin();setDateIssuedToToday(true);render()});
@@ -4178,7 +4205,7 @@ initCloud();
 }
 #newContractPanel .results-heading:hover{background:#e6f5eb!important}
 #newContractPanel .results-heading::before{
-  content:"3";
+  content:none;
   display:inline-grid;
   place-items:center;
   width:24px;height:24px;
