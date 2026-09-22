@@ -3300,7 +3300,7 @@ function updateContractPaymentCalculation(){
  const feeAmount=totalReturn*(feePercent/100);
  const netAmount=Math.max(0,totalReturn-feeAmount);
  const amountPerCheck=payments>0?netAmount/payments:0;
- const estimatedProfit=netAmount-invested+referralFee;
+ const estimatedProfit=netAmount-invested-referralFee;
  const estimatedProfitPercent=invested>0?(estimatedProfit/invested)*100:0;
  const profitPerPayment=payments>0?estimatedProfit/payments:0;
  if($("cpreset"))$("cpreset").value=totalReturn>0&&payments>0?amountPerCheck.toFixed(2):"";
