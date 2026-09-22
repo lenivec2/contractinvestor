@@ -2493,6 +2493,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
           <label class="appearance-option" data-summary-option="defaultLoss"><span>Default Loss</span><input type="checkbox" data-summary-toggle="defaultLoss" onchange="updateDashboardAppearance(this)"></label>
         </div>
       </div></details>
+<details class="appearance-group settings-native-dropdown"><summary>Add Contract Fields</summary><div class="settings-native-dropdown-content"><div class="muted" style="margin-bottom:10px">Choose which optional fields appear when adding a contract.</div><label class="setting-check"><input type="checkbox" data-add-contract-field-toggle="contractType" checked onchange="updateAddContractFieldVisibility(this)"> <span>Contract Type</span></label><label class="setting-check"><input type="checkbox" data-add-contract-field-toggle="startDate" checked onchange="updateAddContractFieldVisibility(this)"> <span>Contract Start Date</span></label><label class="setting-check"><input type="checkbox" data-add-contract-field-toggle="revenueShare" checked onchange="updateAddContractFieldVisibility(this)"> <span>Revenue Share %</span></label><label class="setting-check"><input type="checkbox" data-add-contract-field-toggle="interestRate" checked onchange="updateAddContractFieldVisibility(this)"> <span>Interest Rate %</span></label><label class="setting-check"><input type="checkbox" data-add-contract-field-toggle="referralFee" checked onchange="updateAddContractFieldVisibility(this)"> <span>Upfront Referral Fee</span></label><label class="setting-check"><input type="checkbox" data-add-contract-field-toggle="adminFee" checked onchange="updateAddContractFieldVisibility(this)"> <span>Administrative Fee</span></label><label class="setting-check"><input type="checkbox" data-add-contract-field-toggle="fundingCheck" checked onchange="updateAddContractFieldVisibility(this)"> <span>Funding Check #</span></label><label class="setting-check"><input type="checkbox" data-add-contract-field-toggle="notes" checked onchange="updateAddContractFieldVisibility(this)"> <span>Notes</span></label></div></details>
       <details class="appearance-group settings-native-dropdown"><summary>Active Contracts Columns</summary><div class="settings-native-dropdown-content">
         <p>Select which information columns appear in the Active Contracts table.</p><p class="settings-tip">Drag column headers directly on this table to rearrange them.</p>
         <div class="appearance-options" id="activeColumnOptions">
@@ -4825,5 +4826,48 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 }
 </style>
 <script id="fundledger-runtime-diagnostics">window.addEventListener("error",e=>console.error("FundLedger runtime error:",e.error||e.message));window.addEventListener("unhandledrejection",e=>console.error("FundLedger promise error:",e.reason));</script>
+
+<script id="add-contract-field-settings">
+(function(){
+ const KEY="fundledgerAddContractFieldVisibility";
+ const targets={
+  contractType:["#ctype"],
+  startDate:["#cdate"],
+  maturityDate:["#cmaturitydate"],
+  paymentFrequency:["#cpaymentfrequency"],
+  revenueShare:["#crevenueshare"],
+  interestRate:["#cinterestrate"],
+  referralFee:[".contract-referral-field"],
+  adminFee:[".contract-fee-field"],
+  fundingCheck:[".contract-check-field"],
+  notes:["#cnotes"]
+ };
+ function prefs(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return {}}}
+ function fieldContainer(el){
+   return el.closest(".field")||el.closest("[data-contract-field]")||el;
+ }
+ function apply(){
+   const p=prefs();
+   Object.keys(targets).forEach(function(k){
+     targets[k].forEach(function(sel){
+       document.querySelectorAll(sel).forEach(function(el){
+         const box=fieldContainer(el);
+         if(box) box.style.display=p[k]===false?"none":"";
+       });
+     });
+   });
+   document.querySelectorAll("[data-add-contract-field-toggle]").forEach(function(cb){
+     cb.checked=p[cb.dataset.addContractFieldToggle]!==false;
+   });
+ }
+ window.updateAddContractFieldVisibility=function(cb){
+   const p=prefs(); p[cb.dataset.addContractFieldToggle]=!!cb.checked;
+   localStorage.setItem(KEY,JSON.stringify(p)); apply();
+ };
+ document.addEventListener("DOMContentLoaded",apply);
+ window.addEventListener("pageshow",apply);
+})();
+</script>
+
 </body>
 </html>
