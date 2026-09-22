@@ -4516,3 +4516,51 @@ initCloud();
   padding-bottom:0;
 }
 </style>
+<style id="active-contracts-reference-layout-fix">
+/* Active Contracts: reference-style table + summary, with responsive horizontal scrolling. */
+#contractsPanel.panel.page-summary-layout{width:100%!important;max-width:100%!important}
+#contractsPanel .page-main-content{min-width:0!important}
+#contractsPanel .page-main-content>.scroll{overflow-x:auto!important;overflow-y:visible!important;-webkit-overflow-scrolling:touch!important;border:1px solid #e1eaf4;border-radius:10px}
+#contractsPanel .page-main-content>.scroll table{display:table!important;width:100%!important;min-width:1030px!important;border-collapse:collapse!important}
+#contractsPanel .page-main-content>.scroll thead{display:table-header-group!important}
+#contractsPanel .page-main-content>.scroll tbody{display:table-row-group!important}
+#contractsPanel .page-main-content>.scroll tr{display:table-row!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#contractsPanel .page-main-content>.scroll th,#contractsPanel .page-main-content>.scroll td{display:table-cell!important;white-space:normal!important;word-break:normal!important;vertical-align:middle!important;padding:10px 9px!important;text-align:left!important;border-bottom:1px solid #e7edf5!important}
+#contractsPanel .page-main-content>.scroll td:before{display:none!important;content:none!important}
+#contractsPanel .page-main-content>.scroll th{background:#eef6ff!important;color:#17365f!important;font-size:12px!important;line-height:1.25!important;font-weight:800!important}
+#contractsPanel .page-main-content>.scroll td{font-size:12px!important;color:#243c5a!important}
+#contractsPanel td[data-column-key="actions"],#contractsPanel th[data-column-key="actions"]{position:sticky!important;right:0!important;background:#fff!important;z-index:3!important;min-width:122px!important;box-shadow:-5px 0 8px rgba(21,52,88,.05)}
+#contractsPanel th[data-column-key="actions"]{background:#eef6ff!important;z-index:4!important}
+#contractsPanel .page-summary-side{min-width:280px!important}
+#contractsPanel .page-summary-card{border-radius:10px!important}
+#contractsPanel .page-summary-card h3{font-size:14px!important}
+@media (min-width:1180px){#contractsPanel.panel.page-summary-layout:not(.hidden){grid-template-columns:minmax(0,1fr) 285px!important;gap:14px!important}}
+@media (max-width:1179px){
+ #contractsPanel.panel.page-summary-layout:not(.hidden){display:flex!important;flex-direction:column!important}
+ #contractsPanel.panel.page-summary-layout>.page-summary-side{display:flex!important;position:static!important;margin-top:14px!important;width:100%!important;min-width:0!important}
+ #contractsPanel .page-main-content>.scroll table{min-width:900px!important}
+}
+@media (max-width:700px){
+ #contractsPanel .page-main-content>.scroll table{min-width:820px!important}
+ #contractsPanel .page-main-content>.scroll th,#contractsPanel .page-main-content>.scroll td{padding:8px 7px!important;font-size:11px!important}
+ #contractsPanel td[data-column-key="actions"],#contractsPanel th[data-column-key="actions"]{min-width:105px!important}
+}
+</style>
+<script id="active-contracts-total-cost-summary-fix">
+(function(){
+ function moneyTC(n){return (Number(n)||0).toLocaleString(undefined,{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2})}
+ function updateActiveTotalCost(){
+  if(typeof data!=='object')return;
+  const active=(data.contracts||[]).filter(c=>!c.closed);
+  let total=0;
+  active.forEach(c=>{total+=(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0)});
+  const el=document.getElementById('psActiveFunded');if(el)el.textContent=moneyTC(total);
+ }
+ function renameSummary(){const e=document.getElementById('psActiveFunded');const row=e?.closest('.page-summary-row');const label=row?.querySelector('span');if(label)label.textContent='Total Cost'}
+ const obs=new MutationObserver(()=>{renameSummary();updateActiveTotalCost()});
+ document.addEventListener('DOMContentLoaded',()=>{renameSummary();updateActiveTotalCost();const p=document.getElementById('contractsPanel');if(p)obs.observe(p,{childList:true,subtree:true});});
+ document.addEventListener('click',()=>setTimeout(()=>{renameSummary();updateActiveTotalCost()},20));
+ document.addEventListener('change',()=>setTimeout(updateActiveTotalCost,20));
+ setTimeout(()=>{renameSummary();updateActiveTotalCost()},100);
+})();
+</script>
