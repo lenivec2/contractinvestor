@@ -4361,7 +4361,8 @@ initCloud();
    '<div class="contract-side-row"><span>Net Return</span><strong id="sideNet">$0.00</strong></div>'+
    '<div class="contract-side-row"><span>Payment Amount</span><strong id="sidePayment">$0.00</strong></div>'+
    '<div class="contract-side-row"><span>Payments Remaining</span><strong id="sidePayments">0</strong></div>'+
-   '<div class="contract-side-row profit"><span>Projected Profit</span><strong id="sideProfit">$0.00</strong></div></div></section>'+
+   '<div class="contract-side-row profit"><span>Projected Profit</span><strong id="sideProfit">$0.00</strong></div>'+
+   '<div class="contract-side-row profit"><span>Profit per Payment</span><strong id="sideProfitPerPayment">$0.00</strong></div></div></section>'+
    '<section class="contract-side-card contract-tips"><h3>Quick Tips</h3><ul><li>Enter the participant funded amount.</li><li>Add the upfront referral fee, or enter 0.</li><li>Set the administrative fee percentage.</li><li>Enter the total gross return and payments remaining.</li><li>Projected results update automatically.</li></ul></section>';
    panel.appendChild(side);
    ['cname','cdate','cinvest','creferral','ctotalreturn','cadminfee','cpayments','cpreset'].forEach(id=>{const e=document.getElementById(id);if(e){e.addEventListener('input',updateSide);e.addEventListener('change',updateSide)}});
@@ -4375,8 +4376,9 @@ initCloud();
    let payment=n('cpreset'); if(!(payment>0)&&payments>0)payment=gross/payments;
    const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val};
    set('sideName',v('cname').trim()||'—'); set('sideDate',v('cdate')||'—'); set('sideFunded',moneySide(funded)); set('sideReferral',moneySide(referral));
-   set('sideAdmin',moneySide(fee)); set('sideCost',moneySide(cost)); set('sideGross',moneySide(gross)); set('sideNet',moneySide(net)); set('sidePayment',moneySide(payment)); set('sidePayments',String(payments)); set('sideProfit',moneySide(profit));
-   const pe=document.getElementById('sideProfit');if(pe)pe.style.color=profit<0?'#c92020':'#07853f';
+   const profitPerPayment=payments>0?profit/payments:0;
+   set('sideAdmin',moneySide(fee)); set('sideCost',moneySide(cost)); set('sideGross',moneySide(gross)); set('sideNet',moneySide(net)); set('sidePayment',moneySide(payment)); set('sidePayments',String(payments)); set('sideProfit',moneySide(profit)); set('sideProfitPerPayment',moneySide(profitPerPayment));
+   ['sideProfit','sideProfitPerPayment'].forEach(id=>{const pe=document.getElementById(id);if(pe)pe.style.color=profit<0?'#c92020':'#07853f'});
  }
  const old=window.updateContractPaymentCalculation; if(typeof old==='function')window.updateContractPaymentCalculation=function(){const r=old.apply(this,arguments);updateSide();return r};
  ensureSide();
