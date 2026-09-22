@@ -3722,3 +3722,25 @@ initCloud();
 </script>
 
 </body></html>
+<style id="add-contract-small-fee-payments">
+/* Compact fields requested for Add Contract: Admin Fee and number of remaining/expected payments. */
+#newContractPanel .contract-fee-field,
+#newContractPanel .contract-payments-field{
+  justify-self:start!important;
+  width:100%!important;
+}
+#newContractPanel .contract-fee-field input,
+#newContractPanel .contract-payments-field input{
+  width:72%!important;
+  max-width:110px!important;
+  min-width:82px!important;
+}
+@media (max-width:700px){
+  #newContractPanel .contract-fee-field input,
+  #newContractPanel .contract-payments-field input{
+    width:78%!important;
+    max-width:110px!important;
+    min-width:78px!important;
+  }
+}
+</style>
