@@ -4307,3 +4307,78 @@ initCloud();
 #newContractPanel .projected-results-toggle{display:flex!important;align-items:center!important;justify-content:center!important;padding:2px 4px!important;}
 #newContractPanel .participation-calculator-trigger{padding-right:16px!important;}
 </style>
+
+<style id="wide-add-contract-workspace">
+/* Wide desktop Add Contract workspace: use the screen without stretching the form. */
+@media (min-width: 1180px){
+  #newContractPanel{
+    display:grid!important;
+    grid-template-columns:minmax(0, 1fr) 300px!important;
+    grid-template-areas:
+      "title side"
+      "intro side"
+      "form side"
+      "participant side"
+      "validation side"
+      "button side"!important;
+    column-gap:18px!important;
+    align-items:start!important;
+  }
+  #newContractPanel > h2{grid-area:title;margin-bottom:2px!important}
+  #newContractPanel > .contract-form-intro{grid-area:intro;margin-top:0!important}
+  #newContractPanel > .contract-entry-grid{grid-area:form;min-width:0}
+  #newContractPanel > .participation-calculator-trigger{grid-area:participant}
+  #newContractPanel > #participationCalculatorModal{grid-area:participant}
+  #newContractPanel > #addContractValidation{grid-area:validation}
+  #newContractPanel > #addContractBtn{grid-area:button;justify-self:start}
+  #newContractPanel > .contract-live-side{grid-area:side;display:flex!important;flex-direction:column;gap:14px;position:sticky;top:12px}
+}
+@media (max-width:1179px){#newContractPanel > .contract-live-side{display:none!important}}
+.contract-live-side{display:none}
+.contract-side-card{border:1px solid #d6e4f3;border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 1px 3px rgba(14,49,91,.05)}
+.contract-side-card h3{margin:0;padding:11px 13px;background:#edf5ff;color:#17365f;font-size:14px;font-weight:800;border-bottom:1px solid #d6e4f3}
+.contract-side-list{padding:5px 12px 9px}
+.contract-side-row{display:flex;justify-content:space-between;gap:12px;padding:8px 1px;border-bottom:1px solid #e8eef5;font-size:12px;color:#425a78}
+.contract-side-row:last-child{border-bottom:0}.contract-side-row strong{color:#17365f;text-align:right;overflow-wrap:anywhere}
+.contract-side-row.profit strong{color:#07853f}
+.contract-tips{background:#fffaf0;border-color:#f1dfad}.contract-tips h3{background:#fff5d9;color:#694c00;border-color:#f1dfad}
+.contract-tips ul{margin:0;padding:10px 14px 12px 30px;color:#5f6470;font-size:12px;line-height:1.55}
+</style>
+<script id="wide-add-contract-workspace-js">
+(function(){
+ function moneySide(n){n=Number(n)||0;return n.toLocaleString(undefined,{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2});}
+ function ensureSide(){
+   const panel=document.getElementById('newContractPanel'); if(!panel||document.getElementById('contractLiveSide'))return;
+   const side=document.createElement('aside'); side.id='contractLiveSide'; side.className='contract-live-side';
+   side.innerHTML='<section class="contract-side-card"><h3>Contract Summary</h3><div class="contract-side-list">'+
+   '<div class="contract-side-row"><span>Contract Name</span><strong id="sideName">—</strong></div>'+
+   '<div class="contract-side-row"><span>Start Date</span><strong id="sideDate">—</strong></div>'+
+   '<div class="contract-side-row"><span>Participant Funded</span><strong id="sideFunded">$0.00</strong></div>'+
+   '<div class="contract-side-row"><span>Referral Fee</span><strong id="sideReferral">$0.00</strong></div>'+
+   '<div class="contract-side-row"><span>Administrative Fee</span><strong id="sideAdmin">$0.00</strong></div>'+
+   '<div class="contract-side-row"><span>Total Cost</span><strong id="sideCost">$0.00</strong></div>'+
+   '<div class="contract-side-row"><span>Gross Return</span><strong id="sideGross">$0.00</strong></div>'+
+   '<div class="contract-side-row"><span>Net Return</span><strong id="sideNet">$0.00</strong></div>'+
+   '<div class="contract-side-row"><span>Payment Amount</span><strong id="sidePayment">$0.00</strong></div>'+
+   '<div class="contract-side-row"><span>Payments Remaining</span><strong id="sidePayments">0</strong></div>'+
+   '<div class="contract-side-row profit"><span>Projected Profit</span><strong id="sideProfit">$0.00</strong></div></div></section>'+
+   '<section class="contract-side-card contract-tips"><h3>Quick Tips</h3><ul><li>Enter the participant funded amount.</li><li>Add the upfront referral fee, or enter 0.</li><li>Set the administrative fee percentage.</li><li>Enter the total gross return and payments remaining.</li><li>Projected results update automatically.</li></ul></section>';
+   panel.appendChild(side);
+   ['cname','cdate','cinvest','creferral','ctotalreturn','cadminfee','cpayments','cpreset'].forEach(id=>{const e=document.getElementById(id);if(e){e.addEventListener('input',updateSide);e.addEventListener('change',updateSide)}});
+   updateSide();
+ }
+ function updateSide(){
+   if(!document.getElementById('contractLiveSide'))return;
+   const v=id=>document.getElementById(id)?.value||''; const n=id=>parseFloat(v(id))||0;
+   const funded=n('cinvest'), referral=n('creferral'), gross=n('ctotalreturn'), feePct=n('cadminfee'), payments=Math.max(0,parseInt(v('cpayments'),10)||0);
+   const fee=gross*(feePct/100), net=gross-fee, cost=funded+referral, profit=net-cost;
+   let payment=n('cpreset'); if(!(payment>0)&&payments>0)payment=gross/payments;
+   const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val};
+   set('sideName',v('cname').trim()||'—'); set('sideDate',v('cdate')||'—'); set('sideFunded',moneySide(funded)); set('sideReferral',moneySide(referral));
+   set('sideAdmin',moneySide(fee)); set('sideCost',moneySide(cost)); set('sideGross',moneySide(gross)); set('sideNet',moneySide(net)); set('sidePayment',moneySide(payment)); set('sidePayments',String(payments)); set('sideProfit',moneySide(profit));
+   const pe=document.getElementById('sideProfit');if(pe)pe.style.color=profit<0?'#c92020':'#07853f';
+ }
+ const old=window.updateContractPaymentCalculation; if(typeof old==='function')window.updateContractPaymentCalculation=function(){const r=old.apply(this,arguments);updateSide();return r};
+ ensureSide();
+})();
+</script>
