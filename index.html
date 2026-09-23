@@ -2714,14 +2714,6 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 
 
 
-<style id="fundledger-contact-us-isolation-fix">
-/* Hidden must always win over panel/grid/flex display rules. */
-.hidden{display:none!important}
-
-/* Contact messaging exists only on the Contact Us route. */
-#contactPanel.hidden,
-section#contactPanel.hidden{display:none!important}
-</style>
 
 </head>
 <body>
@@ -2971,7 +2963,8 @@ section#contactPanel.hidden{display:none!important}
       <div class="admin-privacy-note"><strong>Privacy Protected</strong><p class="muted" style="margin:6px 0 0">Analytics shows aggregate usage only. The administrator cannot open another user's contracts, payments, financial data, or account contents.</p></div></div>
     </div>
   </div>
-  <div class="form-card" style="max-width:760px">
+  <div id="contactMessagingRoot">
+<div class="form-card" style="max-width:760px">
     <div class="field"><label for="contactEmail">Your email</label><input id="contactEmail" type="email" placeholder="you@example.com" autocomplete="email"></div>
     <div class="field"><label for="contactMessage">Message</label><textarea id="contactMessage" rows="7" maxlength="2000" placeholder="Type your message..."></textarea></div>
     <button class="primary-btn" id="sendContactMessageBtn" type="button" onclick="submitContactMessage()">Send Message</button>
@@ -2988,6 +2981,8 @@ section#contactPanel.hidden{display:none!important}
     </div>
   </div>
   <div id="contactThread" class="muted">Loading messages…</div>
+</div>
+
 </div>
 </section>
 
@@ -3192,7 +3187,7 @@ function lockAdminDashboard(){adminPinUnlocked=false;updateAdminContactVisibilit
 function changeAdminPin(){
  if(!isAdmin||!adminPinUnlocked)return;
  if(!confirm("Change the Admin Dashboard PIN? You will create a new four-digit PIN now."))return;
- localStorage.removeItem(adminPinStorageKey());adminPinUnlocked=false;updateAdminContactVisibility();
+ localStorage.removeItem(adminPinStorageKey());setContactMessagingMounted(false);adminPinUnlocked=false;updateAdminContactVisibility();
 }
 const DASHBOARD_CARD_KEYS=["invested","received","profit","active","all","paid","default","defaultLoss"];
 const DASHBOARD_CARD_LABELS={fundedAmount:"Total Funded & Upfront Fees",received:"Total Payments Received",profit:"Realized Profit",active:"Active Contracts",all:"Total Contracts",paid:"Completed Contracts",default:"Defaulted Contracts",defaultLoss:"Default Loss"};
@@ -3439,6 +3434,20 @@ function updateSettingsPanel(){
  applyCompletedContractColumns();
  applyCheckHistoryColumns();
 }
+
+let detachedContactMessagingRoot=null;
+function setContactMessagingMounted(shouldMount){
+ const panel=document.getElementById("contactPanel");
+ let root=document.getElementById("contactMessagingRoot")||detachedContactMessagingRoot;
+ if(!root)return;
+ if(shouldMount){
+   if(panel && !panel.contains(root)) panel.appendChild(root);
+   detachedContactMessagingRoot=null;
+ }else if(root.isConnected){
+   root.remove();
+   detachedContactMessagingRoot=root;
+ }
+}
 function setupNavScrolling(){
   document.querySelectorAll(".nav-item").forEach(item=>{
     item.addEventListener("click",e=>{
@@ -3474,6 +3483,7 @@ function setupNavScrolling(){
       document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
       item.classList.add("active");
       if(id==="#dashboard")applyDashboardSections();
+      setContactMessagingMounted(id==="#contactPanel");
       if(id!=="#contactPanel")adminPinUnlocked=false;
       updateAdminContactVisibility();
       if(id==="#reportsPanel") renderReports();
