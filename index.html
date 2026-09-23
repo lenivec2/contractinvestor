@@ -2465,6 +2465,148 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
+
+<style id="add-payment-mobile-summary-stack-final">
+@media(max-width:700px){
+  .fundledger-payment-summary-tips-layout{
+    display:flex !important;
+    flex-direction:column !important;
+    grid-template-columns:1fr !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    gap:14px !important;
+    align-items:stretch !important;
+  }
+
+  .fundledger-payment-summary-card,
+  .fundledger-payment-tips-card{
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    flex:0 0 auto !important;
+    grid-column:1 / -1 !important;
+    box-sizing:border-box !important;
+  }
+
+  .fundledger-payment-summary-card *{
+    min-width:0 !important;
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+  }
+
+  /* Summary rows keep labels left and values right instead of letter-stacking. */
+  .fundledger-payment-summary-card .summary-row,
+  .fundledger-payment-summary-card .summary-line,
+  .fundledger-payment-summary-card .metric-row{
+    display:flex !important;
+    flex-direction:row !important;
+    justify-content:space-between !important;
+    align-items:flex-start !important;
+    gap:12px !important;
+    width:100% !important;
+  }
+
+  .fundledger-payment-summary-card .summary-row > :last-child,
+  .fundledger-payment-summary-card .summary-line > :last-child,
+  .fundledger-payment-summary-card .metric-row > :last-child{
+    flex:0 0 auto !important;
+    width:auto !important;
+    max-width:45% !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+    text-align:right !important;
+  }
+}
+</style>
+
+
+<style id="payment-summary-quick-tips-mobile-exact-stack">
+@media(max-width:700px){
+  /* Exact parent containing both cards */
+  div:has(> * .payment-summary):has(> * .quick-tips),
+  div:has(> .payment-summary):has(> .quick-tips),
+  div:has(> * > .payment-summary):has(> * > .quick-tips),
+  .fundledger-payment-summary-tips-layout{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) !important;
+    flex-direction:column !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    gap:14px !important;
+  }
+
+  .payment-summary,
+  .quick-tips,
+  .fundledger-payment-summary-card,
+  .fundledger-payment-tips-card{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    grid-column:1 / -1 !important;
+    flex:0 0 100% !important;
+    box-sizing:border-box !important;
+  }
+
+  .payment-summary *{
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+  }
+}
+</style>
+
+
+<style id="check-panel-mobile-summary-tips-root-fix">
+@media (max-width:700px){
+  #checkPanel.panel.page-summary-layout:not(.hidden) > .page-summary-side{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    gap:14px !important;
+  }
+
+  #checkPanel > .page-summary-side > .page-summary-card,
+  #checkPanel > .page-summary-side > .payment-quick-tips{
+    display:block !important;
+    flex:none !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    margin:0 !important;
+  }
+
+  #checkPanel .page-summary-row{
+    display:flex !important;
+    flex-direction:row !important;
+    justify-content:space-between !important;
+    align-items:flex-start !important;
+    gap:14px !important;
+  }
+
+  #checkPanel .page-summary-row > span{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+  }
+
+  #checkPanel .page-summary-row > strong{
+    flex:0 0 auto !important;
+    width:auto !important;
+    max-width:48% !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+    text-align:right !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -2537,7 +2679,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </aside>
 <main class="content" id="dashboard"><div class="content-inner">
 <div class="summary-grid" id="dashboardSummary">
-<div class="summary-card" data-summary-key="invested"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Funded</div><div class="summary-value" id="invested">$0.00</div></div></div></div>
+<div class="summary-card" data-summary-key="invested"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Funded + Fees</div><div class="summary-value" id="invested">$0.00</div></div></div></div>
 <div class="summary-card received" data-summary-key="received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Total Payments Received</div><div class="summary-value" id="received">$0.00</div></div></div></div>
 <div class="summary-card profit" data-summary-key="profit"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Realized Profit</div><div class="summary-value" id="profit">$0.00</div></div></div></div>
 <div class="summary-card active" data-summary-key="active" role="button" tabindex="0" style="cursor:pointer" onclick="document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()}"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Active Contracts</div><div class="summary-value" id="openContracts">0</div></div></div></div>
@@ -2607,7 +2749,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
       <details class="appearance-group settings-native-dropdown"><summary>Summary Boxes</summary><div class="settings-native-dropdown-content">
         <p>Select which boxes appear on the Dashboard.</p><p class="settings-tip">Drag the summary boxes directly on the Dashboard to rearrange them.</p>
         <div class="appearance-options" id="summaryBoxOptions">
-          <label class="appearance-option" data-summary-option="invested"><span>Total Funded</span><input type="checkbox" data-summary-toggle="invested" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option" data-summary-option="invested"><span>Total Funded + Fees</span><input type="checkbox" data-summary-toggle="invested" onchange="updateDashboardAppearance(this)"></label>
           <label class="appearance-option" data-summary-option="received"><span>Total Payments Received</span><input type="checkbox" data-summary-toggle="received" onchange="updateDashboardAppearance(this)"></label>
           <label class="appearance-option" data-summary-option="profit"><span>Realized Profit</span><input type="checkbox" data-summary-toggle="profit" onchange="updateDashboardAppearance(this)"></label>
           <label class="appearance-option" data-summary-option="active"><span>Active Contracts</span><input type="checkbox" data-summary-toggle="active" onchange="updateDashboardAppearance(this)"></label>
@@ -3120,7 +3262,14 @@ function setupNavScrolling(){
       document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
       const dashboardSummary=$("dashboardSummary");
       if(dashboardSummary) dashboardSummary.classList.toggle("hidden",id!=="#dashboard");
-      if(id==="#dashboard"){
+      if(window.innerWidth<=700){
+        /* iPhone / Home Screen app: one sidebar destination at a time. */
+        document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
+        target.classList.remove("hidden");
+        const content=document.querySelector(".content");
+        if(content) content.scrollTop=0;
+        window.scrollTo(0,0);
+      }else if(id==="#dashboard"){
         document.querySelectorAll(".panel").forEach(p=>{ if(["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].includes(p.id)) p.classList.remove("hidden"); });
         document.querySelector(".content")?.scrollTo({top:0,behavior:"smooth"});
       }else{
@@ -5093,6 +5242,117 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
  }
 }
 </style>
+
+
+<script id="add-payment-mobile-summary-stack-final-script">
+(function(){
+ function cardForHeading(el){
+   if(!el)return null;
+   return el.closest(".card,.panel,.summary-card,.tips-card,.side-card") || el.parentElement;
+ }
+
+ function commonParent(a,b){
+   if(!a||!b)return null;
+   var p=a.parentElement;
+   while(p && p!==document.body){
+     if(p.contains(b))return p;
+     p=p.parentElement;
+   }
+   return null;
+ }
+
+ function fixPaymentMobile(){
+   var nodes=[].slice.call(document.querySelectorAll("h1,h2,h3,h4,h5,strong,.card-title,.section-title"));
+   var summaryHeading=nodes.find(function(el){
+     return el.textContent.trim()==="Payment Summary";
+   });
+   var tipsHeading=nodes.find(function(el){
+     return el.textContent.trim()==="Quick Tips";
+   });
+   if(!summaryHeading||!tipsHeading)return;
+
+   var summary=cardForHeading(summaryHeading);
+   var tips=cardForHeading(tipsHeading);
+   if(!summary||!tips)return;
+
+   summary.classList.add("fundledger-payment-summary-card");
+   tips.classList.add("fundledger-payment-tips-card");
+
+   var parent=commonParent(summary,tips);
+   if(parent) parent.classList.add("fundledger-payment-summary-tips-layout");
+ }
+
+ document.addEventListener("DOMContentLoaded",function(){
+   fixPaymentMobile();
+   setTimeout(fixPaymentMobile,0);
+   setTimeout(fixPaymentMobile,250);
+ });
+ window.addEventListener("pageshow",fixPaymentMobile);
+})();
+</script>
+
+
+<script id="payment-summary-quick-tips-mobile-exact-stack-script">
+(function(){
+ function nearestCard(h){
+   var n=h;
+   while(n && n!==document.body){
+     if(n.classList && (
+       n.classList.contains("card") ||
+       n.classList.contains("summary-card") ||
+       n.classList.contains("payment-summary") ||
+       n.classList.contains("quick-tips") ||
+       n.classList.contains("tips")
+     )) return n;
+     n=n.parentElement;
+   }
+   return h.parentElement;
+ }
+ function common(a,b){
+   var p=a;
+   while(p && p!==document.body){
+     if(p.contains(b))return p;
+     p=p.parentElement;
+   }
+   return null;
+ }
+ function fix(){
+   if(!window.matchMedia("(max-width: 700px)").matches)return;
+   var all=[].slice.call(document.querySelectorAll("h1,h2,h3,h4,h5,strong,.card-title,.section-title"));
+   var sh=all.find(function(e){return e.textContent.trim()==="Payment Summary"});
+   var qh=all.find(function(e){return e.textContent.trim()==="Quick Tips"});
+   if(!sh||!qh)return;
+
+   var s=nearestCard(sh), q=nearestCard(qh);
+   if(!s||!q)return;
+   s.classList.add("fundledger-payment-summary-card");
+   q.classList.add("fundledger-payment-tips-card");
+
+   var wrap=common(s,q);
+   if(!wrap)return;
+   wrap.classList.add("fundledger-payment-summary-tips-layout");
+   wrap.style.setProperty("display","grid","important");
+   wrap.style.setProperty("grid-template-columns","minmax(0,1fr)","important");
+   wrap.style.setProperty("flex-direction","column","important");
+   wrap.style.setProperty("width","100%","important");
+   wrap.style.setProperty("max-width","100%","important");
+   wrap.style.setProperty("gap","14px","important");
+
+   [s,q].forEach(function(card){
+     card.style.setProperty("width","100%","important");
+     card.style.setProperty("max-width","100%","important");
+     card.style.setProperty("min-width","0","important");
+     card.style.setProperty("grid-column","1 / -1","important");
+     card.style.setProperty("flex","0 0 100%","important");
+   });
+ }
+ document.addEventListener("DOMContentLoaded",function(){
+   fix(); setTimeout(fix,50); setTimeout(fix,300); setTimeout(fix,1000);
+ });
+ window.addEventListener("pageshow",fix);
+ window.addEventListener("resize",fix);
+})();
+</script>
 
 </body>
 </html>
