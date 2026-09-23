@@ -2713,6 +2713,16 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </style>
 
 
+
+<style id="fundledger-contact-us-isolation-fix">
+/* Hidden must always win over panel/grid/flex display rules. */
+.hidden{display:none!important}
+
+/* Contact messaging exists only on the Contact Us route. */
+#contactPanel.hidden,
+section#contactPanel.hidden{display:none!important}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -2922,7 +2932,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
       </div></details>
       <div class="settings-reset-card">
         <div><h4 style="margin:0">Reset Layout</h4><p>Restore dashboard boxes and table columns to their default visibility and order.</p></div>
-        <button class="danger-btn" type="button" onclick="restoreDefaultLayout()">↻ Restore Default Layout</button>
+        <button class="danger-btn hidden" type="button" onclick="restoreDefaultLayout()">↻ Restore Default Layout</button>
       </div>
     </div>
   </div>
