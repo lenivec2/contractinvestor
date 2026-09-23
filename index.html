@@ -2712,31 +2712,6 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 @media(max-width:1050px){.analytics-three,.analytics-bottom{grid-template-columns:1fr}}@media(max-width:700px){.fundledger-analytics-page{padding:12px}.analytics-periods{gap:5px}.analytics-periods>button{border-radius:7px}.analytics-custom-range{width:100%;margin:8px 0}.an-mini{grid-template-columns:1fr 1fr}}
 </style>
 
-<style id="fundledger-single-section-route-visibility">
-/* Every sidebar route is isolated: Contact Us messaging can only appear on Contact Us. */
-#appScreen[data-route] #checkPanel,
-#appScreen[data-route] #newContractPanel,
-#appScreen[data-route] #contractsPanel,
-#appScreen[data-route] #completedPanel,
-#appScreen[data-route] #historyPanel,
-#appScreen[data-route] #reportsPanel,
-#appScreen[data-route] #analyticsPanel,
-#appScreen[data-route] #settingsPanel,
-#appScreen[data-route] #contactPanel{display:none!important}
-
-#appScreen[data-route="checkPanel"] #checkPanel,
-#appScreen[data-route="newContractPanel"] #newContractPanel,
-#appScreen[data-route="contractsPanel"] #contractsPanel,
-#appScreen[data-route="completedPanel"] #completedPanel,
-#appScreen[data-route="historyPanel"] #historyPanel,
-#appScreen[data-route="reportsPanel"] #reportsPanel,
-#appScreen[data-route="analyticsPanel"] #analyticsPanel,
-#appScreen[data-route="settingsPanel"] #settingsPanel,
-#appScreen[data-route="contactPanel"] #contactPanel{display:block!important}
-
-#appScreen[data-route="dashboard"] #dashboardSummary{display:grid!important}
-#appScreen[data-route]:not([data-route="dashboard"]) #dashboardSummary{display:none!important}
-</style>
 
 </head>
 <body>
@@ -3469,8 +3444,9 @@ function setupNavScrolling(){
         /* Mobile: exactly one sidebar destination at a time. */
         const appScreen=document.getElementById("appScreen");
         const routeId=id==="#dashboard"?"dashboard":id.slice(1);
-  const universalAppScreen=document.getElementById("appScreen");
-  if(universalAppScreen) universalAppScreen.dataset.route=routeId;
+  const allRoutePanels=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","settingsPanel","contactPanel"];
+  allRoutePanels.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.add("hidden")});
+  if(routeId!=="dashboard"&&target)target.classList.remove("hidden");
         if(appScreen) appScreen.dataset.mobileRoute=routeId;
         const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","settingsPanel","contactPanel"];
         mobileRouteIds.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.toggle("hidden",route!==routeId)});
@@ -3553,7 +3529,7 @@ function showApp(){
     const p=$(id); if(p) p.classList.remove("hidden");
   });
   const dashboardSummary=$("dashboardSummary"); if(dashboardSummary) dashboardSummary.classList.remove("hidden");
-  const appScreen=$("appScreen"); if(appScreen) appScreen.dataset.mobileRoute="dashboard"; if(appScreen) appScreen.dataset.route="dashboard";
+  const appScreen=$("appScreen"); if(appScreen) appScreen.dataset.mobileRoute="dashboard";
   document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
   const dash=document.querySelector('.nav-item[href="#dashboard"]'); if(dash) dash.classList.add("active");
   adminPinUnlocked=false;updateAdminContactVisibility();
