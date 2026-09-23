@@ -2607,7 +2607,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
-</head>
+<style id="mobile-single-route-view-fix">@media(max-width:700px){#appScreen[data-mobile-route] #checkPanel,#appScreen[data-mobile-route] #newContractPanel,#appScreen[data-mobile-route] #contractsPanel,#appScreen[data-mobile-route] #completedPanel,#appScreen[data-mobile-route] #historyPanel,#appScreen[data-mobile-route] #reportsPanel,#appScreen[data-mobile-route] #settingsPanel,#appScreen[data-mobile-route] #contactPanel{display:none!important}#appScreen[data-mobile-route="checkPanel"] #checkPanel,#appScreen[data-mobile-route="newContractPanel"] #newContractPanel,#appScreen[data-mobile-route="contractsPanel"] #contractsPanel,#appScreen[data-mobile-route="completedPanel"] #completedPanel,#appScreen[data-mobile-route="historyPanel"] #historyPanel,#appScreen[data-mobile-route="reportsPanel"] #reportsPanel,#appScreen[data-mobile-route="settingsPanel"] #settingsPanel,#appScreen[data-mobile-route="contactPanel"] #contactPanel{display:block!important}#appScreen[data-mobile-route="dashboard"] #dashboardSummary{display:grid!important}#appScreen[data-mobile-route]:not([data-mobile-route="dashboard"]) #dashboardSummary{display:none!important}}</style></head>
 <body>
 <div id="authScreen" class="auth-wrap">
   <div class="auth-chart-bg" aria-hidden="true"><div class="auth-chart-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><svg viewBox="0 0 1000 420" preserveAspectRatio="none"><polyline points="0,380 115,330 230,270 350,215 470,190 585,145 710,115 825,70 1000,15"/><g><circle cx="115" cy="330" r="8"/><circle cx="230" cy="270" r="8"/><circle cx="350" cy="215" r="8"/><circle cx="470" cy="190" r="8"/><circle cx="585" cy="145" r="8"/><circle cx="710" cy="115" r="8"/><circle cx="825" cy="70" r="8"/><circle cx="1000" cy="15" r="8"/></g></svg></div>
@@ -3262,10 +3262,14 @@ function setupNavScrolling(){
       document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
       const dashboardSummary=$("dashboardSummary");
       if(dashboardSummary) dashboardSummary.classList.toggle("hidden",id!=="#dashboard");
-      if(window.innerWidth<=700){
-        /* iPhone / Home Screen app: one sidebar destination at a time. */
-        document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
-        target.classList.remove("hidden");
+      if(window.matchMedia("(max-width:700px)").matches){
+        /* Mobile: exactly one sidebar destination at a time. */
+        const appScreen=document.getElementById("appScreen");
+        const routeId=id==="#dashboard"?"dashboard":id.slice(1);
+        if(appScreen) appScreen.dataset.mobileRoute=routeId;
+        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","settingsPanel","contactPanel"];
+        mobileRouteIds.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.toggle("hidden",route!==routeId)});
+        if(routeId!=="dashboard") target.classList.remove("hidden");
         const content=document.querySelector(".content");
         if(content) content.scrollTop=0;
         window.scrollTo(0,0);
@@ -3344,6 +3348,7 @@ function showApp(){
     const p=$(id); if(p) p.classList.remove("hidden");
   });
   const dashboardSummary=$("dashboardSummary"); if(dashboardSummary) dashboardSummary.classList.remove("hidden");
+  const appScreen=$("appScreen"); if(appScreen) appScreen.dataset.mobileRoute="dashboard";
   document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
   const dash=document.querySelector('.nav-item[href="#dashboard"]'); if(dash) dash.classList.add("active");
   adminPinUnlocked=false;updateAdminContactVisibility();
