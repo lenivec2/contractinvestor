@@ -2607,7 +2607,6 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
-
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -3263,13 +3262,15 @@ function setupNavScrolling(){
       document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
       const dashboardSummary=$("dashboardSummary");
       if(dashboardSummary) dashboardSummary.classList.toggle("hidden",id!=="#dashboard");
-      if(id==="#dashboard"){
-        if(window.innerWidth<=700){
-          /* Mobile sidebar rule: the selected sidebar destination is the only view shown. */
-          target.classList.remove("hidden");
-        }else{
-          document.querySelectorAll(".panel").forEach(p=>{ if(["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].includes(p.id)) p.classList.remove("hidden"); });
-        }
+      if(window.innerWidth<=700){
+        /* iPhone / Home Screen app: one sidebar destination at a time. */
+        document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
+        target.classList.remove("hidden");
+        const content=document.querySelector(".content");
+        if(content) content.scrollTop=0;
+        window.scrollTo(0,0);
+      }else if(id==="#dashboard"){
+        document.querySelectorAll(".panel").forEach(p=>{ if(["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].includes(p.id)) p.classList.remove("hidden"); });
         document.querySelector(".content")?.scrollTo({top:0,behavior:"smooth"});
       }else{
         target.classList.remove("hidden");
@@ -3339,11 +3340,9 @@ function showApp(){
   // Always start on Dashboard after opening/signing in, never the last visited panel.
   try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
   document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
-  if(window.innerWidth>700){
-    ["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].forEach(id=>{
-      const p=$(id); if(p) p.classList.remove("hidden");
-    });
-  }
+  ["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].forEach(id=>{
+    const p=$(id); if(p) p.classList.remove("hidden");
+  });
   const dashboardSummary=$("dashboardSummary"); if(dashboardSummary) dashboardSummary.classList.remove("hidden");
   document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
   const dash=document.querySelector('.nav-item[href="#dashboard"]'); if(dash) dash.classList.add("active");
@@ -5354,12 +5353,6 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
  window.addEventListener("resize",fix);
 })();
 </script>
-
-
-
-
-
-
 
 </body>
 </html>
