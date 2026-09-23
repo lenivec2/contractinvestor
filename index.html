@@ -2465,6 +2465,63 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
+
+<style id="add-payment-mobile-summary-stack-final">
+@media(max-width:700px){
+  .fundledger-payment-summary-tips-layout{
+    display:flex !important;
+    flex-direction:column !important;
+    grid-template-columns:1fr !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    gap:14px !important;
+    align-items:stretch !important;
+  }
+
+  .fundledger-payment-summary-card,
+  .fundledger-payment-tips-card{
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    flex:0 0 auto !important;
+    grid-column:1 / -1 !important;
+    box-sizing:border-box !important;
+  }
+
+  .fundledger-payment-summary-card *{
+    min-width:0 !important;
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+  }
+
+  /* Summary rows keep labels left and values right instead of letter-stacking. */
+  .fundledger-payment-summary-card .summary-row,
+  .fundledger-payment-summary-card .summary-line,
+  .fundledger-payment-summary-card .metric-row{
+    display:flex !important;
+    flex-direction:row !important;
+    justify-content:space-between !important;
+    align-items:flex-start !important;
+    gap:12px !important;
+    width:100% !important;
+  }
+
+  .fundledger-payment-summary-card .summary-row > :last-child,
+  .fundledger-payment-summary-card .summary-line > :last-child,
+  .fundledger-payment-summary-card .metric-row > :last-child{
+    flex:0 0 auto !important;
+    width:auto !important;
+    max-width:45% !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+    text-align:right !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -5093,6 +5150,54 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
  }
 }
 </style>
+
+
+<script id="add-payment-mobile-summary-stack-final-script">
+(function(){
+ function cardForHeading(el){
+   if(!el)return null;
+   return el.closest(".card,.panel,.summary-card,.tips-card,.side-card") || el.parentElement;
+ }
+
+ function commonParent(a,b){
+   if(!a||!b)return null;
+   var p=a.parentElement;
+   while(p && p!==document.body){
+     if(p.contains(b))return p;
+     p=p.parentElement;
+   }
+   return null;
+ }
+
+ function fixPaymentMobile(){
+   var nodes=[].slice.call(document.querySelectorAll("h1,h2,h3,h4,h5,strong,.card-title,.section-title"));
+   var summaryHeading=nodes.find(function(el){
+     return el.textContent.trim()==="Payment Summary";
+   });
+   var tipsHeading=nodes.find(function(el){
+     return el.textContent.trim()==="Quick Tips";
+   });
+   if(!summaryHeading||!tipsHeading)return;
+
+   var summary=cardForHeading(summaryHeading);
+   var tips=cardForHeading(tipsHeading);
+   if(!summary||!tips)return;
+
+   summary.classList.add("fundledger-payment-summary-card");
+   tips.classList.add("fundledger-payment-tips-card");
+
+   var parent=commonParent(summary,tips);
+   if(parent) parent.classList.add("fundledger-payment-summary-tips-layout");
+ }
+
+ document.addEventListener("DOMContentLoaded",function(){
+   fixPaymentMobile();
+   setTimeout(fixPaymentMobile,0);
+   setTimeout(fixPaymentMobile,250);
+ });
+ window.addEventListener("pageshow",fixPaymentMobile);
+})();
+</script>
 
 </body>
 </html>
