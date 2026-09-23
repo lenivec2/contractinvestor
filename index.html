@@ -2707,6 +2707,10 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
+<style id="fundledger-admin-analytics-design">
+.fundledger-analytics-page{padding:20px;background:#f7faff}.analytics-topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.analytics-topline h2{margin:0;color:#173b67}.analytics-topline p{margin:4px 0 0}.analytics-periods{display:flex;flex-wrap:wrap;align-items:center;margin-bottom:14px}.analytics-periods>button{background:#fff;border:1px solid #d5e1ed;padding:9px 13px;font-weight:700;color:#173b67}.analytics-periods>button.active{background:#1677e8;color:#fff}.analytics-custom-range{display:flex;gap:7px;align-items:center;margin-left:10px}.analytics-custom-range input{padding:7px;border:1px solid #d4e0eb;border-radius:7px}.analytics-three{display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:12px}.analytics-bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.an-card{background:#fff;border:1px solid #dce6ef;border-radius:11px;padding:16px;box-shadow:0 2px 8px rgba(15,48,82,.05);min-width:0}.an-card header{border-bottom:1px solid #e7edf4;padding-bottom:10px}.an-card header b,.an-card header small{display:block}.an-card header b{color:#16375e}.an-card header small{color:#76889b;margin-top:3px}.an-hero{padding:22px 0}.an-hero span,.an-convert span{display:block;color:#607388}.an-hero strong{display:block;font-size:46px;color:#12345e}.an-row{display:flex;justify-content:space-between;margin-top:13px}.an-meter{height:9px;background:#e5edf5;border-radius:20px;overflow:hidden;margin-top:6px}.an-meter i{display:block;height:100%;width:0;background:#1677e8}.an-chart{height:245px;display:flex;align-items:flex-end;gap:4px;padding:18px 3px 5px;border-bottom:1px solid #e6edf4}.an-chart i,.an-bars i{display:block;background:#1677e8;border-radius:3px 3px 0 0}.an-chart i{flex:1;min-width:4px}.an-mini{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.an-mini>div,.an-convert{background:#f8fbff;border:1px solid #e3ebf3;border-radius:9px;padding:11px}.an-mini span{font-size:12px;color:#65778a;display:block}.an-mini strong,.an-convert strong{font-size:25px;color:#15385f;display:block;margin-top:3px}.an-mini small,.an-convert small{color:#0b8b43}.an-bars{height:160px;display:flex;align-items:flex-end;gap:5px;padding-top:14px}.an-bars i{flex:1;min-width:4px}.an-bars i.alt{background:#75b9f7}
+@media(max-width:1050px){.analytics-three,.analytics-bottom{grid-template-columns:1fr}}@media(max-width:700px){.fundledger-analytics-page{padding:12px}.analytics-periods{gap:5px}.analytics-periods>button{border-radius:7px}.analytics-custom-range{width:100%;margin:8px 0}.an-mini{grid-template-columns:1fr 1fr}}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -2773,6 +2777,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <a class="nav-item" href="#completedPanel"><span class="nav-icon">✓</span><span>Completed Contracts</span></a>
 <a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Payment History</span></a>
 <a class="nav-item" href="#reportsPanel"><span class="nav-icon">▥</span><span>Reports</span></a>
+<a href="#analyticsPanel" id="analyticsNavLink" class="nav-item hidden" data-admin-only="true">▥ <span>Analytics</span></a>
 <a class="nav-item" href="#settingsPanel"><span class="nav-icon">⚙</span><span>Settings</span></a>
 <a class="nav-item" href="#contactPanel"><span class="nav-icon">✉</span><span>Contact Us</span></a>
 <div id="contactNewMessage" class="contact-new-message" style="display:none" aria-hidden="true">NEW MESSAGE</div>
@@ -2821,6 +2826,18 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   </div>
 </section>
 
+<section class="panel hidden fundledger-analytics-page" id="analyticsPanel">
+<div class="analytics-topline"><div><h2>Analytics</h2><p class="muted">Visitors, accounts, subscriptions and growth.</p></div><button class="secondary" onclick="loadFundLedgerAnalytics()">↻ Refresh</button></div>
+<div class="analytics-periods">
+<button onclick="setAnalyticsPeriod('today',this)">Today</button><button onclick="setAnalyticsPeriod('7',this)">7 Days</button><button class="active" onclick="setAnalyticsPeriod('30',this)">30 Days</button><button onclick="setAnalyticsPeriod('month',this)">This Month</button><button onclick="setAnalyticsPeriod('last_month',this)">Last Month</button><button onclick="setAnalyticsPeriod('year',this)">This Year</button><button onclick="setAnalyticsPeriod('custom',this)">Custom</button>
+<input type="hidden" id="analyticsPeriod" value="30"><div id="analyticsCustomRange" class="hidden analytics-custom-range"><input type="date" id="analyticsFrom"><span>to</span><input type="date" id="analyticsTo"><button onclick="loadFundLedgerAnalytics()">Apply</button></div></div>
+<div class="analytics-three">
+<article class="an-card"><header><b>Accounts & Subscribers</b><small>Account and subscription breakdown</small></header><div class="an-hero"><span>Total Accounts</span><strong id="anUsers">—</strong><small id="anUsersCompare">Waiting for data</small></div><div class="an-row"><span>Paid Subscribers</span><strong id="anPaidSubscribers">0</strong></div><div class="an-meter"><i id="anPaidBar"></i></div><div class="an-row"><span>Free Subscribers</span><strong id="anFreeSubscribers">0</strong></div><div class="an-meter"><i id="anFreeBar"></i></div><div class="an-row"><span>Trial Users</span><strong id="anTrialSubscribers">0</strong></div><div class="an-meter"><i id="anTrialBar"></i></div></article>
+<article class="an-card an-traffic"><header><b>Website Traffic</b><small>Visitors and visits over time</small></header><div id="analyticsTrend" class="an-chart"></div><div class="an-mini"><div><span>Unique Visitors</span><strong id="anVisitors">—</strong><small id="anVisitorsCompare"></small></div><div><span>Total Visits</span><strong id="anVisits">—</strong><small id="anVisitsCompare"></small></div><div><span>Active Users</span><strong id="anActive">—</strong><small id="anActiveCompare"></small></div><div><span>Logins</span><strong id="anLogins">—</strong><small id="anLoginsCompare"></small></div></div></article>
+<article class="an-card"><header><b>Growth & Conversion</b><small>Account and subscriber growth</small></header><div class="an-convert"><span>Visitor → Account Conversion</span><strong id="anConversion">0%</strong></div><div class="an-convert"><span>New Accounts</span><strong id="anNew">—</strong><small id="anNewCompare"></small></div><h4>Subscriber Growth</h4><div id="analyticsSubscriberBars" class="an-bars"></div></article>
+</div>
+<div class="analytics-bottom"><article class="an-card"><header><b>Visitor Growth</b><small>Visits by period</small></header><div id="analyticsVisitorBars" class="an-bars"></div></article><article class="an-card"><header><b>Account Growth</b><small>New account performance</small></header><div id="analyticsAccountBars" class="an-bars"></div></article><article class="an-card"><header><b>Subscriber Mix</b><small>Paid, free and trial</small></header><div id="analyticsSubscriberMix" class="an-bars"></div></article></div>
+</section>
 <section class="panel hidden" id="settingsPanel">
   <div class="section-head"><div><h2>Settings</h2><p class="muted" style="margin:-8px 0 0">Account and application preferences.</p></div></div>
   <div class="settings-grid">
@@ -2927,9 +2944,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
       <div class="admin-panel-head"><h2>Admin Dashboard</h2><div class="admin-panel-actions"><button id="adminChangePinBtn" class="secondary" type="button">Change PIN</button><button id="adminLockBtn" class="secondary" type="button">Lock Dashboard</button></div></div>
       <p class="muted">Master account view. Regular users only see their own data.</p>
       <div id="adminAnalytics" class="admin-analytics">
-        <div class="admin-analytics-head"><div><h3>Traffic &amp; Users</h3><p class="muted">Track visits, logins, registrations and active users over time.</p></div>
-          <div class="admin-analytics-controls"><select id="analyticsPeriod"><option value="7">Last 7 Days</option><option value="30" selected>Last 30 Days</option><option value="month">This Month</option><option value="year">This Year</option></select><button id="analyticsRefreshBtn" class="secondary" type="button">Refresh Analytics</button></div>
-        </div>
+        
         <div class="analytics-cards">
           <div class="analytics-card"><span>Unique Visitors</span><strong id="anVisitors">—</strong><small id="anVisitorsCompare">Waiting for data</small></div>
           <div class="analytics-card"><span>Total Visits</span><strong id="anVisits">—</strong><small id="anVisitsCompare">Waiting for data</small></div>
@@ -3428,7 +3443,7 @@ function setupNavScrolling(){
         const appScreen=document.getElementById("appScreen");
         const routeId=id==="#dashboard"?"dashboard":id.slice(1);
         if(appScreen) appScreen.dataset.mobileRoute=routeId;
-        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","settingsPanel","contactPanel"];
+        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","settingsPanel","contactPanel"];
         mobileRouteIds.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.toggle("hidden",route!==routeId)});
         if(routeId!=="dashboard") target.classList.remove("hidden");
         const content=document.querySelector(".content");
@@ -3556,8 +3571,10 @@ async function enforceAccountAccess(){
  applyMessagingRestriction();
  return true;
 }
+function applyAdminAnalyticsVisibility(){const l=document.getElementById("analyticsNavLink"),p=document.getElementById("analyticsPanel");if(l)l.classList.toggle("hidden",!isAdmin);if(!isAdmin&&p)p.classList.add("hidden")}
+function setAnalyticsPeriod(v,b){const p=document.getElementById("analyticsPeriod");if(p)p.value=v;document.querySelectorAll(".analytics-periods>button").forEach(x=>x.classList.toggle("active",x===b));document.getElementById("analyticsCustomRange")?.classList.toggle("hidden",v!=="custom");if(v!=="custom")loadFundLedgerAnalytics()}
 async function initAdmin(){
- isAdmin=!!(currentUser&&currentUser.app_metadata&&currentUser.app_metadata.role==="admin");
+ isAdmin=!!(currentUser&&currentUser.app_metadata&&currentUser.app_metadata.role==="admin");applyAdminAnalyticsVisibility();
  adminPinUnlocked=false;
  await updateAdminContactVisibility();
  applyMessagingRestriction();
@@ -5417,18 +5434,7 @@ document.getElementById("verifyEncryptionBtn")?.addEventListener("click",async()
  window.trackFundLedgerEvent=event;
  window.addEventListener("load",()=>setTimeout(()=>event("visit"),1200));
  window.addEventListener("focus",()=>{if(window.currentUser||currentUser)event("active")});
- window.loadFundLedgerAnalytics=async function(){
-  if(!isAdmin||!adminPinUnlocked||!supabaseClient)return;
-  const period=document.getElementById("analyticsPeriod")?.value||"30";
-  try{
-   const {data,error}=await supabaseClient.rpc("admin_fundledger_analytics",{p_period:period});if(error)throw error;
-   const d=Array.isArray(data)?data[0]:data;if(!d)return;
-   const ids={visitors:"anVisitors",visits:"anVisits",users:"anUsers",active:"anActive",logins:"anLogins",new_accounts:"anNew"};
-   Object.entries(ids).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.textContent=String(d.current?.[k]??0);const c=document.getElementById(id+"Compare");if(c){const cur=Number(d.current?.[k]||0),prev=Number(d.previous?.[k]||0),diff=cur-prev,pct=prev?diff/prev*100:(cur?100:0);c.textContent=(diff>=0?"↑ ":"↓ ")+Math.abs(pct).toFixed(1)+"% ("+(diff>=0?"+":"")+diff+") vs previous period";c.className=diff>0?"up":diff<0?"down":""}});
-   const chart=document.getElementById("analyticsChart"),trend=Array.isArray(d.trend)?d.trend:[];if(chart){const max=Math.max(1,...trend.map(x=>Number(x.visits||0)));chart.innerHTML=trend.length?trend.map(x=>`<div class="analytics-bar" style="height:${Math.max(4,Number(x.visits||0)/max*150)}px" data-tip="${x.day}: ${x.visits} visits"></div>`).join(""):'<div class="muted">No traffic recorded for this period.</div>'}
-   
-  }catch(e){console.error(e);const chart=document.getElementById("analyticsChart");if(chart)chart.innerHTML='<div class="muted">Analytics database setup is required. Run the updated Supabase SQL file once.</div>'}
- };
+ window.loadFundLedgerAnalytics=async function(){if(!isAdmin||!adminPinUnlocked||!supabaseClient)return;const period=document.getElementById("analyticsPeriod")?.value||"30";try{const {data,error}=await supabaseClient.rpc("admin_fundledger_analytics",{p_period:period});if(error)throw error;const d=Array.isArray(data)?data[0]:data;if(!d)return;const ids={visitors:"anVisitors",visits:"anVisits",users:"anUsers",active:"anActive",logins:"anLogins",new_accounts:"anNew"};Object.entries(ids).forEach(([k,id])=>{const e=document.getElementById(id);if(e)e.textContent=Number(d.current?.[k]||0).toLocaleString();const c=document.getElementById(id+"Compare");if(c){const cur=Number(d.current?.[k]||0),prev=Number(d.previous?.[k]||0),pct=prev?Math.round((cur-prev)/prev*100):0;c.textContent=(cur>=prev?"↑ ":"↓ ")+Math.abs(pct)+"% vs previous period"}});const visitors=Number(d.current?.visitors||0),newA=Number(d.current?.new_accounts||0);const cv=document.getElementById("anConversion");if(cv)cv.textContent=(visitors?newA/visitors*100:0).toFixed(1)+"%";const tr=Array.isArray(d.trend)?d.trend:[],mx=Math.max(1,...tr.map(x=>Number(x.visits||0)));const bars=tr.map(x=>`<i title="${Number(x.visits||0)} visits" style="height:${Math.max(5,Number(x.visits||0)/mx*100)}%"></i>`).join("");const ch=document.getElementById("analyticsTrend");if(ch)ch.innerHTML=bars||'<span class="muted">No visits recorded yet.</span>';const vb=document.getElementById("analyticsVisitorBars");if(vb)vb.innerHTML=bars;const paid=Number(d.current?.paid_subscribers||0),free=Number(d.current?.free_subscribers||0),trial=Number(d.current?.trial_subscribers||0),tot=paid+free+trial;[["anPaidSubscribers",paid],["anFreeSubscribers",free],["anTrialSubscribers",trial]].forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.textContent=v.toLocaleString()});[["anPaidBar",paid],["anFreeBar",free],["anTrialBar",trial]].forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.style.width=(tot?v/tot*100:0)+"%"});}catch(e){console.error("Analytics load failed",e);toast("Analytics could not be loaded.")}};
  document.addEventListener("DOMContentLoaded",()=>{document.getElementById("analyticsRefreshBtn")?.addEventListener("click",loadFundLedgerAnalytics);document.getElementById("analyticsPeriod")?.addEventListener("change",loadFundLedgerAnalytics)});
 })();
 </script></body>
