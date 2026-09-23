@@ -2508,6 +2508,84 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
+
+<style id="settings-mobile-switch-root-correction">
+@media(max-width:700px){
+  /* Settings Dashboard Sections use .toggle / .toggle-slider. */
+  .appearance-group .toggle,
+  .settings-native-dropdown .toggle,
+  .settings-grid .toggle,
+  .appearance-group label.toggle{
+    position:relative !important;
+    display:inline-block !important;
+    width:44px !important;
+    min-width:44px !important;
+    max-width:44px !important;
+    height:24px !important;
+    flex:0 0 44px !important;
+    padding:0 !important;
+    margin-left:auto !important;
+  }
+
+  .appearance-group .toggle-slider,
+  .settings-native-dropdown .toggle-slider,
+  .settings-grid .toggle-slider,
+  .appearance-group .toggle .slider,
+  .settings-native-dropdown .toggle .slider{
+    position:absolute !important;
+    inset:0 !important;
+    width:44px !important;
+    min-width:44px !important;
+    max-width:44px !important;
+    height:24px !important;
+    border-radius:999px !important;
+  }
+
+  /* Add Contract and newer Settings controls use .switch / .slider. */
+  .appearance-group .switch,
+  .settings-native-dropdown .switch,
+  .settings-grid .switch,
+  .add-contract-toggle-card .switch{
+    position:relative !important;
+    display:inline-block !important;
+    width:44px !important;
+    min-width:44px !important;
+    max-width:44px !important;
+    height:24px !important;
+    flex:0 0 44px !important;
+    padding:0 !important;
+    margin-left:auto !important;
+  }
+  .appearance-group .switch .slider,
+  .settings-native-dropdown .switch .slider,
+  .settings-grid .switch .slider,
+  .add-contract-toggle-card .switch .slider{
+    position:absolute !important;
+    inset:0 !important;
+    width:44px !important;
+    min-width:44px !important;
+    max-width:44px !important;
+    height:24px !important;
+  }
+
+  /* Option rows: text gets remaining space, toggle never stretches. */
+  .appearance-group .appearance-option,
+  .appearance-group .setting-row,
+  .appearance-group .toggle-row,
+  .settings-native-dropdown .appearance-option,
+  .settings-native-dropdown .setting-row,
+  .settings-native-dropdown .toggle-row{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:12px !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -5185,6 +5263,41 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
  }
  document.addEventListener("DOMContentLoaded",fixSettingsSwitches);
  window.addEventListener("pageshow",fixSettingsSwitches);
+})();
+</script>
+
+
+<script id="settings-mobile-switch-root-runtime-correction">
+(function(){
+ function correct(){
+   document.querySelectorAll(
+     ".appearance-group .toggle,.settings-native-dropdown .toggle,.settings-grid .toggle,"+
+     ".appearance-group .switch,.settings-native-dropdown .switch,.settings-grid .switch,.add-contract-toggle-card .switch"
+   ).forEach(function(sw){
+     sw.style.setProperty("position","relative","important");
+     sw.style.setProperty("display","inline-block","important");
+     sw.style.setProperty("width","44px","important");
+     sw.style.setProperty("min-width","44px","important");
+     sw.style.setProperty("max-width","44px","important");
+     sw.style.setProperty("height","24px","important");
+     sw.style.setProperty("flex","0 0 44px","important");
+     sw.style.setProperty("padding","0","important");
+     sw.style.setProperty("margin-left","auto","important");
+     var track=sw.querySelector(".toggle-slider,.slider");
+     if(track){
+       track.style.setProperty("position","absolute","important");
+       track.style.setProperty("inset","0","important");
+       track.style.setProperty("width","44px","important");
+       track.style.setProperty("min-width","44px","important");
+       track.style.setProperty("max-width","44px","important");
+       track.style.setProperty("height","24px","important");
+     }
+   });
+ }
+ document.addEventListener("DOMContentLoaded",correct);
+ window.addEventListener("pageshow",correct);
+ setTimeout(correct,250);
+ setTimeout(correct,1000);
 })();
 </script>
 
