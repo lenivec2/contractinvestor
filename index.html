@@ -2607,6 +2607,25 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
+
+<style id="mobile-sidebar-route-isolation-safe">
+@media(max-width:700px){
+  body[data-mobile-view] .mobile-route-panel{
+    display:none !important;
+  }
+  body[data-mobile-view="dashboard"] #dashboard,
+  body[data-mobile-view="checkPanel"] #checkPanel,
+  body[data-mobile-view="newContractPanel"] #newContractPanel,
+  body[data-mobile-view="contractsPanel"] #contractsPanel,
+  body[data-mobile-view="completedPanel"] #completedPanel,
+  body[data-mobile-view="historyPanel"] #historyPanel,
+  body[data-mobile-view="reportsPanel"] #reportsPanel,
+  body[data-mobile-view="settingsPanel"] #settingsPanel{
+    display:block !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -5352,69 +5371,60 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 
 
 
-<script id="mobile-sidebar-one-section-actual-ids">
+
+<script id="mobile-sidebar-route-isolation-safe-script">
 (function(){
-  const mobileViews=[
-    "dashboard",
-    "checkPanel",
-    "newContractPanel",
-    "contractsPanel",
-    "completedPanel",
-    "historyPanel",
-    "reportsPanel",
-    "settingsPanel"
-  ];
+ const ids=["dashboard","checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","settingsPanel"];
 
-  function showOnlyMobileView(id){
-    if(!window.matchMedia("(max-width:700px)").matches)return;
-    mobileViews.forEach(function(viewId){
-      const el=document.getElementById(viewId);
-      if(!el)return;
-      if(viewId===id){
-        el.classList.remove("hidden");
-        el.style.removeProperty("display");
-      }else{
-        el.classList.add("hidden");
-        el.style.setProperty("display","none","important");
-      }
-    });
-  }
+ function prepare(){
+   ids.forEach(function(id){
+     const el=document.getElementById(id);
+     if(el)el.classList.add("mobile-route-panel");
+   });
+ }
 
-  document.addEventListener("click",function(e){
-    if(!window.matchMedia("(max-width:700px)").matches)return;
-    const link=e.target.closest('.sidebar a[href^="#"]');
-    if(!link)return;
-    const id=(link.getAttribute("href")||"").slice(1);
-    if(!mobileViews.includes(id))return;
+ function activate(id){
+   if(!window.matchMedia("(max-width:700px)").matches || !ids.includes(id))return;
+   prepare();
+   const target=document.getElementById(id);
+   if(!target)return;
+   document.body.dataset.mobileView=id;
+   /* The selected route must be allowed to display even if dashboard rendering marked it hidden. */
+   target.classList.remove("hidden");
+   target.style.removeProperty("display");
+ }
 
-    /* Run after the app's normal navigation/render so it cannot re-show dashboard sections. */
-    setTimeout(function(){showOnlyMobileView(id)},0);
-    setTimeout(function(){showOnlyMobileView(id)},100);
-    setTimeout(function(){showOnlyMobileView(id)},350);
-  },true);
+ document.addEventListener("DOMContentLoaded",function(){
+   prepare();
+   const id=(location.hash||"").slice(1);
+   if(ids.includes(id))setTimeout(function(){activate(id)},0);
+ });
 
-  /* Hash navigation/back-forward on mobile gets the same one-section behavior. */
-  function applyHash(){
-    if(!window.matchMedia("(max-width:700px)").matches)return;
-    const id=(location.hash||"").slice(1);
-    if(mobileViews.includes(id))showOnlyMobileView(id);
-  }
-  window.addEventListener("hashchange",function(){
-    setTimeout(applyHash,0);
-    setTimeout(applyHash,150);
-  });
-  window.addEventListener("pageshow",applyHash);
+ document.addEventListener("click",function(e){
+   if(!window.matchMedia("(max-width:700px)").matches)return;
+   const a=e.target.closest('.sidebar a[href^="#"]');
+   if(!a)return;
+   const id=(a.getAttribute("href")||"").slice(1);
+   if(!ids.includes(id))return;
+   /* Let the existing app click/navigation logic run first. */
+   setTimeout(function(){activate(id)},0);
+   setTimeout(function(){activate(id)},150);
+ },false);
 
-  window.addEventListener("resize",function(){
-    if(window.matchMedia("(max-width:700px)").matches){
-      applyHash();
-    }else{
-      mobileViews.forEach(function(id){
-        const el=document.getElementById(id);
-        if(el)el.style.removeProperty("display");
-      });
-    }
-  });
+ window.addEventListener("hashchange",function(){
+   const id=(location.hash||"").slice(1);
+   if(ids.includes(id))setTimeout(function(){activate(id)},0);
+ });
+
+ window.addEventListener("resize",function(){
+   if(!window.matchMedia("(max-width:700px)").matches){
+     delete document.body.dataset.mobileView;
+     ids.forEach(function(id){
+       const el=document.getElementById(id);
+       if(el)el.style.removeProperty("display");
+     });
+   }
+ });
 })();
 </script>
 
