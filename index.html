@@ -22,6 +22,7 @@
    var c=window.__fundledgerAuthClient||(window.__fundledgerAuthClient=window.supabase.createClient("https://gtyghdgbieyzurkkzzvh.supabase.co","sb_publishable_k3z3T6m8oxzjvh1uVSkpMw_-FkBxVID"));
    var r=await c.auth.signInWithPassword({email:email,password:password});
    if(r.error){msg(r.error.message);return;}
+   if(window.trackFundLedgerEvent)window.trackFundLedgerEvent("login");
    setTimeout(function(){var a=document.getElementById("authScreen");if(a&&getComputedStyle(a).display!=="none")location.reload();},500);
   }catch(e){console.error("Protected sign-in error",e);msg("Unable to sign in. Check your connection and try again.");}
  }
@@ -2607,7 +2608,106 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
-<style id="mobile-single-route-view-fix">@media(max-width:700px){#appScreen[data-mobile-route] #checkPanel,#appScreen[data-mobile-route] #newContractPanel,#appScreen[data-mobile-route] #contractsPanel,#appScreen[data-mobile-route] #completedPanel,#appScreen[data-mobile-route] #historyPanel,#appScreen[data-mobile-route] #reportsPanel,#appScreen[data-mobile-route] #settingsPanel,#appScreen[data-mobile-route] #contactPanel{display:none!important}#appScreen[data-mobile-route="checkPanel"] #checkPanel,#appScreen[data-mobile-route="newContractPanel"] #newContractPanel,#appScreen[data-mobile-route="contractsPanel"] #contractsPanel,#appScreen[data-mobile-route="completedPanel"] #completedPanel,#appScreen[data-mobile-route="historyPanel"] #historyPanel,#appScreen[data-mobile-route="reportsPanel"] #reportsPanel,#appScreen[data-mobile-route="settingsPanel"] #settingsPanel,#appScreen[data-mobile-route="contactPanel"] #contactPanel{display:block!important}#appScreen[data-mobile-route="dashboard"] #dashboardSummary{display:grid!important}#appScreen[data-mobile-route]:not([data-mobile-route="dashboard"]) #dashboardSummary{display:none!important}}</style></head>
+<style id="mobile-single-route-view-fix">@media(max-width:700px){#appScreen[data-mobile-route] #checkPanel,#appScreen[data-mobile-route] #newContractPanel,#appScreen[data-mobile-route] #contractsPanel,#appScreen[data-mobile-route] #completedPanel,#appScreen[data-mobile-route] #historyPanel,#appScreen[data-mobile-route] #reportsPanel,#appScreen[data-mobile-route] #settingsPanel,#appScreen[data-mobile-route] #contactPanel{display:none!important}#appScreen[data-mobile-route="checkPanel"] #checkPanel,#appScreen[data-mobile-route="newContractPanel"] #newContractPanel,#appScreen[data-mobile-route="contractsPanel"] #contractsPanel,#appScreen[data-mobile-route="completedPanel"] #completedPanel,#appScreen[data-mobile-route="historyPanel"] #historyPanel,#appScreen[data-mobile-route="reportsPanel"] #reportsPanel,#appScreen[data-mobile-route="settingsPanel"] #settingsPanel,#appScreen[data-mobile-route="contactPanel"] #contactPanel{display:block!important}#appScreen[data-mobile-route="dashboard"] #dashboardSummary{display:grid!important}#appScreen[data-mobile-route]:not([data-mobile-route="dashboard"]) #dashboardSummary{display:none!important}}</style><style id="admin-analytics-style">
+.admin-analytics{margin:18px 0;padding:18px;border:1px solid #d9e4f2;border-radius:16px;background:#f8fbff}.admin-analytics-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}.admin-analytics-head h3{margin:0}.admin-analytics-controls{display:flex;gap:8px;flex-wrap:wrap}.analytics-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}.analytics-card{background:#fff;border:1px solid #d9e4f2;border-radius:14px;padding:14px}.analytics-card span{display:block;font-weight:700}.analytics-card strong{display:block;font-size:26px;margin:5px 0}.analytics-card small{color:#5b6f8c}.analytics-card small.up{color:#16833a}.analytics-card small.down{color:#b42318}.analytics-chart-card{background:#fff;border:1px solid #d9e4f2;border-radius:14px;padding:14px;margin-bottom:14px}.analytics-chart-title{display:flex;justify-content:space-between;gap:10px}.analytics-chart{height:190px;display:flex;align-items:flex-end;gap:4px;padding-top:18px;overflow-x:auto}.analytics-bar{min-width:12px;flex:1;background:#2d83df;border-radius:5px 5px 0 0;position:relative}.analytics-bar:hover:after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#17385f;color:#fff;padding:4px 6px;border-radius:5px;white-space:nowrap;font-size:11px;z-index:5}.analytics-table-wrap{overflow:auto}.analytics-table-wrap table{min-width:720px}@media(max-width:700px){.analytics-cards{grid-template-columns:1fr 1fr}.admin-analytics{padding:12px}.analytics-card strong{font-size:22px}}@media(max-width:420px){.analytics-cards{grid-template-columns:1fr}}
+</style><style id="admin-privacy-style">.admin-privacy-note{margin-top:14px;padding:13px 14px;border:1px solid #d9e4f2;border-radius:12px;background:#fff}</style>
+<style id="mobile-active-contract-actions-polish">
+@media (max-width:700px){
+  /* Compact professional Active Contracts action toolbar */
+  #contractsPanel .contract-actions,
+  #contractsPanel .contracts-actions,
+  #contractsPanel .bulk-actions,
+  #contractsPanel .selection-actions{
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:8px !important;
+    width:100% !important;
+    margin-top:10px !important;
+  }
+
+  #contractsPanel button[id*="edit" i],
+  #contractsPanel button[id*="close" i],
+  #contractsPanel button[id*="default" i],
+  #contractsPanel button[id*="delete" i]{
+    min-height:44px !important;
+    height:44px !important;
+    padding:0 10px !important;
+    border-radius:10px !important;
+    font-size:14px !important;
+    font-weight:700 !important;
+    box-shadow:none !important;
+    white-space:nowrap !important;
+  }
+
+  /* Remove the large filled-button appearance on mobile */
+  #contractsPanel button[id*="edit" i]{
+    background:#f8fbff !important;
+    border:1px solid #cbdcf0 !important;
+    color:#1d4f82 !important;
+  }
+  #contractsPanel button[id*="close" i],
+  #contractsPanel button[id*="default" i]{
+    background:#fff !important;
+    border:1px solid #cfd8e3 !important;
+    color:#173b67 !important;
+  }
+  #contractsPanel button[id*="delete" i]{
+    background:#fff8f8 !important;
+    border:1px solid #efc2c7 !important;
+    color:#c62828 !important;
+  }
+  #contractsPanel button:disabled{
+    opacity:.46 !important;
+    box-shadow:none !important;
+  }
+
+  /* Active Contracts Summary uses the entire available mobile width */
+  #contractsPanel .active-summary,
+  #contractsPanel .active-contracts-summary,
+  #contractsPanel .contracts-summary,
+  #contractsPanel .summary-card{
+    width:100% !important;
+    max-width:none !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+}
+</style>
+
+
+<style id="mobile-active-contract-actions-exact">
+@media (max-width:700px){
+  #contractsPanel #activeCloseBtn{
+    min-height:44px !important;height:44px !important;padding:0 10px !important;
+    border-radius:10px !important;font-size:14px !important;font-weight:700 !important;
+    box-shadow:none !important;white-space:nowrap !important;
+  }
+}
+</style>
+
+
+<style id="mobile-active-contract-summary-full-width">
+@media (max-width:700px){
+  #contractsPanel .page-summary-side,
+  #contractsPanel .table-summary-side{
+    width:100% !important;
+    max-width:none !important;
+    min-width:0 !important;
+    flex:0 0 100% !important;
+  }
+  #contractsPanel .page-summary-card,
+  #contractsPanel .summary-card{
+    width:100% !important;
+    max-width:none !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+}
+</style>
+
+</head>
 <body>
 <div id="authScreen" class="auth-wrap">
   <div class="auth-chart-bg" aria-hidden="true"><div class="auth-chart-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><svg viewBox="0 0 1000 420" preserveAspectRatio="none"><polyline points="0,380 115,330 230,270 350,215 470,190 585,145 710,115 825,70 1000,15"/><g><circle cx="115" cy="330" r="8"/><circle cx="230" cy="270" r="8"/><circle cx="350" cy="215" r="8"/><circle cx="470" cy="190" r="8"/><circle cx="585" cy="145" r="8"/><circle cx="710" cy="115" r="8"/><circle cx="825" cy="70" r="8"/><circle cx="1000" cy="15" r="8"/></g></svg></div>
@@ -2826,10 +2926,22 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
     <div id="adminPanel" class="panel hidden" style="margin-top:14px">
       <div class="admin-panel-head"><h2>Admin Dashboard</h2><div class="admin-panel-actions"><button id="adminChangePinBtn" class="secondary" type="button">Change PIN</button><button id="adminLockBtn" class="secondary" type="button">Lock Dashboard</button></div></div>
       <p class="muted">Master account view. Regular users only see their own data.</p>
-      <div class="row"><div class="field"><label>User</label><select id="adminUserSelect"><option value="">Select a user</option></select></div><div class="field" style="max-width:180px"><label>&nbsp;</label><button id="adminRefreshBtn" class="primary-btn" type="button">Refresh Users</button></div></div>
-      <div id="adminUserSummary" class="muted" style="margin-top:12px">Select a user to view their dashboard.</div>
-      <div id="adminUserControls" class="admin-user-controls hidden"><div class="admin-control-head"><strong>Account Permissions</strong><div class="admin-control-status"><span id="adminLoginStatus" class="access-badge allowed">Login Allowed</span><span id="adminMessageStatus" class="access-badge allowed">Messaging Allowed</span></div></div><div class="admin-control-actions"><button id="adminToggleBanBtn" class="admin-ban-btn" type="button">Ban Login</button><button id="adminToggleMuteBtn" class="admin-mute-btn" type="button">Block Messaging</button></div><p class="admin-control-note">Ban Login signs the user out on their next app check and blocks access to their FundLedger data. Block Messaging keeps the account active but prevents new Contact Us messages.</p></div>
-      <div id="adminUserData" class="hidden" style="margin-top:14px"></div>
+      <div id="adminAnalytics" class="admin-analytics">
+        <div class="admin-analytics-head"><div><h3>Traffic &amp; Users</h3><p class="muted">Track visits, logins, registrations and active users over time.</p></div>
+          <div class="admin-analytics-controls"><select id="analyticsPeriod"><option value="7">Last 7 Days</option><option value="30" selected>Last 30 Days</option><option value="month">This Month</option><option value="year">This Year</option></select><button id="analyticsRefreshBtn" class="secondary" type="button">Refresh Analytics</button></div>
+        </div>
+        <div class="analytics-cards">
+          <div class="analytics-card"><span>Unique Visitors</span><strong id="anVisitors">—</strong><small id="anVisitorsCompare">Waiting for data</small></div>
+          <div class="analytics-card"><span>Total Visits</span><strong id="anVisits">—</strong><small id="anVisitsCompare">Waiting for data</small></div>
+          <div class="analytics-card"><span>Registered Users</span><strong id="anUsers">—</strong><small id="anUsersCompare">Waiting for data</small></div>
+          <div class="analytics-card"><span>Active Users</span><strong id="anActive">—</strong><small id="anActiveCompare">Waiting for data</small></div>
+          <div class="analytics-card"><span>Logins</span><strong id="anLogins">—</strong><small id="anLoginsCompare">Waiting for data</small></div>
+          <div class="analytics-card"><span>New Accounts</span><strong id="anNew">—</strong><small id="anNewCompare">Waiting for data</small></div>
+        </div>
+        <div class="analytics-chart-card"><div class="analytics-chart-title"><strong>Activity Trend</strong><span id="analyticsRangeLabel" class="muted"></span></div><div id="analyticsChart" class="analytics-chart"><div class="muted">Analytics begins collecting after the updated SQL is installed.</div></div></div>
+        <div class="admin-privacy-note"><strong>Aggregate Analytics Only</strong><p class="muted" style="margin:6px 0 0">No individual user's contracts, payments, email activity, or financial information is displayed here.</p></div>
+      </div>
+      <div class="admin-privacy-note"><strong>Privacy Protected</strong><p class="muted" style="margin:6px 0 0">Analytics shows aggregate usage only. The administrator cannot open another user's contracts, payments, financial data, or account contents.</p></div></div>
     </div>
   </div>
   <div class="form-card" style="max-width:760px">
@@ -2852,7 +2964,8 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </div>
 </section>
 
-<section class="panel" id="appDataPanel"><h2>App Data</h2><p class="muted">Your contracts are stored under your signed-in account. Other users have separate cloud data.</p></section>
+<section class="panel" id="encryptionRecoveryPanel"><h2>Data Encryption</h2><p class="muted">Your financial data is encrypted before cloud storage. Your encryption key is synchronized privately to your signed-in account so a new device can restore access after sign-in. Signed-in devices also receive encrypted FundLedger updates in real time.</p><div class="row"><button class="secondary" type="button" id="verifyEncryptionBtn">Verify Encryption Access</button><div id="encryptionStatus" class="muted" style="align-self:center">Protected</div></div></section>
+<section class="panel" id="appDataPanel"><h2>App Data</h2><p class="muted">Your contracts and payments are encrypted on this device before cloud storage. Aggregate traffic analytics is stored separately and does not contain your contract or payment details.</p></section>
 </div></div></div></main></div></div>
 <div class="toast" id="toast"></div>
 <script>
@@ -2893,7 +3006,7 @@ let adminPinUnlocked=false;
 let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
-let cloudLoadInFlight=false;
+let cloudLoadInFlight=false; let fundLedgerRealtimeChannel=null; let realtimeApplyInFlight=false;
 const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{invested:true,received:true,profit:true,active:true,all:true,paid:true,default:true,defaultLoss:true},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{summary:true,payments:false,addContract:false,activeContracts:false,completedContracts:false,checkHistory:false,reports:false},activeContractColumns:{name:true,dayOpened:true,invested:true,paid:true,breakEven:true,remainingBalance:true,amountPerCheck:true,expectedPayments:true,paymentsLeft:true,actions:true},completedContractColumns:{contract:true,dayOpened:true,dayClosed:true,invested:true,received:true,remainingPayment:true,gainLoss:true,status:true,action:true},checkHistoryColumns:{sequence:true,dateIssued:true,dateReceived:true,amount:true,contract:true,checkno:true,actions:true},activeContractColumnOrder:[],completedContractColumnOrder:[],checkHistoryColumnOrder:[],projectedResultsOrder:[]}};
 let data={contracts:[],checks:[]};
 // Data-model compatibility layer: converts legacy FundLedger field names to the
@@ -2920,11 +3033,31 @@ function normalizeFundLedgerData(snapshot){
 }
 let cloudDataReady=false;
 function localKey(userId){return "contractChecksIOS:"+userId}
-function loadLocalCache(userId){
-  try{const raw=localStorage.getItem(localKey(userId));return normalizeFundLedgerData(raw?JSON.parse(raw):JSON.parse(JSON.stringify(EMPTY_DATA)))}
-  catch(e){return JSON.parse(JSON.stringify(EMPTY_DATA))}
+const FUNDLEDGER_ENCRYPTION_VERSION=1;
+function encryptionSecretKey(userId){return `fundledgerEncryptionSecret:${userId}`}
+function bytesToB64(bytes){let s="";bytes.forEach(b=>s+=String.fromCharCode(b));return btoa(s)}
+function b64ToBytes(s){const raw=atob(s),a=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)a[i]=raw.charCodeAt(i);return a}
+async function getOrCreateEncryptionSecret(userId){
+ let local=localStorage.getItem(encryptionSecretKey(userId));
+ if(local)return local;
+ if(!supabaseClient)throw new Error("Cloud service unavailable");
+ const {data:row,error}=await supabaseClient.from("fundledger_user_keys").select("wrapped_key").eq("user_id",userId).maybeSingle();
+ if(error)throw error;
+ if(row?.wrapped_key){local=row.wrapped_key;localStorage.setItem(encryptionSecretKey(userId),local);return local}
+ local=bytesToB64(crypto.getRandomValues(new Uint8Array(32)));
+ const {error:saveError}=await supabaseClient.from("fundledger_user_keys").insert({user_id:userId,wrapped_key:local});
+ if(saveError)throw saveError;
+ localStorage.setItem(encryptionSecretKey(userId),local);return local;
 }
-function saveLocalCache(userId,snapshot){try{localStorage.setItem(localKey(userId),JSON.stringify(snapshot))}catch(e){console.error(e)}}
+async function fundLedgerEncryptionKey(userId){
+ const secret=await getOrCreateEncryptionSecret(userId);
+ const m=await crypto.subtle.importKey("raw",new TextEncoder().encode(userId+":"+secret),"PBKDF2",false,["deriveKey"]);
+ return crypto.subtle.deriveKey({name:"PBKDF2",salt:new TextEncoder().encode("FundLedger Private Data v1"),iterations:210000,hash:"SHA-256"},m,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+}
+async function encryptFundLedgerData(userId,value){const iv=crypto.getRandomValues(new Uint8Array(12)),key=await fundLedgerEncryptionKey(userId),plain=new TextEncoder().encode(JSON.stringify(value)),cipher=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},key,plain));return {fundledger_encrypted:true,v:1,alg:"AES-GCM",iv:bytesToB64(iv),ciphertext:bytesToB64(cipher)}}
+async function decryptFundLedgerData(userId,e){if(!e||e.fundledger_encrypted!==true)return e;const key=await fundLedgerEncryptionKey(userId),plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64ToBytes(e.iv)},key,b64ToBytes(e.ciphertext));return JSON.parse(new TextDecoder().decode(plain))}
+function loadLocalCache(userId){return null}
+function saveLocalCache(userId,snapshot){/* readable financial cache disabled */}
 let removedBreakdownContracts=new Set();
 let selectedChoiceIds=[];
 let breakdownRows=[];
@@ -2959,11 +3092,39 @@ async function syncToCloud(){
  cloudSyncQueued=false;
  setSyncStatus("Saving to cloud…");
  const snapshot=normalizeFundLedgerData(JSON.parse(JSON.stringify(data)));
- const {error}=await supabaseClient.from("contract_tracker_data").upsert({user_id:currentUser.id,data:snapshot,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+ let cloudPayload;try{cloudPayload=await encryptFundLedgerData(currentUser.id,snapshot)}catch(e){cloudSaveInFlight=false;setSyncStatus("Encryption error");console.error(e);toast("Private data could not be encrypted");return} const {error}=await supabaseClient.from("contract_tracker_data").upsert({user_id:currentUser.id,data:cloudPayload,updated_at:new Date().toISOString()},{onConflict:"user_id"});
  cloudSaveInFlight=false;
  if(error){setSyncStatus("Cloud sync error");console.error(error);toast("Cloud sync failed");}
  else setSyncStatus("Saved to cloud • "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}));
  if(cloudSyncQueued&&currentUser){cloudSyncQueued=false;setTimeout(syncToCloud,0)}
+}
+
+async function applyRealtimeCloudPayload(row){
+ if(!currentUser||!row||row.user_id!==currentUser.id||realtimeApplyInFlight)return;
+ realtimeApplyInFlight=true;
+ try{
+   const decoded=await decryptFundLedgerData(currentUser.id,row.data);
+   data=normalizeFundLedgerData(decoded);
+   cloudDataReady=true;
+   render();
+   setSyncStatus("Synced from another device • "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}));
+ }catch(e){console.error("Realtime encrypted sync failed",e)}
+ finally{realtimeApplyInFlight=false}
+}
+function stopFundLedgerRealtime(){
+ if(fundLedgerRealtimeChannel&&supabaseClient){try{supabaseClient.removeChannel(fundLedgerRealtimeChannel)}catch(e){console.error(e)}}
+ fundLedgerRealtimeChannel=null;
+}
+function startFundLedgerRealtime(userId){
+ if(!supabaseClient||!userId)return;
+ stopFundLedgerRealtime();
+ fundLedgerRealtimeChannel=supabaseClient.channel("fundledger-user-"+userId)
+ .on("postgres_changes",{event:"*",schema:"public",table:"contract_tracker_data",filter:"user_id=eq."+userId},payload=>{
+   if(!currentUser||currentUser.id!==userId)return;
+   if(payload.eventType==="DELETE")return;
+   applyRealtimeCloudPayload(payload.new);
+ })
+ .subscribe(status=>{if(status==="SUBSCRIBED"&&currentUser?.id===userId)setSyncStatus("Cloud sync live")});
 }
 function setSyncStatus(s){const el=$("syncStatus");if(el)el.textContent=s}
 function adminPinStorageKey(){return currentUser?`fundledgerAdminPinHash:${currentUser.id}`:""}
@@ -2984,7 +3145,7 @@ async function updateAdminContactVisibility(){
  $("adminPinHelp").textContent=hasPin?"Enter your four-digit PIN to continue.":"Create a four-digit PIN for the Admin Dashboard on this device.";
  $("adminPinConfirmField").classList.toggle("hidden",hasPin);
  $("adminPinUnlockBtn").textContent=hasPin?"Unlock Admin Dashboard":"Create PIN";
- if(adminPinUnlocked){gate.classList.add("hidden");panel.classList.remove("hidden");if(!adminUsers.length)await loadAdminUsers()}
+ if(adminPinUnlocked){gate.classList.add("hidden");panel.classList.remove("hidden");if(window.loadFundLedgerAnalytics)window.loadFundLedgerAnalytics()}
  else{gate.classList.remove("hidden");panel.classList.add("hidden");setTimeout(()=>$("adminPinInput")?.focus(),0)}
 }
 async function submitAdminPin(){
@@ -3395,116 +3556,6 @@ async function enforceAccountAccess(){
  applyMessagingRestriction();
  return true;
 }
-function renderAdminRestrictionControls(userId,restrictions){
- selectedAdminUserId=userId||"";
- selectedAdminRestrictions={login_banned:!!restrictions?.login_banned,messages_blocked:!!restrictions?.messages_blocked};
- const controls=$("adminUserControls"),login=$("adminLoginStatus"),messages=$("adminMessageStatus"),banBtn=$("adminToggleBanBtn"),muteBtn=$("adminToggleMuteBtn");
- if(!controls)return;
- controls.classList.toggle("hidden",!userId);
- if(!userId)return;
- if(login){login.textContent=selectedAdminRestrictions.login_banned?"Login Banned":"Login Allowed";login.className="access-badge "+(selectedAdminRestrictions.login_banned?"blocked":"allowed")}
- if(messages){messages.textContent=selectedAdminRestrictions.messages_blocked?"Messaging Blocked":"Messaging Allowed";messages.className="access-badge "+(selectedAdminRestrictions.messages_blocked?"muted":"allowed")}
- if(banBtn){banBtn.textContent=selectedAdminRestrictions.login_banned?"Restore Login":"Ban Login";banBtn.className=selectedAdminRestrictions.login_banned?"admin-unban-btn":"admin-ban-btn";banBtn.disabled=userId===currentUser?.id;banBtn.title=banBtn.disabled?"You cannot ban your own admin account":""}
- if(muteBtn){muteBtn.textContent=selectedAdminRestrictions.messages_blocked?"Allow Messaging":"Block Messaging";muteBtn.className=selectedAdminRestrictions.messages_blocked?"admin-allow-btn":"admin-mute-btn"}
-}
-async function loadAdminUserRestrictions(userId){
- if(!userId||!isAdmin||!adminPinUnlocked||!supabaseClient)return {login_banned:false,messages_blocked:false};
- const {data:row,error}=await supabaseClient.rpc("admin_get_user_restrictions",{p_user_id:userId});
- if(error)throw error;
- const r=Array.isArray(row)?(row[0]||{}):(row||{});
- return {login_banned:!!r.login_banned,messages_blocked:!!r.messages_blocked};
-}
-async function updateSelectedUserRestriction(kind){
- if(!selectedAdminUserId||!isAdmin||!adminPinUnlocked||!supabaseClient)return;
- const isBan=kind==="login";
- const next=isBan?!selectedAdminRestrictions.login_banned:!selectedAdminRestrictions.messages_blocked;
- const label=adminUsers.find(u=>u.id===selectedAdminUserId)?.email||"this user";
- const action=isBan?(next?"ban login for":"restore login for"):(next?"block messaging for":"allow messaging for");
- if(!confirm(`Are you sure you want to ${action} ${label}?`))return;
- const btn=isBan?$("adminToggleBanBtn"):$("adminToggleMuteBtn");
- if(btn)btn.disabled=true;
- try{
-  const functionName=isBan?"admin_set_user_login_banned":"admin_set_user_messages_blocked";
-  const args=isBan?{p_user_id:selectedAdminUserId,p_banned:next}:{p_user_id:selectedAdminUserId,p_blocked:next};
-  const {error}=await supabaseClient.rpc(functionName,args);
-  if(error)throw error;
-  const restrictions=await loadAdminUserRestrictions(selectedAdminUserId);
-  renderAdminRestrictionControls(selectedAdminUserId,restrictions);
-  toast(isBan?(next?"User login banned":"User login restored"):(next?"User messaging blocked":"User messaging restored"));
- }catch(e){console.error(e);toast("Permission update failed. Run the updated Supabase SQL setup.")}
- finally{if(btn)btn.disabled=false}
-}
-async function loadAdminUsers(){
- if(!currentUser||!isAdmin||!adminPinUnlocked||!supabaseClient)return;
- const select=$("adminUserSelect"),summary=$("adminUserSummary"),box=$("adminUserData");
- select.innerHTML='<option value="">Loading users…</option>'; box.classList.add("hidden");renderAdminRestrictionControls("",{});
- try{
-  const {data:users,error:userError}=await supabaseClient.rpc("admin_list_users");
-  if(userError){
-    console.error("admin_list_users failed",userError);
-    throw new Error("Unable to load users: "+(userError.message||"Admin user list function failed"));
-  }
-  adminUsers=users||[];
-  adminRows=[];
-  select.innerHTML='<option value="">Select a user</option>'+adminUsers.map(u=>`<option value="${u.id}">${escape(u.email||u.id)}</option>`).join("");
-  summary.textContent=adminUsers.length+" user"+(adminUsers.length===1?"":"s")+" found. Select a user to load their contracts and checks.";
- }catch(e){console.error(e);select.innerHTML='<option value="">Unable to load users</option>';summary.textContent="Admin user list could not be loaded. Make sure the admin SQL setup has been run.";toast("Admin user list failed")}
-}
-async function renderAdminUser(userId){
- if(!isAdmin||!adminPinUnlocked)return;
- const box=$("adminUserData"),summary=$("adminUserSummary");
- if(!userId){box.classList.add("hidden");renderAdminRestrictionControls("",{});summary.textContent=adminUsers.length+" user"+(adminUsers.length===1?"":"s")+" found. Select a user to load their dashboard.";return}
- const user=adminUsers.find(u=>u.id===userId);
- summary.textContent="Loading dashboard for "+(user?.email||userId)+"…";
- box.classList.remove("hidden");box.innerHTML='<div class="muted">Loading selected user dashboard…</div>';
- try{
-  const restrictions=await loadAdminUserRestrictions(userId);
-  renderAdminRestrictionControls(userId,restrictions);
-  const {data:row,error}=await supabaseClient.rpc("admin_get_user_data",{target_user_id:userId});
-  if(error){console.error("admin_get_user_data failed",error);throw error}
-  // Support both a single JSON object and a one-row RPC array response.
-  let d=row;
-  if(Array.isArray(d)) d=d[0]||{};
-  if(typeof d==="string"){try{d=JSON.parse(d)}catch(_){d={}}}
-  d=d&&typeof d==="object"?d:{};
-  let contracts=d.contracts||[],checks=d.checks||[];
-  if(typeof contracts==="string"){try{contracts=JSON.parse(contracts)}catch(_){contracts=[]}}
-  if(typeof checks==="string"){try{checks=JSON.parse(checks)}catch(_){checks=[]}}
-  contracts=Array.isArray(contracts)?contracts:[];
-  checks=Array.isArray(checks)?checks:[];
-
-  const received=checks.reduce((a,x)=>a+(parseFloat(x.paymentAmount)||0),0);
-  const invested=contracts.reduce((a,x)=>a+(parseFloat(x.fundedAmount)||0)+(parseFloat(x.referralFee)||0),0);
-  const overallProfit=received-invested;
-  const activeContracts=contracts.filter(c=>!c.closed).length;
-  const paidInFull=contracts.filter(c=>c.closed&&!c.defaulted).length;
-  const defaultContracts=contracts.filter(c=>c.closed&&c.defaulted);
-  const defaultLoss=defaultContracts.reduce((sum,c)=>{
-   const rec=checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.paymentAmount)||0),0);
-   return sum+Math.max(0,(parseFloat(c.fundedAmount)||0)-rec);
-  },0);
-  const profitClass=overallProfit>0.009?'positive':overallProfit<-0.009?'negative':'';
-  summary.innerHTML=`<b>${escape(user?.email||userId)}</b> — Selected User Dashboard`;
-  box.innerHTML=`
-   <div class="admin-summary-wrap">
-    <div class="admin-summary-title">Dashboard Summary</div>
-    <div class="admin-summary-grid">
-     <div class="summary-card"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Funded</div><div class="summary-value">${money(invested)}</div></div></div></div>
-     <div class="summary-card received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Total Payments Received</div><div class="summary-value">${money(received)}</div></div></div></div>
-     <div class="summary-card profit ${profitClass}"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Realized Profit</div><div class="summary-value">${money(overallProfit)}</div></div></div></div>
-     <div class="summary-card active"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Active Contracts</div><div class="summary-value">${activeContracts}</div></div></div></div>
-     <div class="summary-card"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Total Contracts</div><div class="summary-value">${contracts.length}</div></div></div></div>
-     <div class="summary-card"><div class="summary-top"><div class="summary-icon">✓</div><div><div class="summary-label">Completed Contracts</div><div class="summary-value">${paidInFull}</div></div></div></div>
-     <div class="summary-card default"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Defaulted Contracts</div><div class="summary-value">${defaultContracts.length}</div></div></div></div>
-     <div class="summary-card default-loss"><div class="summary-top"><div class="summary-icon">−</div><div><div class="summary-label">Default Loss</div><div class="summary-value">${money(defaultLoss)}</div></div></div></div>
-    </div>
-   </div>
-   <h3>Contracts</h3>
-   <div class="scroll"><table class="admin-table"><thead><tr><th>Contract Name / ID</th><th>Funded</th><th>Amount Received</th><th>Status</th></tr></thead><tbody>${contracts.map(c=>{const xs=checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+(parseFloat(x.paymentAmount)||0),0);return `<tr><td><b>${escape(c.name)}</b></td><td>${money(c.fundedAmount)}</td><td>${money(rec)}</td><td>${c.closed?(c.defaulted?"Default":"Completed Contracts"):"Open"}</td></tr>`}).join("")||'<tr><td colspan="4" class="muted">No contracts.</td></tr>'}</tbody></table></div>
-   <h3 style="margin-top:18px">Payment History</h3>
-   <div class="scroll"><table class="admin-table"><thead><tr><th>Payment Date</th><th>Date Received</th><th>Contract Name / ID</th><th>Check #</th><th>Amount</th><th>Verified</th></tr></thead><tbody>${checks.map(x=>`<tr><td>${escape(x.paymentDate||"")}</td><td>${escape(x.dateReceived||"")||"—"}</td><td>${escape(x.contract||"")}</td><td>${escape(x.checkno||"")||"—"}</td><td>${money(x.paymentAmount)}</td><td>${x.verified?"Yes":"No"}</td></tr>`).join("")||'<tr><td colspan="6" class="muted">No checks.</td></tr>'}</tbody></table></div>`;
- }catch(e){console.error(e);box.innerHTML='<div class="muted">Unable to load this user\'s dashboard. Please run the updated Admin SQL setup.</div>';summary.textContent="Could not load data for "+(user?.email||userId);toast("Could not load user data")}
-}
 async function initAdmin(){
  isAdmin=!!(currentUser&&currentUser.app_metadata&&currentUser.app_metadata.role==="admin");
  adminPinUnlocked=false;
@@ -3673,15 +3724,12 @@ async function loadCloudData(expectedUserId=null){
   }
   if(row&&row.data){
    // Never use a browser-wide/shared cache as a fallback. Cloud data is authoritative.
-   data=normalizeFundLedgerData(row.data);
-   saveLocalCache(userId,data);
-   cloudDataReady=true;
-   setSyncStatus("Loaded from cloud");
+   try{data=normalizeFundLedgerData(await decryptFundLedgerData(userId,row.data))}catch(e){console.error("Private data decryption failed",e);setSyncStatus("Unable to decrypt private data");toast("Private data could not be decrypted on this device");return false} cloudDataReady=true; setSyncStatus(row.data.fundledger_encrypted?"Loaded encrypted data":"Loaded legacy data — encryption will apply on save");
    return true;
   }
   // A genuinely new user gets a brand-new empty dataset.
   data=JSON.parse(JSON.stringify(EMPTY_DATA));
-  const {error:emptyError}=await supabaseClient.from("contract_tracker_data").insert({user_id:userId,data,updated_at:new Date().toISOString()});
+  const initialEncrypted=await encryptFundLedgerData(userId,data); const {error:emptyError}=await supabaseClient.from("contract_tracker_data").insert({user_id:userId,data:initialEncrypted,updated_at:new Date().toISOString()});
   if(!currentUser||currentUser.id!==userId)return false;
   if(emptyError){
    console.error(emptyError);
@@ -3910,7 +3958,7 @@ async function initCloud(){
   sessionData={session:null};
  }
  currentUser=sessionData.session?.user||null;
- if(currentUser){const accessAllowed=await enforceAccountAccess();if(accessAllowed){if($("contactEmail"))$("contactEmail").value=currentUser.email||"";cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showApp();setUserStatus(currentUser);setSyncStatus("Loading cloud data…");await loadCloudData(currentUser?.id);await initAdmin();setDateIssuedToToday(true);render()}}else{cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showAuth();render()}
+ if(currentUser){const accessAllowed=await enforceAccountAccess();if(accessAllowed){if($("contactEmail"))$("contactEmail").value=currentUser.email||"";cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showApp();setUserStatus(currentUser);setSyncStatus("Loading cloud data…");await loadCloudData(currentUser?.id);startFundLedgerRealtime(currentUser?.id);await initAdmin();setDateIssuedToToday(true);render()}}else{cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showAuth();render()}
  supabaseClient.auth.onAuthStateChange(async (_event,session)=>{
    if(_event==="PASSWORD_RECOVERY"){
     showPasswordRecovery();
@@ -3929,8 +3977,8 @@ async function initCloud(){
     if(!appAlreadyVisible)showApp();
     setUserStatus(currentUser);
     setSyncStatus("Loading cloud data…");
-    loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;await initAdmin();setDateIssuedToToday(true);render()});
-   }else{currentUser=null;isAdmin=false;adminPinUnlocked=false;currentUserRestrictions={login_banned:false,messages_blocked:false};cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));setUserStatus(null);showAuth();render()}
+    loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;startFundLedgerRealtime(effectiveUser.id);await initAdmin();setDateIssuedToToday(true);render()});
+   }else{stopFundLedgerRealtime();currentUser=null;isAdmin=false;adminPinUnlocked=false;currentUserRestrictions={login_banned:false,messages_blocked:false};cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));setUserStatus(null);showAuth();render()}
  });
 }
 function toggleProjectedResults(){
@@ -4611,10 +4659,6 @@ $("forgotPasswordBtn").addEventListener("click",()=>{
 $("sendResetBtn").addEventListener("click",sendPasswordReset);
 $("cancelResetBtn").addEventListener("click",()=>{$("resetPanel").classList.add("hidden");setAuthError("")});
 $("updatePasswordBtn").addEventListener("click",updatePassword);
-$("adminUserSelect").addEventListener("change",e=>renderAdminUser(e.target.value));
-$("adminRefreshBtn").addEventListener("click",loadAdminUsers);
-$("adminToggleBanBtn").addEventListener("click",()=>updateSelectedUserRestriction("login"));
-$("adminToggleMuteBtn").addEventListener("click",()=>updateSelectedUserRestriction("messages"));
 $("adminPinUnlockBtn").addEventListener("click",submitAdminPin);
 $("adminLockBtn").addEventListener("click",lockAdminDashboard);
 $("adminChangePinBtn").addEventListener("click",changeAdminPin);
@@ -5359,7 +5403,33 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
  window.addEventListener("pageshow",fix);
  window.addEventListener("resize",fix);
 })();
+document.getElementById("verifyEncryptionBtn")?.addEventListener("click",async()=>{const el=document.getElementById("encryptionStatus");if(!currentUser){if(el)el.textContent="Sign in first";return}try{await getOrCreateEncryptionSecret(currentUser.id);if(el)el.textContent="Encryption key available • recovery ready";toast("Encryption recovery is ready")}catch(e){console.error(e);if(el)el.textContent="Recovery setup required — run updated Supabase SQL";toast("Encryption recovery setup required")}});
 </script>
 
-</body>
+<script id="fundledger-analytics">
+(function(){
+ const visitorKey="fundledgerVisitorId";
+ function visitorId(){let v=localStorage.getItem(visitorKey);if(!v){v=(crypto.randomUUID?crypto.randomUUID():(Date.now()+"-"+Math.random().toString(36).slice(2)));localStorage.setItem(visitorKey,v)}return v}
+ async function event(type){
+  if(!window.supabaseClient||!supabaseClient)return;
+  try{await supabaseClient.rpc("track_fundledger_event",{p_event_type:type,p_visitor_id:visitorId(),p_path:location.pathname||"/"})}catch(e){console.warn("Analytics event skipped",e)}
+ }
+ window.trackFundLedgerEvent=event;
+ window.addEventListener("load",()=>setTimeout(()=>event("visit"),1200));
+ window.addEventListener("focus",()=>{if(window.currentUser||currentUser)event("active")});
+ window.loadFundLedgerAnalytics=async function(){
+  if(!isAdmin||!adminPinUnlocked||!supabaseClient)return;
+  const period=document.getElementById("analyticsPeriod")?.value||"30";
+  try{
+   const {data,error}=await supabaseClient.rpc("admin_fundledger_analytics",{p_period:period});if(error)throw error;
+   const d=Array.isArray(data)?data[0]:data;if(!d)return;
+   const ids={visitors:"anVisitors",visits:"anVisits",users:"anUsers",active:"anActive",logins:"anLogins",new_accounts:"anNew"};
+   Object.entries(ids).forEach(([k,id])=>{const el=document.getElementById(id);if(el)el.textContent=String(d.current?.[k]??0);const c=document.getElementById(id+"Compare");if(c){const cur=Number(d.current?.[k]||0),prev=Number(d.previous?.[k]||0),diff=cur-prev,pct=prev?diff/prev*100:(cur?100:0);c.textContent=(diff>=0?"↑ ":"↓ ")+Math.abs(pct).toFixed(1)+"% ("+(diff>=0?"+":"")+diff+") vs previous period";c.className=diff>0?"up":diff<0?"down":""}});
+   const chart=document.getElementById("analyticsChart"),trend=Array.isArray(d.trend)?d.trend:[];if(chart){const max=Math.max(1,...trend.map(x=>Number(x.visits||0)));chart.innerHTML=trend.length?trend.map(x=>`<div class="analytics-bar" style="height:${Math.max(4,Number(x.visits||0)/max*150)}px" data-tip="${x.day}: ${x.visits} visits"></div>`).join(""):'<div class="muted">No traffic recorded for this period.</div>'}
+   
+  }catch(e){console.error(e);const chart=document.getElementById("analyticsChart");if(chart)chart.innerHTML='<div class="muted">Analytics database setup is required. Run the updated Supabase SQL file once.</div>'}
+ };
+ document.addEventListener("DOMContentLoaded",()=>{document.getElementById("analyticsRefreshBtn")?.addEventListener("click",loadFundLedgerAnalytics);document.getElementById("analyticsPeriod")?.addEventListener("change",loadFundLedgerAnalytics)});
+})();
+</script></body>
 </html>
