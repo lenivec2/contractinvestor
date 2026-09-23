@@ -2424,93 +2424,107 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </style>
 
 
-<style id="settings-mobile-clean-rebuild">
-@media(max-width:700px){
-  /* Settings containers */
-  .appearance-group,
-  .settings-native-dropdown,
-  .settings-native-dropdown-content{
-    width:100% !important;
-    max-width:100% !important;
-    min-width:0 !important;
-    box-sizing:border-box !important;
-    overflow:hidden !important;
-  }
-
-  /* Dashboard/Settings option rows */
-  .appearance-group .appearance-row,
-  .appearance-group .settings-row,
-  .appearance-group .setting-row,
-  .appearance-group .toggle-row,
-  .appearance-group .appearance-item,
-  .appearance-group .setting-item,
-  .settings-native-dropdown .settings-row,
-  .settings-native-dropdown .setting-row,
-  .settings-native-dropdown .toggle-row{
-    display:flex !important;
-    flex-direction:row !important;
-    align-items:center !important;
-    justify-content:space-between !important;
-    width:100% !important;
-    max-width:100% !important;
-    min-width:0 !important;
-    gap:12px !important;
-  }
-
-  /* Add Contract Settings cards */
-  .add-contract-toggle-grid{
+<style id="settings-mobile-exact-fix">
+@media(max-width:600px){
+  .settings-appearance .appearance-options{
     display:grid !important;
     grid-template-columns:1fr !important;
+    gap:8px !important;
+    margin-top:12px !important;
     width:100% !important;
-    gap:10px !important;
   }
-  .add-contract-toggle-card{
+
+  .settings-appearance .appearance-option{
     display:flex !important;
     flex-direction:row !important;
     align-items:center !important;
     justify-content:space-between !important;
+    gap:12px !important;
     width:100% !important;
     min-width:0 !important;
-    gap:12px !important;
+    min-height:48px !important;
+    padding:10px 12px !important;
+    box-sizing:border-box !important;
   }
 
-  /* The switch itself: fixed compact size. */
-  .appearance-group label.switch,
-  .settings-native-dropdown label.switch,
-  .add-contract-toggle-card .switch{
-    position:relative !important;
-    display:inline-block !important;
-    width:46px !important;
-    min-width:46px !important;
-    max-width:46px !important;
-    height:26px !important;
-    flex:0 0 46px !important;
-    padding:0 !important;
-    margin:0 0 0 auto !important;
-  }
-
-  .appearance-group label.switch > input,
-  .settings-native-dropdown label.switch > input,
-  .add-contract-toggle-card .switch > input{
-    width:0 !important;
-    height:0 !important;
+  .settings-appearance .appearance-option > span{
+    flex:1 1 auto !important;
     min-width:0 !important;
-    padding:0 !important;
-    margin:0 !important;
-    opacity:0 !important;
+    width:auto !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:normal !important;
   }
 
-  .appearance-group label.switch > .slider,
-  .settings-native-dropdown label.switch > .slider,
-  .add-contract-toggle-card .switch > .slider{
-    position:absolute !important;
-    inset:0 !important;
-    width:46px !important;
-    min-width:46px !important;
-    max-width:46px !important;
-    height:26px !important;
+  /* Exact compact switch size used by the desktop version. */
+  .settings-appearance .appearance-option input[type="checkbox"]{
+    appearance:none !important;
+    -webkit-appearance:none !important;
+    position:relative !important;
+    display:block !important;
+    width:42px !important;
+    min-width:42px !important;
+    max-width:42px !important;
+    height:24px !important;
+    min-height:24px !important;
+    max-height:24px !important;
+    flex:0 0 42px !important;
     padding:0 !important;
     margin:0 !important;
+    border:0 !important;
+    border-radius:999px !important;
+    background:#cbd5e1 !important;
+    box-sizing:border-box !important;
+  }
+
+  .settings-appearance .appearance-option input[type="checkbox"]::after{
+    content:"" !important;
+    position:absolute !important;
+    width:18px !important;
+    height:18px !important;
+    left:3px !important;
+    top:3px !important;
+    border-radius:50% !important;
+    background:#fff !important;
+    transform:none !important;
+  }
+
+  .settings-appearance .appearance-option input[type="checkbox"]:checked{
+    background:#16a34a !important;
+  }
+
+  .settings-appearance .appearance-option input[type="checkbox"]:checked::after{
+    transform:translateX(18px) !important;
+  }
+
+  /* Add Contract field switches use separate markup; make them the same size. */
+  .add-contract-toggle-grid{
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+  }
+  .add-contract-toggle-card{
+    min-height:48px !important;
+    padding:10px 12px !important;
+  }
+  .add-contract-toggle-card .switch{
+    width:42px !important;
+    min-width:42px !important;
+    max-width:42px !important;
+    height:24px !important;
+    flex:0 0 42px !important;
+  }
+  .add-contract-toggle-card .slider{
+    width:42px !important;
+    height:24px !important;
+  }
+  .add-contract-toggle-card .slider:before{
+    width:18px !important;
+    height:18px !important;
+    left:3px !important;
+    top:3px !important;
+  }
+  .add-contract-toggle-card .switch input:checked + .slider:before{
+    transform:translateX(18px) !important;
   }
 }
 </style>
@@ -5166,41 +5180,6 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
  .payment-summary-mobile-card *{
    word-break:normal !important;
    overflow-wrap:normal !important;
- }
-}
-</style>
-
-
-<script id="settings-mobile-clean-rebuild-script">
-(function(){
- function setup(){
-   document.querySelectorAll(".appearance-group label.switch,.settings-native-dropdown label.switch").forEach(function(sw){
-     var row=sw.parentElement;
-     if(row && row!==document.body) row.classList.add("fundledger-mobile-setting-row");
-   });
- }
- document.addEventListener("DOMContentLoaded",setup);
- window.addEventListener("pageshow",setup);
-})();
-</script>
-<style id="settings-mobile-clean-row-fix">
-@media(max-width:700px){
- .fundledger-mobile-setting-row{
-   display:flex !important;
-   flex-direction:row !important;
-   align-items:center !important;
-   justify-content:space-between !important;
-   gap:12px !important;
-   width:100% !important;
-   max-width:100% !important;
-   min-width:0 !important;
-   box-sizing:border-box !important;
- }
- .fundledger-mobile-setting-row > label.switch{
-   width:46px !important;
-   min-width:46px !important;
-   max-width:46px !important;
-   flex:0 0 46px !important;
  }
 }
 </style>
