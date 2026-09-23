@@ -2558,6 +2558,55 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
+
+<style id="check-panel-mobile-summary-tips-root-fix">
+@media (max-width:700px){
+  #checkPanel.panel.page-summary-layout:not(.hidden) > .page-summary-side{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    gap:14px !important;
+  }
+
+  #checkPanel > .page-summary-side > .page-summary-card,
+  #checkPanel > .page-summary-side > .payment-quick-tips{
+    display:block !important;
+    flex:none !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    margin:0 !important;
+  }
+
+  #checkPanel .page-summary-row{
+    display:flex !important;
+    flex-direction:row !important;
+    justify-content:space-between !important;
+    align-items:flex-start !important;
+    gap:14px !important;
+  }
+
+  #checkPanel .page-summary-row > span{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+  }
+
+  #checkPanel .page-summary-row > strong{
+    flex:0 0 auto !important;
+    width:auto !important;
+    max-width:48% !important;
+    white-space:normal !important;
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+    text-align:right !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
