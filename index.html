@@ -2711,6 +2711,33 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 .fundledger-analytics-page{padding:20px;background:#f7faff}.analytics-topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.analytics-topline h2{margin:0;color:#173b67}.analytics-topline p{margin:4px 0 0}.analytics-periods{display:flex;flex-wrap:wrap;align-items:center;margin-bottom:14px}.analytics-periods>button{background:#fff;border:1px solid #d5e1ed;padding:9px 13px;font-weight:700;color:#173b67}.analytics-periods>button.active{background:#1677e8;color:#fff}.analytics-custom-range{display:flex;gap:7px;align-items:center;margin-left:10px}.analytics-custom-range input{padding:7px;border:1px solid #d4e0eb;border-radius:7px}.analytics-three{display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:12px}.analytics-bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.an-card{background:#fff;border:1px solid #dce6ef;border-radius:11px;padding:16px;box-shadow:0 2px 8px rgba(15,48,82,.05);min-width:0}.an-card header{border-bottom:1px solid #e7edf4;padding-bottom:10px}.an-card header b,.an-card header small{display:block}.an-card header b{color:#16375e}.an-card header small{color:#76889b;margin-top:3px}.an-hero{padding:22px 0}.an-hero span,.an-convert span{display:block;color:#607388}.an-hero strong{display:block;font-size:46px;color:#12345e}.an-row{display:flex;justify-content:space-between;margin-top:13px}.an-meter{height:9px;background:#e5edf5;border-radius:20px;overflow:hidden;margin-top:6px}.an-meter i{display:block;height:100%;width:0;background:#1677e8}.an-chart{height:245px;display:flex;align-items:flex-end;gap:4px;padding:18px 3px 5px;border-bottom:1px solid #e6edf4}.an-chart i,.an-bars i{display:block;background:#1677e8;border-radius:3px 3px 0 0}.an-chart i{flex:1;min-width:4px}.an-mini{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.an-mini>div,.an-convert{background:#f8fbff;border:1px solid #e3ebf3;border-radius:9px;padding:11px}.an-mini span{font-size:12px;color:#65778a;display:block}.an-mini strong,.an-convert strong{font-size:25px;color:#15385f;display:block;margin-top:3px}.an-mini small,.an-convert small{color:#0b8b43}.an-bars{height:160px;display:flex;align-items:flex-end;gap:5px;padding-top:14px}.an-bars i{flex:1;min-width:4px}.an-bars i.alt{background:#75b9f7}
 @media(max-width:1050px){.analytics-three,.analytics-bottom{grid-template-columns:1fr}}@media(max-width:700px){.fundledger-analytics-page{padding:12px}.analytics-periods{gap:5px}.analytics-periods>button{border-radius:7px}.analytics-custom-range{width:100%;margin:8px 0}.an-mini{grid-template-columns:1fr 1fr}}
 </style>
+
+<style id="fundledger-single-section-route-visibility">
+/* Every sidebar route is isolated: Contact Us messaging can only appear on Contact Us. */
+#appScreen[data-route] #checkPanel,
+#appScreen[data-route] #newContractPanel,
+#appScreen[data-route] #contractsPanel,
+#appScreen[data-route] #completedPanel,
+#appScreen[data-route] #historyPanel,
+#appScreen[data-route] #reportsPanel,
+#appScreen[data-route] #analyticsPanel,
+#appScreen[data-route] #settingsPanel,
+#appScreen[data-route] #contactPanel{display:none!important}
+
+#appScreen[data-route="checkPanel"] #checkPanel,
+#appScreen[data-route="newContractPanel"] #newContractPanel,
+#appScreen[data-route="contractsPanel"] #contractsPanel,
+#appScreen[data-route="completedPanel"] #completedPanel,
+#appScreen[data-route="historyPanel"] #historyPanel,
+#appScreen[data-route="reportsPanel"] #reportsPanel,
+#appScreen[data-route="analyticsPanel"] #analyticsPanel,
+#appScreen[data-route="settingsPanel"] #settingsPanel,
+#appScreen[data-route="contactPanel"] #contactPanel{display:block!important}
+
+#appScreen[data-route="dashboard"] #dashboardSummary{display:grid!important}
+#appScreen[data-route]:not([data-route="dashboard"]) #dashboardSummary{display:none!important}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -3442,6 +3469,8 @@ function setupNavScrolling(){
         /* Mobile: exactly one sidebar destination at a time. */
         const appScreen=document.getElementById("appScreen");
         const routeId=id==="#dashboard"?"dashboard":id.slice(1);
+  const universalAppScreen=document.getElementById("appScreen");
+  if(universalAppScreen) universalAppScreen.dataset.route=routeId;
         if(appScreen) appScreen.dataset.mobileRoute=routeId;
         const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","settingsPanel","contactPanel"];
         mobileRouteIds.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.toggle("hidden",route!==routeId)});
@@ -3524,7 +3553,7 @@ function showApp(){
     const p=$(id); if(p) p.classList.remove("hidden");
   });
   const dashboardSummary=$("dashboardSummary"); if(dashboardSummary) dashboardSummary.classList.remove("hidden");
-  const appScreen=$("appScreen"); if(appScreen) appScreen.dataset.mobileRoute="dashboard";
+  const appScreen=$("appScreen"); if(appScreen) appScreen.dataset.mobileRoute="dashboard"; if(appScreen) appScreen.dataset.route="dashboard";
   document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
   const dash=document.querySelector('.nav-item[href="#dashboard"]'); if(dash) dash.classList.add("active");
   adminPinUnlocked=false;updateAdminContactVisibility();
