@@ -2360,6 +2360,111 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 @media(max-width:700px){.add-contract-settings-hint{display:block;margin-top:4px}}
 </style>
 
+
+<style id="mobile-settings-desktop-style">
+@media(max-width:700px){
+  /* Dashboard Sections: compact one-column cards on phone */
+  .appearance-options,
+  .settings-appearance-options{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+    width:100% !important;
+  }
+
+  .appearance-option,
+  .settings-toggle-card{
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:12px !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:48px !important;
+    padding:9px 12px !important;
+    box-sizing:border-box !important;
+  }
+
+  /* Never allow the checkbox/toggle to inherit a full-width mobile input rule. */
+  .appearance-option input[type="checkbox"],
+  .settings-toggle-card input[type="checkbox"],
+  .fundledger-mobile-settings-row input[type="checkbox"]{
+    -webkit-appearance:none !important;
+    appearance:none !important;
+    position:relative !important;
+    display:block !important;
+    width:42px !important;
+    min-width:42px !important;
+    max-width:42px !important;
+    height:24px !important;
+    min-height:24px !important;
+    max-height:24px !important;
+    flex:0 0 42px !important;
+    padding:0 !important;
+    margin:0 0 0 auto !important;
+    border:0 !important;
+    border-radius:999px !important;
+    background:#cbd5e1 !important;
+    box-sizing:border-box !important;
+  }
+  .appearance-option input[type="checkbox"]::before,
+  .settings-toggle-card input[type="checkbox"]::before,
+  .fundledger-mobile-settings-row input[type="checkbox"]::before{
+    content:"" !important;
+    position:absolute !important;
+    width:18px !important;
+    height:18px !important;
+    left:3px !important;
+    top:3px !important;
+    border-radius:50% !important;
+    background:#fff !important;
+    box-shadow:0 1px 3px rgba(0,0,0,.25) !important;
+    transform:none !important;
+  }
+  .appearance-option input[type="checkbox"]:checked,
+  .settings-toggle-card input[type="checkbox"]:checked,
+  .fundledger-mobile-settings-row input[type="checkbox"]:checked{
+    background:#22a447 !important;
+  }
+  .appearance-option input[type="checkbox"]:checked::before,
+  .settings-toggle-card input[type="checkbox"]:checked::before,
+  .fundledger-mobile-settings-row input[type="checkbox"]:checked::before{
+    transform:translateX(18px) !important;
+  }
+
+  /* Other Settings toggle-card grids also become compact one-column rows. */
+  .add-contract-toggle-grid{
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+  }
+  .add-contract-toggle-card{
+    min-height:48px !important;
+    padding:9px 12px !important;
+  }
+  .add-contract-toggle-card .switch{
+    width:42px !important;
+    min-width:42px !important;
+    max-width:42px !important;
+    height:24px !important;
+    flex:0 0 42px !important;
+  }
+  .add-contract-toggle-card .slider{
+    width:42px !important;
+    height:24px !important;
+  }
+  .add-contract-toggle-card .slider:before{
+    width:18px !important;
+    height:18px !important;
+    left:3px !important;
+    top:3px !important;
+  }
+  .add-contract-toggle-card .switch input:checked + .slider:before{
+    transform:translateX(18px) !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -4940,5 +5045,54 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
  window.addEventListener("pageshow",apply);
 })();
 </script>
+
+<script id="mobile-settings-desktop-style-script">
+(function(){
+ function mark(){
+   var heading=[].slice.call(document.querySelectorAll("h2,h3,h4,strong,summary"))
+     .find(function(x){return x.textContent.trim()==="Dashboard Sections"});
+   if(!heading)return;
+   var section=heading.closest("details")||heading.parentElement;
+   if(!section)return;
+   section.querySelectorAll('input[type="checkbox"]').forEach(function(cb){
+     var row=cb.closest("label")||cb.parentElement;
+     if(row){
+       row.classList.add("fundledger-mobile-settings-row");
+       row.style.removeProperty("width");
+     }
+   });
+ }
+ document.addEventListener("DOMContentLoaded",mark);
+ window.addEventListener("pageshow",mark);
+})();
+</script>
+<style id="mobile-settings-row-exact">
+@media(max-width:700px){
+ .fundledger-mobile-settings-row{
+   display:flex !important;
+   flex-direction:row !important;
+   align-items:center !important;
+   justify-content:space-between !important;
+   gap:12px !important;
+   width:100% !important;
+   max-width:100% !important;
+   min-width:0 !important;
+   min-height:48px !important;
+   height:auto !important;
+   padding:9px 12px !important;
+   box-sizing:border-box !important;
+   white-space:normal !important;
+   word-break:normal !important;
+ }
+ .fundledger-mobile-settings-row > span,
+ .fundledger-mobile-settings-row > strong{
+   flex:1 1 auto !important;
+   width:auto !important;
+   min-width:0 !important;
+   word-break:normal !important;
+ }
+}
+</style>
+
 </body>
 </html>
