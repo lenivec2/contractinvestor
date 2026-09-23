@@ -2679,7 +2679,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </aside>
 <main class="content" id="dashboard"><div class="content-inner">
 <div class="summary-grid" id="dashboardSummary">
-<div class="summary-card" data-summary-key="invested"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Funded + Fees</div><div class="summary-value" id="invested">$0.00</div></div></div></div>
+<div class="summary-card" data-summary-key="invested"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Funded & Upfront Fees</div><div class="summary-value" id="invested">$0.00</div></div></div></div>
 <div class="summary-card received" data-summary-key="received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Total Payments Received</div><div class="summary-value" id="received">$0.00</div></div></div></div>
 <div class="summary-card profit" data-summary-key="profit"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Realized Profit</div><div class="summary-value" id="profit">$0.00</div></div></div></div>
 <div class="summary-card active" data-summary-key="active" role="button" tabindex="0" style="cursor:pointer" onclick="document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()}"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Active Contracts</div><div class="summary-value" id="openContracts">0</div></div></div></div>
@@ -2749,7 +2749,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
       <details class="appearance-group settings-native-dropdown"><summary>Summary Boxes</summary><div class="settings-native-dropdown-content">
         <p>Select which boxes appear on the Dashboard.</p><p class="settings-tip">Drag the summary boxes directly on the Dashboard to rearrange them.</p>
         <div class="appearance-options" id="summaryBoxOptions">
-          <label class="appearance-option" data-summary-option="invested"><span>Total Funded + Fees</span><input type="checkbox" data-summary-toggle="invested" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option" data-summary-option="invested"><span>Total Funded & Upfront Fees</span><input type="checkbox" data-summary-toggle="invested" onchange="updateDashboardAppearance(this)"></label>
           <label class="appearance-option" data-summary-option="received"><span>Total Payments Received</span><input type="checkbox" data-summary-toggle="received" onchange="updateDashboardAppearance(this)"></label>
           <label class="appearance-option" data-summary-option="profit"><span>Realized Profit</span><input type="checkbox" data-summary-toggle="profit" onchange="updateDashboardAppearance(this)"></label>
           <label class="appearance-option" data-summary-option="active"><span>Active Contracts</span><input type="checkbox" data-summary-toggle="active" onchange="updateDashboardAppearance(this)"></label>
@@ -3007,7 +3007,7 @@ function changeAdminPin(){
  localStorage.removeItem(adminPinStorageKey());adminPinUnlocked=false;updateAdminContactVisibility();
 }
 const DASHBOARD_CARD_KEYS=["invested","received","profit","active","all","paid","default","defaultLoss"];
-const DASHBOARD_CARD_LABELS={fundedAmount:"Total Funded",received:"Total Payments Received",profit:"Realized Profit",active:"Active Contracts",all:"Total Contracts",paid:"Completed Contracts",default:"Defaulted Contracts",defaultLoss:"Default Loss"};
+const DASHBOARD_CARD_LABELS={fundedAmount:"Total Funded & Upfront Fees",received:"Total Payments Received",profit:"Realized Profit",active:"Active Contracts",all:"Total Contracts",paid:"Completed Contracts",default:"Defaulted Contracts",defaultLoss:"Default Loss"};
 const DASHBOARD_SECTION_IDS={payments:"checkPanel",addContract:"newContractPanel",activeContracts:"contractsPanel",completedContracts:"completedPanel",checkHistory:"historyPanel",reports:"reportsPanel"};
 const DASHBOARD_SECTION_KEYS=["summary",...Object.keys(DASHBOARD_SECTION_IDS)];
 const ACTIVE_CONTRACT_COLUMN_KEYS=["name","dayOpened","invested","paid","breakEven","remainingBalance","amountPerCheck","expectedPayments","paymentsLeft","actions"];
@@ -3469,7 +3469,7 @@ async function renderAdminUser(userId){
   checks=Array.isArray(checks)?checks:[];
 
   const received=checks.reduce((a,x)=>a+(parseFloat(x.paymentAmount)||0),0);
-  const invested=contracts.reduce((a,x)=>a+(parseFloat(x.fundedAmount)||0),0);
+  const invested=contracts.reduce((a,x)=>a+(parseFloat(x.fundedAmount)||0)+(parseFloat(x.referralFee)||0),0);
   const overallProfit=received-invested;
   const activeContracts=contracts.filter(c=>!c.closed).length;
   const paidInFull=contracts.filter(c=>c.closed&&!c.defaulted).length;
@@ -4523,7 +4523,7 @@ function render(){
  let current=$("filter")?$("filter").value:"";
  if($("filter")){ $("filter").innerHTML='<option value="">All contracts</option>'+filterOpts; $("filter").value=current; }
  renderActiveContractsTable();
- let received=data.checks.reduce((a,x)=>a+x.paymentAmount,0), invested=data.contracts.reduce((a,c)=>a+c.fundedAmount,0);
+ let received=data.checks.reduce((a,x)=>a+x.paymentAmount,0), invested=data.contracts.reduce((a,c)=>a+(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0),0);
  const overallProfit=received-invested;$("invested").textContent=money(invested);$("received").textContent=money(received);$("profit").textContent=money(overallProfit);const profitCard=$("profit")?.closest(".summary-card.profit");if(profitCard){profitCard.classList.toggle("positive",overallProfit>0);profitCard.classList.toggle("negative",overallProfit<0);}$("openContracts").textContent=open.length;
  let paidInFull=data.contracts.filter(c=>c.closed&&!c.defaulted).length,defaultContracts=data.contracts.filter(c=>c.closed&&c.defaulted),defaultLoss=defaultContracts.reduce((sum,c)=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+x.paymentAmount,0);return sum+Math.max(0,((parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0))-rec)},0);
  $("allContracts").textContent=data.contracts.length;$("paidInFull").textContent=paidInFull;$("defaultContracts").textContent=defaultContracts.length;$("defaultLoss").textContent=money(defaultLoss);
