@@ -2894,7 +2894,7 @@ let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
 let cloudLoadInFlight=false;
-const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{},activeContractColumns:{},completedContractColumns:{},checkHistoryColumns:{},activeContractColumnOrder:[],completedContractColumnOrder:[],checkHistoryColumnOrder:[],projectedResultsOrder:[]}};
+const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{invested:true,received:true,profit:true,active:true,all:true,paid:true,default:true,defaultLoss:true},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{summary:true,payments:false,addContract:false,activeContracts:false,completedContracts:false,checkHistory:false,reports:false},activeContractColumns:{name:true,dayOpened:true,invested:true,paid:true,breakEven:true,remainingBalance:true,amountPerCheck:true,expectedPayments:true,paymentsLeft:true,actions:true},completedContractColumns:{contract:true,dayOpened:true,dayClosed:true,invested:true,received:true,remainingPayment:true,gainLoss:true,status:true,action:true},checkHistoryColumns:{sequence:true,dateIssued:true,dateReceived:true,amount:true,contract:true,checkno:true,actions:true},activeContractColumnOrder:[],completedContractColumnOrder:[],checkHistoryColumnOrder:[],projectedResultsOrder:[]}};
 let data={contracts:[],checks:[]};
 // Data-model compatibility layer: converts legacy FundLedger field names to the
 // current terminology when old local/cloud records are loaded. New saves use
@@ -5108,6 +5108,8 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 <script id="add-contract-field-settings">
 (function(){
  const KEY="fundledgerAddContractFieldVisibility";
+ const DEFAULTS={contractType:true,customContractType:true,startDate:true,maturityDate:false,paymentFrequency:true,revenueShare:false,interestRate:true,referralFee:true,adminFee:true,fundingCheck:true,notes:false};
+ if(localStorage.getItem(KEY)===null)localStorage.setItem(KEY,JSON.stringify(DEFAULTS));
  const targets={
   contractType:["#ctype"],
   customContractType:["#ccustomtype"],
