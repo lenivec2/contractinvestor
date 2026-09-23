@@ -5347,5 +5347,92 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 })();
 </script>
 
+
+
+
+
+<script id="mobile-sidebar-single-view-final">
+(function(){
+  var views=[
+    "dashboard",
+    "checkPanel",
+    "contractPanel",
+    "contractsPanel",
+    "completedPanel",
+    "historyPanel",
+    "reportsPanel",
+    "settingsPanel"
+  ];
+
+  var aliases={
+    "dashboard":"dashboard",
+    "add payment / check":"checkPanel",
+    "add payment":"checkPanel",
+    "add contract":"contractPanel",
+    "active contracts":"contractsPanel",
+    "completed contracts":"completedPanel",
+    "payment history":"historyPanel",
+    "check history":"historyPanel",
+    "reports":"reportsPanel",
+    "settings":"settingsPanel"
+  };
+
+  function norm(s){
+    return (s||"").replace(/\s+/g," ").trim().toLowerCase();
+  }
+
+  function setOnly(id){
+    if(!window.matchMedia("(max-width:700px)").matches || !id)return;
+    views.forEach(function(viewId){
+      var el=document.getElementById(viewId);
+      if(!el)return;
+      if(viewId===id){
+        el.classList.remove("hidden");
+        el.style.removeProperty("display");
+      }else{
+        el.classList.add("hidden");
+        el.style.setProperty("display","none","important");
+      }
+    });
+  }
+
+  function sidebarTarget(el){
+    if(!el)return null;
+    var label=norm(
+      el.getAttribute("aria-label") ||
+      el.getAttribute("title") ||
+      el.textContent
+    );
+    if(aliases[label])return aliases[label];
+
+    var onclick=el.getAttribute("onclick")||"";
+    var href=el.getAttribute("href")||"";
+    for(var i=0;i<views.length;i++){
+      if(onclick.indexOf(views[i])!==-1 || href.indexOf(views[i])!==-1)return views[i];
+    }
+    return null;
+  }
+
+  document.addEventListener("click",function(e){
+    if(!window.matchMedia("(max-width:700px)").matches)return;
+    var el=e.target.closest("a,button,[role='button'],.nav-item,.sidebar-item");
+    if(!el)return;
+    var id=sidebarTarget(el);
+    if(!id)return;
+    setTimeout(function(){setOnly(id);},0);
+    setTimeout(function(){setOnly(id);},100);
+  },true);
+
+  window.addEventListener("resize",function(){
+    if(!window.matchMedia("(max-width:700px)").matches){
+      views.forEach(function(id){
+        var el=document.getElementById(id);
+        if(el)el.style.removeProperty("display");
+      });
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
