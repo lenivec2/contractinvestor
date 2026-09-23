@@ -2608,24 +2608,6 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </style>
 
 
-<style id="mobile-sidebar-route-isolation-safe">
-@media(max-width:700px){
-  body[data-mobile-view] .mobile-route-panel{
-    display:none !important;
-  }
-  body[data-mobile-view="dashboard"] #dashboard,
-  body[data-mobile-view="checkPanel"] #checkPanel,
-  body[data-mobile-view="newContractPanel"] #newContractPanel,
-  body[data-mobile-view="contractsPanel"] #contractsPanel,
-  body[data-mobile-view="completedPanel"] #completedPanel,
-  body[data-mobile-view="historyPanel"] #historyPanel,
-  body[data-mobile-view="reportsPanel"] #reportsPanel,
-  body[data-mobile-view="settingsPanel"] #settingsPanel{
-    display:block !important;
-  }
-}
-</style>
-
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -3282,7 +3264,12 @@ function setupNavScrolling(){
       const dashboardSummary=$("dashboardSummary");
       if(dashboardSummary) dashboardSummary.classList.toggle("hidden",id!=="#dashboard");
       if(id==="#dashboard"){
-        document.querySelectorAll(".panel").forEach(p=>{ if(["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].includes(p.id)) p.classList.remove("hidden"); });
+        if(window.innerWidth<=700){
+          /* Mobile sidebar rule: the selected sidebar destination is the only view shown. */
+          target.classList.remove("hidden");
+        }else{
+          document.querySelectorAll(".panel").forEach(p=>{ if(["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].includes(p.id)) p.classList.remove("hidden"); });
+        }
         document.querySelector(".content")?.scrollTo({top:0,behavior:"smooth"});
       }else{
         target.classList.remove("hidden");
@@ -3352,9 +3339,11 @@ function showApp(){
   // Always start on Dashboard after opening/signing in, never the last visited panel.
   try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
   document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
-  ["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].forEach(id=>{
-    const p=$(id); if(p) p.classList.remove("hidden");
-  });
+  if(window.innerWidth>700){
+    ["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel"].forEach(id=>{
+      const p=$(id); if(p) p.classList.remove("hidden");
+    });
+  }
   const dashboardSummary=$("dashboardSummary"); if(dashboardSummary) dashboardSummary.classList.remove("hidden");
   document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
   const dash=document.querySelector('.nav-item[href="#dashboard"]'); if(dash) dash.classList.add("active");
@@ -5371,62 +5360,6 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 
 
 
-
-<script id="mobile-sidebar-route-isolation-safe-script">
-(function(){
- const ids=["dashboard","checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","settingsPanel"];
-
- function prepare(){
-   ids.forEach(function(id){
-     const el=document.getElementById(id);
-     if(el)el.classList.add("mobile-route-panel");
-   });
- }
-
- function activate(id){
-   if(!window.matchMedia("(max-width:700px)").matches || !ids.includes(id))return;
-   prepare();
-   const target=document.getElementById(id);
-   if(!target)return;
-   document.body.dataset.mobileView=id;
-   /* The selected route must be allowed to display even if dashboard rendering marked it hidden. */
-   target.classList.remove("hidden");
-   target.style.removeProperty("display");
- }
-
- document.addEventListener("DOMContentLoaded",function(){
-   prepare();
-   const id=(location.hash||"").slice(1);
-   if(ids.includes(id))setTimeout(function(){activate(id)},0);
- });
-
- document.addEventListener("click",function(e){
-   if(!window.matchMedia("(max-width:700px)").matches)return;
-   const a=e.target.closest('.sidebar a[href^="#"]');
-   if(!a)return;
-   const id=(a.getAttribute("href")||"").slice(1);
-   if(!ids.includes(id))return;
-   /* Let the existing app click/navigation logic run first. */
-   setTimeout(function(){activate(id)},0);
-   setTimeout(function(){activate(id)},150);
- },false);
-
- window.addEventListener("hashchange",function(){
-   const id=(location.hash||"").slice(1);
-   if(ids.includes(id))setTimeout(function(){activate(id)},0);
- });
-
- window.addEventListener("resize",function(){
-   if(!window.matchMedia("(max-width:700px)").matches){
-     delete document.body.dataset.mobileView;
-     ids.forEach(function(id){
-       const el=document.getElementById(id);
-       if(el)el.style.removeProperty("display");
-     });
-   }
- });
-})();
-</script>
 
 </body>
 </html>
