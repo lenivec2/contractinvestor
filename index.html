@@ -2424,107 +2424,33 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </style>
 
 
-<style id="settings-mobile-exact-fix">
-@media(max-width:600px){
-  .settings-appearance .appearance-options{
+<style id="restore-approved-add-contract-layout">
+@media(min-width:851px){
+  .contract-details-three-row{
+    display:grid !important;
+    grid-template-columns:minmax(300px,2fr) minmax(170px,.85fr) minmax(190px,1fr) !important;
+    gap:14px !important;
+    align-items:end !important;
+    width:100% !important;
+  }
+  .contract-details-three-row > .field{
+    width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+  }
+
+  /* Optional/dynamic fields must remain outside the approved top row. */
+  #customContractTypeField,
+  .contract-type-field,
+  .contract-maturity-field{
+    grid-column:auto !important;
+  }
+}
+@media(max-width:850px){
+  .contract-details-three-row{
     display:grid !important;
     grid-template-columns:1fr !important;
-    gap:8px !important;
-    margin-top:12px !important;
-    width:100% !important;
-  }
-
-  .settings-appearance .appearance-option{
-    display:flex !important;
-    flex-direction:row !important;
-    align-items:center !important;
-    justify-content:space-between !important;
     gap:12px !important;
-    width:100% !important;
-    min-width:0 !important;
-    min-height:48px !important;
-    padding:10px 12px !important;
-    box-sizing:border-box !important;
-  }
-
-  .settings-appearance .appearance-option > span{
-    flex:1 1 auto !important;
-    min-width:0 !important;
-    width:auto !important;
-    white-space:normal !important;
-    word-break:normal !important;
-    overflow-wrap:normal !important;
-  }
-
-  /* Exact compact switch size used by the desktop version. */
-  .settings-appearance .appearance-option input[type="checkbox"]{
-    appearance:none !important;
-    -webkit-appearance:none !important;
-    position:relative !important;
-    display:block !important;
-    width:42px !important;
-    min-width:42px !important;
-    max-width:42px !important;
-    height:24px !important;
-    min-height:24px !important;
-    max-height:24px !important;
-    flex:0 0 42px !important;
-    padding:0 !important;
-    margin:0 !important;
-    border:0 !important;
-    border-radius:999px !important;
-    background:#cbd5e1 !important;
-    box-sizing:border-box !important;
-  }
-
-  .settings-appearance .appearance-option input[type="checkbox"]::after{
-    content:"" !important;
-    position:absolute !important;
-    width:18px !important;
-    height:18px !important;
-    left:3px !important;
-    top:3px !important;
-    border-radius:50% !important;
-    background:#fff !important;
-    transform:none !important;
-  }
-
-  .settings-appearance .appearance-option input[type="checkbox"]:checked{
-    background:#16a34a !important;
-  }
-
-  .settings-appearance .appearance-option input[type="checkbox"]:checked::after{
-    transform:translateX(18px) !important;
-  }
-
-  /* Add Contract field switches use separate markup; make them the same size. */
-  .add-contract-toggle-grid{
-    grid-template-columns:1fr !important;
-    gap:8px !important;
-  }
-  .add-contract-toggle-card{
-    min-height:48px !important;
-    padding:10px 12px !important;
-  }
-  .add-contract-toggle-card .switch{
-    width:42px !important;
-    min-width:42px !important;
-    max-width:42px !important;
-    height:24px !important;
-    flex:0 0 42px !important;
-  }
-  .add-contract-toggle-card .slider{
-    width:42px !important;
-    height:24px !important;
-  }
-  .add-contract-toggle-card .slider:before{
-    width:18px !important;
-    height:18px !important;
-    left:3px !important;
-    top:3px !important;
-  }
-  .add-contract-toggle-card .switch input:checked + .slider:before{
-    transform:translateX(18px) !important;
   }
 }
 </style>
@@ -5183,6 +5109,43 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
  }
 }
 </style>
+
+
+<script id="restore-approved-add-contract-layout-script">
+(function(){
+ function field(id){
+   var el=document.getElementById(id);
+   return el && (el.closest(".field")||el.closest(".form-group")||el.parentElement);
+ }
+ function restore(){
+   var name=field("cname"), date=field("cdate"), freq=field("cpaymentfreq");
+   if(!name||!date||!freq)return;
+
+   var row=document.querySelector(".contract-details-three-row");
+   if(!row){
+     row=document.createElement("div");
+     row.className="contract-details-three-row";
+     name.parentNode.insertBefore(row,name);
+   }
+   [name,date,freq].forEach(function(x){
+     if(x.parentNode!==row)row.appendChild(x);
+   });
+
+   /* If dynamic fields were accidentally inserted into this row, move them back after it. */
+   Array.from(row.children).forEach(function(x){
+     if(x!==name && x!==date && x!==freq){
+       row.parentNode.insertBefore(x,row.nextSibling);
+     }
+   });
+ }
+ document.addEventListener("DOMContentLoaded",function(){
+   restore();
+   setTimeout(restore,0);
+   setTimeout(restore,250);
+ });
+ window.addEventListener("pageshow",restore);
+})();
+</script>
 
 </body>
 </html>
