@@ -2715,6 +2715,174 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 
 
 
+
+<style id="fundledger-report-kpi-number-fix">
+#reportsPanel .report-kpis .report-card{
+  min-width:0;
+  overflow:hidden;
+}
+#reportsPanel .report-kpis .report-value{
+  white-space:nowrap !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+  line-height:1.08 !important;
+  font-size:clamp(20px,1.75vw,30px) !important;
+  letter-spacing:-0.02em;
+}
+#reportsPanel .report-kpis .report-label{
+  overflow-wrap:normal;
+  word-break:normal;
+}
+#reportsPanel .report-summary strong,
+#reportsPanel .report-summary-card strong,
+#reportsPanel .report-summary-value{
+  white-space:nowrap !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+}
+@media(max-width:1200px){
+  #reportsPanel .report-kpis .report-value{font-size:clamp(18px,2vw,26px)!important}
+}
+@media(max-width:700px){
+  #reportsPanel .report-kpis .report-value{font-size:22px!important}
+}
+</style>
+
+
+<style id="fundledger-reports-mobile-dashboard-card-match">
+@media (max-width:700px){
+  #reportsPanel .report-kpis{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:10px !important;
+    width:100% !important;
+    align-items:stretch !important;
+  }
+
+  #reportsPanel .report-kpis .report-card{
+    min-width:0 !important;
+    width:100% !important;
+    min-height:128px !important;
+    margin:0 !important;
+    padding:18px 14px 16px 18px !important;
+    border-radius:12px !important;
+    box-sizing:border-box !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    align-items:flex-start !important;
+    overflow:hidden !important;
+  }
+
+  #reportsPanel .report-kpis .report-label{
+    width:100% !important;
+    margin:0 0 8px 0 !important;
+    font-size:16px !important;
+    line-height:1.18 !important;
+    font-weight:800 !important;
+    letter-spacing:0 !important;
+    text-transform:none !important;
+    color:#17375f !important;
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+  }
+
+  #reportsPanel .report-kpis .report-value{
+    width:100% !important;
+    margin:0 !important;
+    font-size:22px !important;
+    line-height:1.08 !important;
+    font-weight:800 !important;
+    letter-spacing:-.02em !important;
+    white-space:nowrap !important;
+    word-break:normal !important;
+    overflow-wrap:normal !important;
+  }
+
+  #reportsPanel .report-kpis .report-value.loss{
+    font-size:21px !important;
+  }
+
+  #reportsPanel .report-head{
+    gap:10px !important;
+    align-items:flex-start !important;
+  }
+}
+@media (max-width:390px){
+  #reportsPanel .report-kpis{gap:8px !important}
+  #reportsPanel .report-kpis .report-card{
+    padding:15px 10px 14px 14px !important;
+    min-height:122px !important;
+  }
+  #reportsPanel .report-kpis .report-label{font-size:15px !important}
+  #reportsPanel .report-kpis .report-value{font-size:20px !important}
+  #reportsPanel .report-kpis .report-value.loss{font-size:19px !important}
+}
+</style>
+
+
+<style id="fundledger-completed-summary-mobile-full-width">
+@media (max-width:700px){
+  #completedPanel .page-summary-side,
+  #completedPanel .completed-summary-side,
+  #completedPanel .table-summary-side{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    flex:0 0 100% !important;
+    box-sizing:border-box !important;
+  }
+
+  #completedPanel .page-summary-card,
+  #completedPanel .completed-summary,
+  #completedPanel .completed-summary-card{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    box-sizing:border-box !important;
+  }
+
+  #completedPanel .page-summary-row{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:16px !important;
+    width:100% !important;
+  }
+
+  #completedPanel .page-summary-row > span{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+  }
+
+  #completedPanel .page-summary-row > strong{
+    flex:0 0 auto !important;
+    white-space:nowrap !important;
+    text-align:right !important;
+  }
+}
+</style>
+
+
+<style id="fundledger-add-contract-mobile-quick-tips">
+.add-contract-quick-tips{display:none}
+@media(max-width:700px){
+  #newContractPanel .add-contract-quick-tips{
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+    margin:16px 0 0 !important;
+  }
+  #newContractPanel .add-contract-quick-tips ul{
+    margin-bottom:0 !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -2798,7 +2966,18 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <div class="summary-card default-loss" data-summary-key="defaultLoss"><div class="summary-top"><div class="summary-icon">−</div><div><div class="summary-label">Default Loss</div><div class="summary-value" id="defaultLoss">$0.00</div></div></div></div>
 </div>
 <section class="panel" id="checkPanel"><h2>Add Payment / Check</h2><div class="row"><div class="field"><label>Payment Amount <span class="required-star" id="amountRequiredStar" aria-hidden="true">*</span></label><input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="$0.00" oninput="clearPaymentRequiredError('amount');updateBreakdown()" onchange="checkForDuplicateCheck(true)"></div><div class="field"><label>Payment Date <span class="required-star" id="dateRequiredStar" aria-hidden="true">*</span></label><input id="date" type="date" data-auto-today="1" onchange="this.dataset.autoToday='0';clearPaymentRequiredError('date');checkForDuplicateCheck(true)"></div><div class="field"><label>Date Received</label><input id="dateReceived" type="text" placeholder="Optional" onfocus="activateOptionalDate(this)" onblur="resetOptionalDate(this)"></div><div class="field"><label>Check #</label><input id="checkno" inputmode="numeric" placeholder="Optional" onchange="checkForDuplicateCheck(true)"></div></div><h3>Select Contract(s) for This Payment</h3><div class="choices" id="contractChoices"></div><h3>Manual Payment Breakdown</h3><div class="manual-box" id="manualBreakdown"></div><div class="check-form-actions"><button class="secondary" type="button" onclick="clearCheckEntry()">Cancel / Clear</button><button class="primary-btn save-check" id="saveCheckBtn" type="button" onclick="addCheck()" disabled>Save Payment</button></div></section>
-<section class="panel" id="newContractPanel"><h2>Add Contract</h2><p class="contract-form-intro">Enter the contract terms below. Projected results update automatically. <span class="add-contract-settings-hint">For additional fields, go to Settings → Add Contract Fields.</span></p><div class="row contract-entry-grid"><div class="contract-grid-heading details-heading">Contract Details</div><div class="field contract-name-field"><label>Contract Name / ID</label><input id="cname" placeholder="Contract #1" oninput="updateAddContractButton()"></div><div class="field contract-type-field" data-contract-field="contractType"><label>Contract Type</label><select id="ctype" onchange="applyContractTypeFields();updateAddContractButton()"><option value="Funding Agreement">Funding Agreement</option><option value="Revenue Share">Revenue Share</option><option value="Installment Contract">Installment Contract</option><option value="Loan / Note">Loan / Note</option><option value="Investment Agreement">Investment Agreement</option><option value="Fixed Return Agreement">Fixed Return Agreement</option><option value="Other">Other</option></select></div><div class="field contract-custom-type-field" id="customContractTypeField" style="display:none"><label>Custom Contract Type</label><input id="ccustomtype" type="text" placeholder="Ex: Partnership Agreement" oninput="updateAddContractButton()"></div><div class="contract-date-field field"><label>Contract Start Date</label><input id="cdate" type="date" onchange="updateAddContractButton()"></div><div class="field contract-maturity-field"><label>End / Maturity Date <span class="muted">(Optional)</span></label><input id="cmaturity" type="date"></div><div class="field contract-frequency-field" data-contract-field="paymentFrequency"><label>Payment Frequency</label><select id="cpaymentfreq"><option value="Weekly">Weekly</option><option value="Biweekly">Biweekly</option><option value="Monthly">Monthly</option><option value="Custom">Custom</option></select></div><div class="contract-grid-heading funding-heading">Funding &amp; Return</div><div class="field contract-share-field dynamic-contract-field" id="contractShareField" style="display:none"><label>Revenue Share (%)</label><input id="crevenueshare" type="number" inputmode="decimal" min="0" max="100" step="0.01" placeholder="Ex: 20%"></div><div class="field contract-interest-field dynamic-contract-field" id="contractInterestField" style="display:none"><label>Interest Rate (%)</label><input id="cinterestrate" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 8%"></div><div class="field contract-invest-field"><label>Participant Funded Amount</label><input id="cinvest" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: $5,000" oninput="updateContractPaymentCalculation();updateAddContractButton()"></div><div class="field contract-referral-field"><label>Upfront Referral Fee <span class="muted">(Optional)</span></label><input id="creferral" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: $300" title="Optional upfront referral fee." oninput="updateContractPaymentCalculation();updateAddContractButton()" onblur="validateReferralFeeField();updateAddContractButton()"></div><div class="field contract-return-field"><label>Gross Return</label><input id="ctotalreturn" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: $6,800" oninput="updateContractPaymentCalculation();updateAddContractButton()"></div><div class="field contract-fee-field"><label>Administrative Fee (%) <span class="muted">(Optional)</span></label><input id="cadminfee" type="number" inputmode="decimal" min="0" max="100" step="0.01" placeholder="Ex: 2%" title="Optional administrative fee percentage." oninput="updateContractPaymentCalculation();updateAddContractButton()" onblur="validateAdminFeeField();updateAddContractButton()"></div><div class="field contract-payments-field"><label>Total Expected Payments</label><input id="cpayments" type="number" inputmode="numeric" min="1" step="1" placeholder="Ex: 34" oninput="updateContractPaymentCalculation();updateAddContractButton()"></div><div class="field contract-amount-field"><label>Payment Amount</label><input id="cpreset" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Auto-calculated" oninput="updateContractPaymentOverride();updateAddContractButton()"></div><div class="contract-grid-heading">Additional Details <span class="muted" style="font-weight:600">— Optional</span></div><div class="field contract-check-field"><label>Funding Check #</label><input id="ccheckno" inputmode="numeric" placeholder="Optional"></div><div class="field" style="grid-column:span 2"><label>Notes <span class="muted">(Optional)</span></label><textarea id="cnotes" rows="2" placeholder="Optional contract notes"></textarea></div><div class="contract-grid-heading results-heading" id="projectedResultsHeading" role="button" tabindex="0" aria-expanded="true" onclick="toggleProjectedResults()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleProjectedResults()}"><span>Projected Results</span><button class="projected-results-toggle" type="button" tabindex="-1" aria-label="Minimize Projected Results"><span id="projectedResultsArrow">▲</span></button></div><div id="contractCalcSummary" class="contract-calc-summary"><div><span>Gross Return</span><strong id="contractCalcTotal">$0.00</strong></div><div class="fee-value"><span>Administrative Fee</span><strong id="contractCalcFee">$0.00</strong></div><div><span>Net Return</span><strong id="contractCalcNet">$0.00</strong></div><div><span>Payment Amount</span><strong id="contractCalcPayment">$0.00</strong></div></div></div><button type="button" class="participation-calculator-trigger" onclick="openParticipationCalculator()">View Participant Calculation <span class="participant-arrow">▾</span></button><div id="participationCalculatorModal" class="participation-modal" aria-hidden="true"><div class="participation-modal-backdrop" onclick="closeParticipationCalculator()"></div><div class="participation-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="participationCalculatorTitle"><button type="button" class="participation-modal-close" onclick="closeParticipationCalculator()" aria-label="Close">×</button><h3 id="participationCalculatorTitle">Participation Calculator</h3><p class="participation-calculator-help">Enter the full contract amounts and your funded portion without fees. The repayment uses your exact share; the displayed percentage is rounded.</p><div class="participation-calculator-grid"><div class="field"><label>Entire Contract Funded</label><input id="fullContractFunded" type="number" inputmode="decimal" min="0" step="0.01"></div><div class="field"><label>Entire Contract Repayment</label><input id="fullContractRepayment" type="number" inputmode="decimal" min="0" step="0.01"></div><div class="field"><label>My Funded Portion w/out Fees</label><input id="myFundedPortion" type="number" inputmode="decimal" min="0" step="0.01" placeholder="5,000"></div></div><div class="participation-result"><div><span>Your Participation Percentage</span><strong id="participationPercent">0.0%</strong></div><div><span>Your Repayment Portion</span><strong id="participationRepayment">$0.00</strong></div></div><button type="button" class="secondary-btn participation-modal-done" onclick="closeParticipationCalculator()">Close</button></div></div><div id="addContractValidation" class="contract-validation-msg">Complete the required fields to add this contract.</div><button id="addContractBtn" class="primary-btn" style="margin-top:8px" onclick="addContract()" disabled>＋ Add Contract</button></section>
+<section class="panel" id="newContractPanel"><h2>Add Contract</h2><p class="contract-form-intro">Enter the contract terms below. Projected results update automatically. <span class="add-contract-settings-hint">For additional fields, go to Settings → Add Contract Fields.</span></p><div class="row contract-entry-grid"><div class="contract-grid-heading details-heading">Contract Details</div><div class="field contract-name-field"><label>Contract Name / ID</label><input id="cname" placeholder="Contract #1" oninput="updateAddContractButton()"></div><div class="field contract-type-field" data-contract-field="contractType"><label>Contract Type</label><select id="ctype" onchange="applyContractTypeFields();updateAddContractButton()"><option value="Funding Agreement">Funding Agreement</option><option value="Revenue Share">Revenue Share</option><option value="Installment Contract">Installment Contract</option><option value="Loan / Note">Loan / Note</option><option value="Investment Agreement">Investment Agreement</option><option value="Fixed Return Agreement">Fixed Return Agreement</option><option value="Other">Other</option></select></div><div class="field contract-custom-type-field" id="customContractTypeField" style="display:none"><label>Custom Contract Type</label><input id="ccustomtype" type="text" placeholder="Ex: Partnership Agreement" oninput="updateAddContractButton()"></div><div class="contract-date-field field"><label>Contract Start Date</label><input id="cdate" type="date" onchange="updateAddContractButton()"></div><div class="field contract-maturity-field"><label>End / Maturity Date <span class="muted">(Optional)</span></label><input id="cmaturity" type="date"></div><div class="field contract-frequency-field" data-contract-field="paymentFrequency"><label>Payment Frequency</label><select id="cpaymentfreq"><option value="Weekly">Weekly</option><option value="Biweekly">Biweekly</option><option value="Monthly">Monthly</option><option value="Custom">Custom</option></select></div><div class="contract-grid-heading funding-heading">Funding &amp; Return</div><div class="field contract-share-field dynamic-contract-field" id="contractShareField" style="display:none"><label>Revenue Share (%)</label><input id="crevenueshare" type="number" inputmode="decimal" min="0" max="100" step="0.01" placeholder="Ex: 20%"></div><div class="field contract-interest-field dynamic-contract-field" id="contractInterestField" style="display:none"><label>Interest Rate (%)</label><input id="cinterestrate" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 8%"></div><div class="field contract-invest-field"><label>Participant Funded Amount</label><input id="cinvest" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: $5,000" oninput="updateContractPaymentCalculation();updateAddContractButton()"></div><div class="field contract-referral-field"><label>Upfront Referral Fee <span class="muted">(Optional)</span></label><input id="creferral" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: $300" title="Optional upfront referral fee." oninput="updateContractPaymentCalculation();updateAddContractButton()" onblur="validateReferralFeeField();updateAddContractButton()"></div><div class="field contract-return-field"><label>Gross Return</label><input id="ctotalreturn" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: $6,800" oninput="updateContractPaymentCalculation();updateAddContractButton()"></div><div class="field contract-fee-field"><label>Administrative Fee (%) <span class="muted">(Optional)</span></label><input id="cadminfee" type="number" inputmode="decimal" min="0" max="100" step="0.01" placeholder="Ex: 2%" title="Optional administrative fee percentage." oninput="updateContractPaymentCalculation();updateAddContractButton()" onblur="validateAdminFeeField();updateAddContractButton()"></div><div class="field contract-payments-field"><label>Total Expected Payments</label><input id="cpayments" type="number" inputmode="numeric" min="1" step="1" placeholder="Ex: 34" oninput="updateContractPaymentCalculation();updateAddContractButton()"></div><div class="field contract-amount-field"><label>Payment Amount</label><input id="cpreset" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Auto-calculated" oninput="updateContractPaymentOverride();updateAddContractButton()"></div><div class="contract-grid-heading">Additional Details <span class="muted" style="font-weight:600">— Optional</span></div><div class="field contract-check-field"><label>Funding Check #</label><input id="ccheckno" inputmode="numeric" placeholder="Optional"></div><div class="field" style="grid-column:span 2"><label>Notes <span class="muted">(Optional)</span></label><textarea id="cnotes" rows="2" placeholder="Optional contract notes"></textarea></div><div class="contract-grid-heading results-heading" id="projectedResultsHeading" role="button" tabindex="0" aria-expanded="true" onclick="toggleProjectedResults()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleProjectedResults()}"><span>Projected Results</span><button class="projected-results-toggle" type="button" tabindex="-1" aria-label="Minimize Projected Results"><span id="projectedResultsArrow">▲</span></button></div><div id="contractCalcSummary" class="contract-calc-summary"><div><span>Gross Return</span><strong id="contractCalcTotal">$0.00</strong></div><div class="fee-value"><span>Administrative Fee</span><strong id="contractCalcFee">$0.00</strong></div><div><span>Net Return</span><strong id="contractCalcNet">$0.00</strong></div><div><span>Payment Amount</span><strong id="contractCalcPayment">$0.00</strong></div></div></div><button type="button" class="participation-calculator-trigger" onclick="openParticipationCalculator()">View Participant Calculation <span class="participant-arrow">▾</span></button><div id="participationCalculatorModal" class="participation-modal" aria-hidden="true"><div class="participation-modal-backdrop" onclick="closeParticipationCalculator()"></div><div class="participation-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="participationCalculatorTitle"><button type="button" class="participation-modal-close" onclick="closeParticipationCalculator()" aria-label="Close">×</button><h3 id="participationCalculatorTitle">Participation Calculator</h3><p class="participation-calculator-help">Enter the full contract amounts and your funded portion without fees. The repayment uses your exact share; the displayed percentage is rounded.</p><div class="participation-calculator-grid"><div class="field"><label>Entire Contract Funded</label><input id="fullContractFunded" type="number" inputmode="decimal" min="0" step="0.01"></div><div class="field"><label>Entire Contract Repayment</label><input id="fullContractRepayment" type="number" inputmode="decimal" min="0" step="0.01"></div><div class="field"><label>My Funded Portion w/out Fees</label><input id="myFundedPortion" type="number" inputmode="decimal" min="0" step="0.01" placeholder="5,000"></div></div><div class="participation-result"><div><span>Your Participation Percentage</span><strong id="participationPercent">0.0%</strong></div><div><span>Your Repayment Portion</span><strong id="participationRepayment">$0.00</strong></div></div><button type="button" class="secondary-btn participation-modal-done" onclick="closeParticipationCalculator()">Close</button></div></div><div id="addContractValidation" class="contract-validation-msg">Complete the required fields to add this contract.</div><button id="addContractBtn" class="primary-btn" style="margin-top:8px" onclick="addContract()" disabled>＋ Add Contract</button>
+<div class="payment-quick-tips add-contract-quick-tips">
+  <h3>Quick Tips</h3>
+  <ul>
+    <li>Enter the Contract Name / ID and Participant Funded Amount.</li>
+    <li>Select the contract type and complete the fields that apply to that agreement.</li>
+    <li>Add an Upfront Referral Fee or Administrative Fee when applicable.</li>
+    <li>Review the Contract Summary before saving.</li>
+    <li>For additional fields, go to Settings → Add Contract Fields.</li>
+  </ul>
+</div>
+</section>
 <section class="panel" id="contractsPanel" style="width:100%;max-width:100%;"><div class="section-head active-contracts-head"><h2>Active Contracts</h2><div class="active-contract-actions"><span id="activeSelectedCount" class="active-selected-count">Selected: 0 contracts</span><button id="activeEditBtn" class="table-action" type="button" onclick="runSelectedActiveAction('edit')" disabled>✎&nbsp; Edit</button><button id="activeCloseBtn" class="warning" type="button" onclick="runSelectedActiveAction('close')" disabled>▰&nbsp; Close / Default</button><button id="activeDeleteBtn" class="danger" type="button" onclick="runSelectedActiveAction('delete')" disabled>♜&nbsp; Delete</button></div></div><div class="active-contract-search"><span>⌕</span><input id="activeContractSearch" type="search" placeholder="Search contracts..." oninput="renderActiveContractsTable()" autocomplete="off"></div><div class="scroll"><table><thead><tr><th class="active-select-col"></th><th data-column-key="name">Contract Name / ID</th><th data-column-key="dayOpened">Day Opened</th><th data-column-key="invested">Total Cost</th><th data-column-key="paid">Amount Received</th><th data-column-key="breakEven">Break-Even</th><th data-column-key="remainingBalance">Remaining Receivable</th><th data-column-key="amountPerCheck">Payment Amount</th><th data-column-key="expectedPayments">Total Payments</th><th data-column-key="paymentsLeft">Payments Remaining</th></tr></thead><tbody id="contracts"></tbody></table></div><div class="active-contract-footer"><span id="activeContractShowing"></span></div></section>
 <section class="panel side-card" id="completedPanel"><div class="section-head completed-contracts-head"><h2>Completed Contracts</h2><div class="completed-contract-actions"><span id="completedSelectedCount" class="active-selected-count">Selected: 0 contracts</span><button id="completedEditBtn" class="table-action" type="button" onclick="runSelectedCompletedAction('edit')" disabled>✎&nbsp; Edit</button><button id="completedRestoreBtn" class="warning" type="button" onclick="runSelectedCompletedAction('restore')" disabled>▰&nbsp; Restore</button><button id="completedDeleteBtn" class="danger" type="button" onclick="runSelectedCompletedAction('delete')" disabled>♜&nbsp; Delete</button></div></div><div class="completed-contract-search"><span>⌕</span><input id="completedContractSearch" type="search" placeholder="Search contracts..." oninput="renderCompletedContracts()" autocomplete="off"></div><div class="scroll"><table><thead><tr><th class="completed-select-col" aria-hidden="true"></th><th data-column-key="contract">Contract Name / ID</th><th data-column-key="dayOpened">Day Opened</th><th data-column-key="dayClosed">Day Closed</th><th data-column-key="invested">Funded</th><th data-column-key="received" class="completed-compact-head">Amount<span>Amount Received</span></th><th data-column-key="remainingPayment" class="completed-compact-head">Payments<span>Remaining Payment</span></th><th data-column-key="gainLoss">Gain / Loss</th></tr></thead><tbody id="completedContracts"></tbody></table></div><div class="completed-contract-footer"><span id="completedContractShowing"></span></div></section>
 <div class="dashboard-grid">
@@ -3549,7 +3728,7 @@ function showApp(){
     const p=$(id); if(p) p.classList.remove("hidden");
   });
   const dashboardSummary=$("dashboardSummary"); if(dashboardSummary) dashboardSummary.classList.remove("hidden");
-  const appScreen=$("appScreen"); if(appScreen) appScreen.dataset.mobileRoute="dashboard";
+  const appScreen=$("appScreen"); setContactMessagingMounted(false); if(appScreen) appScreen.dataset.mobileRoute="dashboard";
   document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
   const dash=document.querySelector('.nav-item[href="#dashboard"]'); if(dash) dash.classList.add("active");
   adminPinUnlocked=false;updateAdminContactVisibility();
