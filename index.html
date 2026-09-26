@@ -2957,7 +2957,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <main class="content" id="dashboard"><div class="content-inner">
 <div class="summary-grid" id="dashboardSummary">
 <div class="summary-card" data-summary-key="invested"><div class="summary-top"><div class="summary-icon">▣</div><div><div class="summary-label">Total Funded & Upfront Fees</div><div class="summary-value" id="invested">$0.00</div></div></div></div>
-<div class="summary-card received" data-summary-key="received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Total Payments Received</div><div class="summary-value" id="received">$0.00</div></div></div></div>
+<div class="summary-card received" data-summary-key="received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Total Payments Received</div><div class="summary-value" id="received">$0.00</div></div></div></div> <div class="summary-card remaining-receivable" data-summary-key="remainingReceivable"><div class="summary-top"><div class="summary-icon">⇢</div><div><div class="summary-label">Total Remaining Receivable</div><div class="summary-value" id="totalRemainingReceivable">$0.00</div></div></div></div>
 <div class="summary-card profit" data-summary-key="profit"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Realized Profit</div><div class="summary-value" id="profit">$0.00</div></div></div></div>
 <div class="summary-card active" data-summary-key="active" role="button" tabindex="0" style="cursor:pointer" onclick="document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()}"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Active Contracts</div><div class="summary-value" id="openContracts">0</div></div></div></div>
 <div class="summary-card" data-summary-key="all"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Total Contracts</div><div class="summary-value" id="allContracts">0</div></div></div></div>
@@ -3050,7 +3050,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
         <p>Select which boxes appear on the Dashboard.</p><p class="settings-tip">Drag the summary boxes directly on the Dashboard to rearrange them.</p>
         <div class="appearance-options" id="summaryBoxOptions">
           <label class="appearance-option" data-summary-option="invested"><span>Total Funded & Upfront Fees</span><input type="checkbox" data-summary-toggle="invested" onchange="updateDashboardAppearance(this)"></label>
-          <label class="appearance-option" data-summary-option="received"><span>Total Payments Received</span><input type="checkbox" data-summary-toggle="received" onchange="updateDashboardAppearance(this)"></label>
+          <label class="appearance-option" data-summary-option="received"><span>Total Payments Received</span><input type="checkbox" data-summary-toggle="received" onchange="updateDashboardAppearance(this)"></label> <label class="appearance-option" data-summary-option="remainingReceivable"><span>Total Remaining Receivable</span><input type="checkbox" data-summary-toggle="remainingReceivable" onchange="updateDashboardAppearance(this)"></label>
           <label class="appearance-option" data-summary-option="profit"><span>Realized Profit</span><input type="checkbox" data-summary-toggle="profit" onchange="updateDashboardAppearance(this)"></label>
           <label class="appearance-option" data-summary-option="active"><span>Active Contracts</span><input type="checkbox" data-summary-toggle="active" onchange="updateDashboardAppearance(this)"></label>
           <label class="appearance-option" data-summary-option="all"><span>Total Contracts</span><input type="checkbox" data-summary-toggle="all" onchange="updateDashboardAppearance(this)"></label>
@@ -3288,6 +3288,9 @@ function save(){
 }
 async function syncToCloud(){
  if(!currentUser){return}
+ // Recovery safety: never overwrite an existing encrypted cloud record with an
+ // empty/incomplete in-memory state before that user's cloud record has loaded.
+ if(!cloudDataReady){setSyncStatus("Waiting for private cloud data…");return}
  if(cloudSaveInFlight){cloudSyncQueued=true;return}
  cloudSaveInFlight=true;
  cloudSyncQueued=false;
@@ -3368,8 +3371,8 @@ function changeAdminPin(){
  if(!confirm("Change the Admin Dashboard PIN? You will create a new four-digit PIN now."))return;
  localStorage.removeItem(adminPinStorageKey());setContactMessagingMounted(false);adminPinUnlocked=false;updateAdminContactVisibility();
 }
-const DASHBOARD_CARD_KEYS=["invested","received","profit","active","all","paid","default","defaultLoss"];
-const DASHBOARD_CARD_LABELS={fundedAmount:"Total Funded & Upfront Fees",received:"Total Payments Received",profit:"Realized Profit",active:"Active Contracts",all:"Total Contracts",paid:"Completed Contracts",default:"Defaulted Contracts",defaultLoss:"Default Loss"};
+const DASHBOARD_CARD_KEYS=["invested","received","remainingReceivable","profit","active","all","paid","default","defaultLoss"];
+const DASHBOARD_CARD_LABELS={fundedAmount:"Total Funded & Upfront Fees",received:"Total Payments Received",remainingReceivable:"Total Remaining Receivable",profit:"Realized Profit",active:"Active Contracts",all:"Total Contracts",paid:"Completed Contracts",default:"Defaulted Contracts",defaultLoss:"Default Loss"};
 const DASHBOARD_SECTION_IDS={payments:"checkPanel",addContract:"newContractPanel",activeContracts:"contractsPanel",completedContracts:"completedPanel",checkHistory:"historyPanel",reports:"reportsPanel"};
 const DASHBOARD_SECTION_KEYS=["summary",...Object.keys(DASHBOARD_SECTION_IDS)];
 const ACTIVE_CONTRACT_COLUMN_KEYS=["name","dayOpened","invested","paid","breakEven","remainingBalance","amountPerCheck","expectedPayments","paymentsLeft","actions"];
@@ -3945,7 +3948,10 @@ async function loadCloudData(expectedUserId=null){
   }
   if(row&&row.data){
    // Never use a browser-wide/shared cache as a fallback. Cloud data is authoritative.
-   try{data=normalizeFundLedgerData(await decryptFundLedgerData(userId,row.data))}catch(e){console.error("Private data decryption failed",e);setSyncStatus("Unable to decrypt private data");toast("Private data could not be decrypted on this device");return false} cloudDataReady=true; setSyncStatus(row.data.fundledger_encrypted?"Loaded encrypted data":"Loaded legacy data — encryption will apply on save");
+   try{data=normalizeFundLedgerData(await decryptFundLedgerData(userId,row.data))}catch(e){console.error("Private data decryption failed",e);setSyncStatus("Unable to decrypt private data — cloud record preserved");toast("Private data could not be decrypted. Nothing was overwritten.");return false}
+   cloudDataReady=true;
+   setSyncStatus(row.data.fundledger_encrypted?"Loaded encrypted data":"Loaded legacy data — encryption will apply on save");
+   render();
    return true;
   }
   // A genuinely new user gets a brand-new empty dataset.
@@ -4193,9 +4199,10 @@ async function initCloud(){
     // Auth events such as TOKEN_REFRESHED can fire when the browser is resized,
     // maximized, restored, or regains focus. Do not reset navigation in those cases.
     const appAlreadyVisible=!$("appScreen").classList.contains("hidden");
-    cloudDataReady=false;
-    data=JSON.parse(JSON.stringify(EMPTY_DATA));
-    if(!appAlreadyVisible)showApp();
+    // TOKEN_REFRESHED / focus-related auth events must never blank already-loaded financial data.
+    // Only a genuinely new app session starts from an empty in-memory placeholder.
+    if(!appAlreadyVisible){cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showApp();}
+    else if(_event==="SIGNED_IN" && !cloudDataReady){cloudDataReady=false;}
     setUserStatus(currentUser);
     setSyncStatus("Loading cloud data…");
     loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;startFundLedgerRealtime(effectiveUser.id);await initAdmin();setDateIssuedToToday(true);render()});
@@ -4798,7 +4805,9 @@ function render(){
  if($("filter")){ $("filter").innerHTML='<option value="">All contracts</option>'+filterOpts; $("filter").value=current; }
  renderActiveContractsTable();
  let received=data.checks.reduce((a,x)=>a+x.paymentAmount,0), invested=data.contracts.reduce((a,c)=>a+(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0),0);
- const overallProfit=received-invested;$("invested").textContent=money(invested);$("received").textContent=money(received);$("profit").textContent=money(overallProfit);const profitCard=$("profit")?.closest(".summary-card.profit");if(profitCard){profitCard.classList.toggle("positive",overallProfit>0);profitCard.classList.toggle("negative",overallProfit<0);}$("openContracts").textContent=open.length;
+ const overallProfit=received-invested;$("invested").textContent=money(invested);$("received").textContent=money(received);
+const totalRemainingReceivable=open.reduce((sum,c)=>{const xs=data.checks.filter(x=>x.contract===c.name),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),left=Math.max(0,expected-uniquePaymentCount(xs));return sum+(left*(parseFloat(c.paymentAmount)||0))},0);
+$("totalRemainingReceivable").textContent=money(totalRemainingReceivable);$("profit").textContent=money(overallProfit);const profitCard=$("profit")?.closest(".summary-card.profit");if(profitCard){profitCard.classList.toggle("positive",overallProfit>0);profitCard.classList.toggle("negative",overallProfit<0);}$("openContracts").textContent=open.length;
  let paidInFull=data.contracts.filter(c=>c.closed&&!c.defaulted).length,defaultContracts=data.contracts.filter(c=>c.closed&&c.defaulted),defaultLoss=defaultContracts.reduce((sum,c)=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+x.paymentAmount,0);return sum+Math.max(0,((parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0))-rec)},0);
  $("allContracts").textContent=data.contracts.length;$("paidInFull").textContent=paidInFull;$("defaultContracts").textContent=defaultContracts.length;$("defaultLoss").textContent=money(defaultLoss);
  $("reportInvested").textContent=money(invested);$("reportReceived").textContent=money(received);$("reportProfit").textContent=money(overallProfit);$("reportProfit").classList.toggle("gain",overallProfit>0);$("reportProfit").classList.toggle("loss",overallProfit<0);$("reportAllContracts").textContent=data.contracts.length;$("reportOpenContracts").textContent=open.length;$("reportPaidInFull").textContent=paidInFull;$("reportDefaultContracts").textContent=defaultContracts.length;$("reportDefaultLoss").textContent=money(defaultLoss);
