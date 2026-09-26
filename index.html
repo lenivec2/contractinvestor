@@ -3238,25 +3238,51 @@ const FUNDLEDGER_ENCRYPTION_VERSION=1;
 function encryptionSecretKey(userId){return `fundledgerEncryptionSecret:${userId}`}
 function bytesToB64(bytes){let s="";bytes.forEach(b=>s+=String.fromCharCode(b));return btoa(s)}
 function b64ToBytes(s){const raw=atob(s),a=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)a[i]=raw.charCodeAt(i);return a}
-async function getOrCreateEncryptionSecret(userId){
- let local=localStorage.getItem(encryptionSecretKey(userId));
- if(local)return local;
+async function getCloudEncryptionSecret(userId){
  if(!supabaseClient)throw new Error("Cloud service unavailable");
  const {data:row,error}=await supabaseClient.from("fundledger_user_keys").select("wrapped_key").eq("user_id",userId).maybeSingle();
  if(error)throw error;
- if(row?.wrapped_key){local=row.wrapped_key;localStorage.setItem(encryptionSecretKey(userId),local);return local}
- local=bytesToB64(crypto.getRandomValues(new Uint8Array(32)));
+ return row?.wrapped_key||null;
+}
+async function getOrCreateEncryptionSecret(userId){
+ // Cloud copy is authoritative for cross-device recovery. A stale browser secret must
+ // never prevent an existing encrypted cloud record from being opened.
+ let cloud=await getCloudEncryptionSecret(userId);
+ if(cloud){localStorage.setItem(encryptionSecretKey(userId),cloud);return cloud}
+ let local=localStorage.getItem(encryptionSecretKey(userId));
+ if(!local)local=bytesToB64(crypto.getRandomValues(new Uint8Array(32)));
  const {error:saveError}=await supabaseClient.from("fundledger_user_keys").insert({user_id:userId,wrapped_key:local});
  if(saveError)throw saveError;
  localStorage.setItem(encryptionSecretKey(userId),local);return local;
 }
-async function fundLedgerEncryptionKey(userId){
- const secret=await getOrCreateEncryptionSecret(userId);
+async function deriveFundLedgerEncryptionKey(userId,secret){
  const m=await crypto.subtle.importKey("raw",new TextEncoder().encode(userId+":"+secret),"PBKDF2",false,["deriveKey"]);
  return crypto.subtle.deriveKey({name:"PBKDF2",salt:new TextEncoder().encode("FundLedger Private Data v1"),iterations:210000,hash:"SHA-256"},m,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
 }
+async function fundLedgerEncryptionKey(userId){return deriveFundLedgerEncryptionKey(userId,await getOrCreateEncryptionSecret(userId))}
 async function encryptFundLedgerData(userId,value){const iv=crypto.getRandomValues(new Uint8Array(12)),key=await fundLedgerEncryptionKey(userId),plain=new TextEncoder().encode(JSON.stringify(value)),cipher=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},key,plain));return {fundledger_encrypted:true,v:1,alg:"AES-GCM",iv:bytesToB64(iv),ciphertext:bytesToB64(cipher)}}
-async function decryptFundLedgerData(userId,e){if(!e||e.fundledger_encrypted!==true)return e;const key=await fundLedgerEncryptionKey(userId),plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64ToBytes(e.iv)},key,b64ToBytes(e.ciphertext));return JSON.parse(new TextDecoder().decode(plain))}
+async function decryptFundLedgerData(userId,e){
+ if(!e||e.fundledger_encrypted!==true)return e;
+ console.info("[FundLedger recovery] encrypted cloud record detected");
+ const local=localStorage.getItem(encryptionSecretKey(userId));
+ const cloud=await getCloudEncryptionSecret(userId);
+ const candidates=[];
+ if(cloud)candidates.push(["cloud recovery key",cloud]);
+ if(local&&local!==cloud)candidates.push(["browser key",local]);
+ if(!candidates.length)throw new Error("No encryption recovery key exists for this account");
+ let lastError=null;
+ for(const [label,secret] of candidates){
+  try{
+   const key=await deriveFundLedgerEncryptionKey(userId,secret);
+   const plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64ToBytes(e.iv)},key,b64ToBytes(e.ciphertext));
+   const decoded=JSON.parse(new TextDecoder().decode(plain));
+   localStorage.setItem(encryptionSecretKey(userId),secret);
+   console.info("[FundLedger recovery] decryption succeeded using "+label+"; contracts="+(Array.isArray(decoded?.contracts)?decoded.contracts.length:"? ")+", checks="+(Array.isArray(decoded?.checks)?decoded.checks.length:"?"));
+   return decoded;
+  }catch(err){lastError=err;console.warn("[FundLedger recovery] decryption attempt failed using "+label)}
+ }
+ throw lastError||new Error("Encrypted data could not be decrypted");
+}
 function loadLocalCache(userId){return null}
 function saveLocalCache(userId,snapshot){/* readable financial cache disabled */}
 let removedBreakdownContracts=new Set();
@@ -3947,6 +3973,7 @@ async function loadCloudData(expectedUserId=null){
    return false;
   }
   if(row&&row.data){
+   console.info("[FundLedger recovery] cloud data row found; encrypted="+(row.data?.fundledger_encrypted===true));
    // Never use a browser-wide/shared cache as a fallback. Cloud data is authoritative.
    try{data=normalizeFundLedgerData(await decryptFundLedgerData(userId,row.data))}catch(e){console.error("Private data decryption failed",e);setSyncStatus("Unable to decrypt private data — cloud record preserved");toast("Private data could not be decrypted. Nothing was overwritten.");return false}
    cloudDataReady=true;
@@ -3955,6 +3982,7 @@ async function loadCloudData(expectedUserId=null){
    return true;
   }
   // A genuinely new user gets a brand-new empty dataset.
+  console.info("[FundLedger recovery] no cloud data row exists for signed-in user; initializing new account");
   data=JSON.parse(JSON.stringify(EMPTY_DATA));
   const initialEncrypted=await encryptFundLedgerData(userId,data); const {error:emptyError}=await supabaseClient.from("contract_tracker_data").insert({user_id:userId,data:initialEncrypted,updated_at:new Date().toISOString()});
   if(!currentUser||currentUser.id!==userId)return false;
