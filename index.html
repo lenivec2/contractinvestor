@@ -370,102 +370,6 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
-
-
-<style id="final-mobile-regression-fix">
-@media (max-width:700px){
-  /* Sidebar: icon + label */
-  .sidebar{
-    width:min(82vw,290px)!important;
-    flex-basis:min(82vw,290px)!important;
-    padding:14px 10px!important;
-  }
-  .sidebar .nav-item{
-    display:flex!important;
-    align-items:center!important;
-    justify-content:flex-start!important;
-    gap:14px!important;
-    padding:13px 14px!important;
-    min-height:46px!important;
-    white-space:normal!important;
-  }
-  .sidebar .nav-item span:last-child{
-    display:inline!important;
-    visibility:visible!important;
-    opacity:1!important;
-    overflow:visible!important;
-    text-overflow:clip!important;
-    flex:1 1 auto!important;
-  }
-  .sidebar .nav-icon{
-    display:inline-flex!important;
-    width:26px!important;
-    min-width:26px!important;
-    flex:0 0 26px!important;
-  }
-
-  /* Reports: no horizontal overflow or overlapping cards */
-  #reportsPanel,
-  #reportsPanel *{box-sizing:border-box!important}
-  #reportsPanel{
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    overflow-x:hidden!important;
-  }
-  #reportsPanel input,
-  #reportsPanel select,
-  #reportsPanel button{
-    max-width:100%!important;
-  }
-  #reportsPanel input,
-  #reportsPanel select{
-    width:100%!important;
-  }
-  #reportsPanel .date-range-buttons,
-  #reportsPanel .range-buttons{
-    display:flex!important;
-    flex-wrap:wrap!important;
-    gap:10px!important;
-    width:100%!important;
-  }
-  #reportsPanel .report-summary,
-  #reportsPanel .summary-grid,
-  #reportsPanel .metrics,
-  #reportsPanel .report-metrics{
-    display:grid!important;
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    gap:10px!important;
-    width:100%!important;
-    min-width:0!important;
-  }
-  #reportsPanel .report-summary>*,
-  #reportsPanel .summary-grid>*,
-  #reportsPanel .metrics>*,
-  #reportsPanel .report-metrics>*{
-    min-width:0!important;
-    width:100%!important;
-    overflow:hidden!important;
-  }
-  #reportsPanel h1,
-  #reportsPanel h2,
-  #reportsPanel h3,
-  #reportsPanel p{
-    max-width:100%!important;
-    overflow-wrap:anywhere!important;
-  }
-}
-@media (max-width:430px){
-  #reportsPanel .report-summary,
-  #reportsPanel .summary-grid,
-  #reportsPanel .metrics,
-  #reportsPanel .report-metrics{
-    grid-template-columns:1fr!important;
-  }
-}
-</style>
-
-
 <style id="reports-mobile-actual-layout-fix">
 @media (max-width:700px){
   /* The Reports page uses a two-column desktop grid. Collapse it on phones. */
@@ -1556,77 +1460,6 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
-
-<style id="mobile-landscape-new-contract-absolute-fix">
-/* Absolute final fix: New Contract fields are equal-width in phone landscape. */
-@media (max-width:700px) and (orientation:landscape){
-  #newContractPanel{
-    width:100% !important;
-    max-width:100% !important;
-    min-width:0 !important;
-    overflow:hidden !important;
-  }
-  #newContractPanel > .row{
-    display:grid !important;
-    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
-    grid-auto-flow:row !important;
-    gap:10px !important;
-    width:100% !important;
-    max-width:100% !important;
-    min-width:0 !important;
-    margin:0 !important;
-    padding:0 !important;
-    box-sizing:border-box !important;
-  }
-  #newContractPanel > .row > .field{
-    width:100% !important;
-    min-width:0 !important;
-    max-width:100% !important;
-    flex:0 0 auto !important;
-    box-sizing:border-box !important;
-    overflow:hidden !important;
-  }
-  #newContractPanel > .row > .field label{
-    display:block !important;
-    width:100% !important;
-    min-width:0 !important;
-    max-width:100% !important;
-    min-height:2.4em !important;
-    margin:0 0 5px !important;
-    line-height:1.15 !important;
-    overflow-wrap:anywhere !important;
-    word-break:break-word !important;
-  }
-  #newContractPanel > .row > .field input,
-  #newContractPanel > .row > .field select,
-  #newContractPanel > .row > .field textarea{
-    display:block !important;
-    width:100% !important;
-    min-width:0 !important;
-    max-width:100% !important;
-    box-sizing:border-box !important;
-    height:40px !important;
-    min-height:40px !important;
-    max-height:40px !important;
-    margin:0 !important;
-    padding:8px !important;
-    font-size:13px !important;
-    line-height:normal !important;
-  }
-  #newContractPanel > .row > .field input[type="date"]{
-    -webkit-appearance:none !important;
-    appearance:none !important;
-    overflow:hidden !important;
-    text-overflow:clip !important;
-  }
-  #newContractPanel > .row > .field input[type="number"],
-  #newContractPanel > .row > .field input[type="text"],
-  #newContractPanel > .row > .field input[type="date"]{
-    flex:none !important;
-  }
-}
-</style>
-
 <style id="contract-date-landscape-equal-fix">
 /* Specifically keep Contract Start Date the exact same box size as the other New Contract fields in phone landscape. */
 @media (max-width:700px) and (orientation:landscape){
@@ -1693,86 +1526,6 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
-
-<style id="phone-landscape-new-contract-real-fix">
-/* Real phone-landscape fix: phone landscape viewports can be wider than 700px.
-   Use viewport height so these rules also apply when the phone is turned sideways. */
-@media (orientation: landscape) and (max-height: 600px){
-  #newContractPanel{
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    overflow-x:hidden!important;
-  }
-  #newContractPanel > .row{
-    display:grid!important;
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    grid-auto-flow:row!important;
-    gap:12px!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    margin:0!important;
-    padding:0!important;
-  }
-  #newContractPanel > .row > .field{
-    display:block!important;
-    width:100%!important;
-    min-width:0!important;
-    max-width:100%!important;
-    flex:none!important;
-    box-sizing:border-box!important;
-    overflow:hidden!important;
-  }
-  #newContractPanel > .row > .field label{
-    display:block!important;
-    width:100%!important;
-    min-width:0!important;
-    max-width:100%!important;
-    min-height:2.4em!important;
-    margin:0 0 6px!important;
-    line-height:1.2!important;
-    overflow-wrap:anywhere!important;
-  }
-  #newContractPanel > .row > .field > input,
-  #newContractPanel > .row > .field > select,
-  #newContractPanel > .row > .field > textarea{
-    display:block!important;
-    width:100%!important;
-    min-width:0!important;
-    max-width:100%!important;
-    box-sizing:border-box!important;
-    height:42px!important;
-    min-height:42px!important;
-    max-height:42px!important;
-    margin:0!important;
-    padding:9px 10px!important;
-    font-size:14px!important;
-    line-height:normal!important;
-  }
-  #newContractPanel #cinvest,
-  #newContractPanel #cdate{
-    display:block!important;
-    width:100%!important;
-    min-width:0!important;
-    max-width:100%!important;
-    box-sizing:border-box!important;
-    height:42px!important;
-    min-height:42px!important;
-    max-height:42px!important;
-  }
-  #newContractPanel #cdate{
-    -webkit-appearance:none!important;
-    appearance:none!important;
-    overflow:hidden!important;
-    text-overflow:clip!important;
-  }
-  #newContractPanel #cdate::-webkit-date-and-time-value{
-    text-align:left!important;
-  }
-}
-</style>
-
 <style id="contact-new-message-badge-style">
   .contact-new-message {
     display: none;
@@ -2950,6 +2703,84 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
+
+<style id="fundledger-add-contract-mobile-summary-tips-production">
+@media (max-width:700px){
+  /* Add Contract: expose the already-existing live summary/tips sidebar on phones. */
+  #newContractPanel #contractLiveSide.contract-live-side{
+    display:flex !important;
+    flex-direction:column !important;
+    position:static !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin:16px 0 0 !important;
+    gap:14px !important;
+    box-sizing:border-box !important;
+  }
+  #newContractPanel #contractLiveSide .contract-side-card{
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    box-sizing:border-box !important;
+    border-radius:12px !important;
+    overflow:hidden !important;
+  }
+  /* Contract Summary mirrors the Payment Summary card proportions. */
+  #newContractPanel #contractLiveSide .contract-side-card:first-child{
+    border:1px solid #d6e4f3 !important;
+    background:#fff !important;
+    box-shadow:0 1px 3px rgba(14,49,91,.05) !important;
+  }
+  #newContractPanel #contractLiveSide .contract-side-card:first-child h3{
+    margin:0 !important;
+    padding:11px 13px !important;
+    background:#edf5ff !important;
+    color:#17365f !important;
+    border-bottom:1px solid #d6e4f3 !important;
+    font-size:14px !important;
+    font-weight:800 !important;
+  }
+  #newContractPanel #contractLiveSide .contract-side-list{padding:5px 12px 9px !important;}
+  #newContractPanel #contractLiveSide .contract-side-row{
+    display:flex !important;
+    justify-content:space-between !important;
+    gap:12px !important;
+    padding:8px 1px !important;
+    border-bottom:1px solid #e8eef5 !important;
+    font-size:12px !important;
+    color:#425a78 !important;
+  }
+  #newContractPanel #contractLiveSide .contract-side-row:last-child{border-bottom:0 !important;}
+  /* Exact Add Payment Quick Tips visual treatment. */
+  #newContractPanel #contractLiveSide .contract-tips{
+    background:#fffaf0 !important;
+    border:1px solid #f1dfad !important;
+    box-shadow:0 1px 3px rgba(14,49,91,.05) !important;
+  }
+  #newContractPanel #contractLiveSide .contract-tips h3{
+    margin:0 !important;
+    padding:11px 13px !important;
+    background:#fff5d9 !important;
+    color:#694c00 !important;
+    border-bottom:1px solid #f1dfad !important;
+    font-size:14px !important;
+    font-weight:800 !important;
+  }
+  #newContractPanel #contractLiveSide .contract-tips ul{
+    margin:0 !important;
+    padding:10px 14px 12px 30px !important;
+    color:#5f6470 !important;
+    font-size:12px !important;
+    line-height:1.55 !important;
+  }
+  #newContractPanel #contractLiveSide .contract-tips li{margin:4px 0 !important;}
+  /* There is an older duplicate mobile tips block in the markup; keep only the live sidebar tips. */
+  #newContractPanel > .add-contract-quick-tips{display:none !important;}
+}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -3168,7 +2999,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
           <label class="appearance-option"><span>Actions</span><input type="checkbox" data-history-column-toggle="actions" onchange="updateCheckHistoryColumnAppearance(this)"></label>
         </div>
       </div></details>
-      <div class="settings-reset-card">
+      <div class="settings-card"><h3>Backup &amp; Recovery</h3><p>Export a private encrypted copy of your contracts, payments, and preferences, or restore one if needed.</p><div class="settings-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="primary-btn" type="button" onclick="exportFundLedgerBackup()">Export Encrypted Backup</button><button type="button" onclick="chooseFundLedgerBackup()">Restore Backup</button><input id="fundLedgerBackupFile" type="file" accept=".fundledger,.json,application/json" style="display:none" onchange="restoreFundLedgerBackup(this.files?.[0]);this.value=''"></div><p class="settings-status" id="fundLedgerBackupStatus" style="margin-top:10px">No backup action in progress.</p></div><div class="settings-reset-card">
         <div><h4 style="margin:0">Reset Layout</h4><p>Restore dashboard boxes and table columns to their default visibility and order.</p></div>
         <button class="danger-btn hidden" type="button" onclick="restoreDefaultLayout()">↻ Restore Default Layout</button>
       </div>
@@ -3299,7 +3130,7 @@ function normalizeFundLedgerData(snapshot){
  });
  return out;
 }
-let cloudDataReady=false;
+let cloudDataReady=false;let fundLedgerSuccessfulCloudRead=false;let fundLedgerLastGoodSnapshot=null;let fundLedgerAllowEmptyWrite=false;
 function localKey(userId){return "contractChecksIOS:"+userId}
 const FUNDLEDGER_ENCRYPTION_VERSION=1;
 function encryptionSecretKey(userId){return `fundledgerEncryptionSecret:${userId}`}
@@ -3379,6 +3210,13 @@ function uniquePaymentCount(checks){
  });
  return new Set(identities).size;
 }
+
+function rememberFundLedgerGood(v){if(!hasFundLedgerRecords(v))return;fundLedgerLastGoodSnapshot=normalizeFundLedgerData(JSON.parse(JSON.stringify(v)));try{localStorage.setItem(`fundledgerLastGood:${currentUser?.id||"unknown"}`,JSON.stringify(fundLedgerLastGoodSnapshot))}catch(_){}}
+function getFundLedgerGood(userId){if(hasFundLedgerRecords(fundLedgerLastGoodSnapshot))return normalizeFundLedgerData(JSON.parse(JSON.stringify(fundLedgerLastGoodSnapshot)));try{const r=localStorage.getItem(`fundledgerLastGood:${userId}`);if(r){const v=normalizeFundLedgerData(JSON.parse(r));if(hasFundLedgerRecords(v))return v}}catch(_){}return null}
+async function fundLedgerBackupKey(password,salt){const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(password),"PBKDF2",false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:250000,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+async function exportFundLedgerBackup(){if(!currentUser||!cloudDataReady){toast("Wait for your data to finish loading");return}const password=prompt("Create a backup password (at least 8 characters). You will need it to restore this backup.");if(!password||password.length<8){toast("Backup password must be at least 8 characters");return}try{const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),key=await fundLedgerBackupKey(password,salt),snapshot=normalizeFundLedgerData(JSON.parse(JSON.stringify(data))),plain=new TextEncoder().encode(JSON.stringify({format:"FundLedger Backup",version:1,created_at:new Date().toISOString(),data:snapshot})),enc=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,plain),payload={fundledger_backup:true,version:1,kdf:"PBKDF2-SHA256",iterations:250000,salt:bytesToB64(salt),iv:bytesToB64(iv),ciphertext:bytesToB64(new Uint8Array(enc))},blob=new Blob([JSON.stringify(payload)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`FundLedger-Backup-${new Date().toISOString().slice(0,10)}.fundledger`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);if($("fundLedgerBackupStatus"))$("fundLedgerBackupStatus").textContent="Encrypted backup exported "+new Date().toLocaleString();toast("Encrypted backup created")}catch(e){console.error(e);toast("Could not create backup")}}
+function chooseFundLedgerBackup(){$("fundLedgerBackupFile")?.click()}
+async function restoreFundLedgerBackup(file){if(!file||!currentUser)return;const password=prompt("Enter the password for this FundLedger backup.");if(!password)return;try{const payload=JSON.parse(await file.text());if(!payload?.fundledger_backup)throw new Error("Not a FundLedger backup");const key=await fundLedgerBackupKey(password,b64ToBytes(payload.salt)),dec=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64ToBytes(payload.iv)},key,b64ToBytes(payload.ciphertext)),restored=JSON.parse(new TextDecoder().decode(dec)),candidate=normalizeFundLedgerData(restored.data),cc=candidate.contracts.length,pc=candidate.checks.length;if(!confirm(`Restore this backup?\n\nContracts: ${cc}\nPayments / checks: ${pc}\n\nCurrent app data will be replaced after confirmation.`))return;rememberFundLedgerGood(data);data=candidate;saveLocalCache(currentUser.id,data);cloudDataReady=true;fundLedgerSuccessfulCloudRead=true;rememberFundLedgerGood(data);render();fundLedgerAllowEmptyWrite=!hasFundLedgerRecords(data);await syncToCloud();fundLedgerAllowEmptyWrite=false;if($("fundLedgerBackupStatus"))$("fundLedgerBackupStatus").textContent="Backup restored "+new Date().toLocaleString();toast("Backup restored")}catch(e){console.error(e);toast("Could not restore backup. Check the file and password.")}}
 function save(){
  if(!currentUser||!cloudDataReady)return;
  const snapshot=normalizeFundLedgerData(JSON.parse(JSON.stringify(data)));
@@ -3386,8 +3224,10 @@ function save(){
  clearTimeout(cloudSaveTimer);
  cloudSaveTimer=setTimeout(syncToCloud,250);
 }
-async function syncToCloud(){
- if(!currentUser){return}
+async function syncToCloud(){if(!currentUser){return}
+ if(!cloudDataReady||!fundLedgerSuccessfulCloudRead){setSyncStatus("Safety lock — waiting for verified cloud data");return}
+ const safetySnapshot=normalizeFundLedgerData(JSON.parse(JSON.stringify(data))),lastGood=getFundLedgerGood(currentUser.id);
+ if(!hasFundLedgerRecords(safetySnapshot)&&hasFundLedgerRecords(lastGood)&&!fundLedgerAllowEmptyWrite){data=lastGood;saveLocalCache(currentUser.id,data);render();setSyncStatus("Safety lock — previous data preserved");toast("Safety protection stopped an unexpected empty save");return}
  if(cloudSaveInFlight){cloudSyncQueued=true;return}
  cloudSaveInFlight=true;
  cloudSyncQueued=false;
@@ -3396,22 +3236,11 @@ async function syncToCloud(){
  let cloudPayload;try{cloudPayload=await encryptFundLedgerData(currentUser.id,snapshot)}catch(e){cloudSaveInFlight=false;setSyncStatus("Encryption error");console.error(e);toast("Private data could not be encrypted");return} const {error}=await supabaseClient.from("contract_tracker_data").upsert({user_id:currentUser.id,data:cloudPayload,updated_at:new Date().toISOString()},{onConflict:"user_id"});
  cloudSaveInFlight=false;
  if(error){setSyncStatus("Cloud sync error");console.error(error);toast("Cloud sync failed");}
- else setSyncStatus("Saved to cloud • "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}));
+ else {rememberFundLedgerGood(snapshot);setSyncStatus("Saved to cloud • "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}));}
  if(cloudSyncQueued&&currentUser){cloudSyncQueued=false;setTimeout(syncToCloud,0)}
 }
 
-async function applyRealtimeCloudPayload(row){
- if(!currentUser||!row||row.user_id!==currentUser.id||realtimeApplyInFlight)return;
- realtimeApplyInFlight=true;
- try{
-   const decoded=await decryptFundLedgerData(currentUser.id,row.data);
-   data=normalizeFundLedgerData(decoded);
-   cloudDataReady=true;
-   render();
-   setSyncStatus("Synced from another device • "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}));
- }catch(e){console.error("Realtime encrypted sync failed",e)}
- finally{realtimeApplyInFlight=false}
-}
+async function applyRealtimeCloudPayload(row){if(!currentUser||!row||row.user_id!==currentUser.id||realtimeApplyInFlight)return;realtimeApplyInFlight=true;try{const decoded=normalizeFundLedgerData(await decryptFundLedgerData(currentUser.id,row.data)),previousGood=getFundLedgerGood(currentUser.id)||data;if(!hasFundLedgerRecords(decoded)&&hasFundLedgerRecords(previousGood)){setSyncStatus("Safety lock — empty cloud update ignored");return}data=decoded;cloudDataReady=true;fundLedgerSuccessfulCloudRead=true;rememberFundLedgerGood(data);render();setSyncStatus("Synced from another device • "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}))}catch(e){console.error("Realtime encrypted sync failed",e)}finally{realtimeApplyInFlight=false}}
 function stopFundLedgerRealtime(){
  if(fundLedgerRealtimeChannel&&supabaseClient){try{supabaseClient.removeChannel(fundLedgerRealtimeChannel)}catch(e){console.error(e)}}
  fundLedgerRealtimeChannel=null;
@@ -4021,7 +3850,7 @@ async function loadCloudData(expectedUserId=null){
  // for User A from ever populating User B's screen after an account switch.
  const userId=expectedUserId||currentUser?.id;
  if(!userId||!supabaseClient)return false;
- cloudDataReady=false;
+ cloudDataReady=false;fundLedgerSuccessfulCloudRead=false;
  // Keep the user's last known data visible while the cloud request is running.
  // Never blank the dashboard before we know that the cloud read succeeded.
  const cached=loadLocalCache(userId);
@@ -4051,7 +3880,7 @@ async function loadCloudData(expectedUserId=null){
    // the real data instead of accepting/propagating the empty snapshot.
    if(!hasFundLedgerRecords(cloudDecoded)&&hasFundLedgerRecords(cached)){
     data=normalizeFundLedgerData(cached);
-    cloudDataReady=true;
+    cloudDataReady=true;fundLedgerSuccessfulCloudRead=true;rememberFundLedgerGood(data);
     render();
     setSyncStatus("Recovered device data — saving to cloud…");
     await syncToCloud();
@@ -4061,7 +3890,7 @@ async function loadCloudData(expectedUserId=null){
    }
    data=cloudDecoded;
    saveLocalCache(userId,data);
-   cloudDataReady=true;
+   cloudDataReady=true;fundLedgerSuccessfulCloudRead=true;rememberFundLedgerGood(data);
    setSyncStatus(row.data.fundledger_encrypted?"Loaded encrypted data":"Loaded legacy data — encryption will apply on save");
    return true;
   }
@@ -4077,7 +3906,7 @@ async function loadCloudData(expectedUserId=null){
    return false;
   }
   saveLocalCache(userId,data);
-  cloudDataReady=true;
+  cloudDataReady=true;fundLedgerSuccessfulCloudRead=true;
   setSyncStatus("Cloud account ready — 0 contracts, 0 checks");
   return true;
  }finally{cloudLoadInFlight=false}
