@@ -2883,6 +2883,73 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
+
+<style id="fundledger-add-contract-mobile-summary-and-tips-fix">
+@media (max-width:700px){
+  /* Show the existing live Contract Summary + its Quick Tips on mobile. */
+  #newContractPanel > #contractLiveSide.contract-live-side{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:14px !important;
+    position:static !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    margin-top:16px !important;
+    box-sizing:border-box !important;
+  }
+
+  #newContractPanel #contractLiveSide .contract-side-card{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+  }
+
+  /* Make Contract Summary match the roomy mobile Payment Summary layout. */
+  #newContractPanel #contractLiveSide .contract-side-card:first-child h3{
+    padding:14px 16px !important;
+    font-size:17px !important;
+  }
+  #newContractPanel #contractLiveSide .contract-side-list{
+    padding:7px 16px 11px !important;
+  }
+  #newContractPanel #contractLiveSide .contract-side-row{
+    padding:10px 1px !important;
+    font-size:14px !important;
+    align-items:center !important;
+  }
+  #newContractPanel #contractLiveSide .contract-side-row strong{
+    white-space:nowrap !important;
+  }
+
+  /* Quick Tips: same yellow/cream visual treatment as Add Payment. */
+  #newContractPanel #contractLiveSide .contract-tips{
+    background:#fffaf0 !important;
+    border-color:#f1d88a !important;
+  }
+  #newContractPanel #contractLiveSide .contract-tips h3{
+    background:#fff4cf !important;
+    color:#694c00 !important;
+    border-color:#f1d88a !important;
+    padding:14px 16px !important;
+    font-size:17px !important;
+  }
+  #newContractPanel #contractLiveSide .contract-tips ul{
+    margin:0 !important;
+    padding:14px 18px 16px 32px !important;
+    color:#5f6470 !important;
+    font-size:14px !important;
+    line-height:1.55 !important;
+  }
+
+  /* Remove the duplicate temporary Add Contract Quick Tips block. */
+  #newContractPanel > .add-contract-quick-tips{
+    display:none !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -3369,7 +3436,7 @@ function changeAdminPin(){
  localStorage.removeItem(adminPinStorageKey());setContactMessagingMounted(false);adminPinUnlocked=false;updateAdminContactVisibility();
 }
 const DASHBOARD_CARD_KEYS=["invested","received","remainingReceivable","profit","active","all","paid","default","defaultLoss"];
-const DASHBOARD_CARD_LABELS={fundedAmount:"Total Funded & Upfront Fees",received:"Total Payments Received",remainingReceivable:"Total Remaining Receivable",profit:"Realized Profit",active:"Active Contracts",all:"Total Contracts",paid:"Completed Contracts",default:"Defaulted Contracts",defaultLoss:"Default Loss"};
+const DASHBOARD_CARD_LABELS={invested:"Total Funded & Upfront Fees",received:"Total Payments Received",remainingReceivable:"Total Remaining Receivable",profit:"Realized Profit",active:"Active Contracts",all:"Total Contracts",paid:"Completed Contracts",default:"Defaulted Contracts",defaultLoss:"Default Loss"};
 const DASHBOARD_SECTION_IDS={payments:"checkPanel",addContract:"newContractPanel",activeContracts:"contractsPanel",completedContracts:"completedPanel",checkHistory:"historyPanel",reports:"reportsPanel"};
 const DASHBOARD_SECTION_KEYS=["summary",...Object.keys(DASHBOARD_SECTION_IDS)];
 const ACTIVE_CONTRACT_COLUMN_KEYS=["name","dayOpened","invested","paid","breakEven","remainingBalance","amountPerCheck","expectedPayments","paymentsLeft","actions"];
@@ -4799,8 +4866,15 @@ function render(){
  renderActiveContractsTable();
  let received=data.checks.reduce((a,x)=>a+x.paymentAmount,0), invested=data.contracts.reduce((a,c)=>a+(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0),0);
  const overallProfit=received-invested;$("invested").textContent=money(invested);$("received").textContent=money(received);
-const totalRemainingReceivable=open.reduce((sum,c)=>{const xs=data.checks.filter(x=>x.contract===c.name),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),left=Math.max(0,expected-uniquePaymentCount(xs));return sum+(left*(parseFloat(c.paymentAmount)||0))},0);
-$("totalRemainingReceivable").textContent=money(totalRemainingReceivable);$("profit").textContent=money(overallProfit);const profitCard=$("profit")?.closest(".summary-card.profit");if(profitCard){profitCard.classList.toggle("positive",overallProfit>0);profitCard.classList.toggle("negative",overallProfit<0);}$("openContracts").textContent=open.length;
+const totalRemainingReceivable=open.reduce((sum,c)=>{
+const xs=data.checks.filter(x=>x.contract===c.name);
+const expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0);
+const receivedCount=(typeof uniquePaymentCount==="function")?uniquePaymentCount(xs):xs.length;
+const left=Math.max(0,expected-receivedCount);
+return sum+(left*(parseFloat(c.paymentAmount)||0));
+},0);
+const totalRemainingReceivableEl=$("totalRemainingReceivable");
+if(totalRemainingReceivableEl) totalRemainingReceivableEl.textContent=money(totalRemainingReceivable);$("profit").textContent=money(overallProfit);const profitCard=$("profit")?.closest(".summary-card.profit");if(profitCard){profitCard.classList.toggle("positive",overallProfit>0);profitCard.classList.toggle("negative",overallProfit<0);}$("openContracts").textContent=open.length;
  let paidInFull=data.contracts.filter(c=>c.closed&&!c.defaulted).length,defaultContracts=data.contracts.filter(c=>c.closed&&c.defaulted),defaultLoss=defaultContracts.reduce((sum,c)=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+x.paymentAmount,0);return sum+Math.max(0,((parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0))-rec)},0);
  $("allContracts").textContent=data.contracts.length;$("paidInFull").textContent=paidInFull;$("defaultContracts").textContent=defaultContracts.length;$("defaultLoss").textContent=money(defaultLoss);
  $("reportInvested").textContent=money(invested);$("reportReceived").textContent=money(received);$("reportProfit").textContent=money(overallProfit);$("reportProfit").classList.toggle("gain",overallProfit>0);$("reportProfit").classList.toggle("loss",overallProfit<0);$("reportAllContracts").textContent=data.contracts.length;$("reportOpenContracts").textContent=open.length;$("reportPaidInFull").textContent=paidInFull;$("reportDefaultContracts").textContent=defaultContracts.length;$("reportDefaultLoss").textContent=money(defaultLoss);
