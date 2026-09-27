@@ -2853,12 +2853,12 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #landingScreen .landing-nav {
   position: absolute !important;
   inset: 0 0 auto 0 !important;
-  z-index: 5 !important;
+  z-index: 30 !important;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 #landingScreen {
   background: #062c50 !important;
@@ -2870,7 +2870,17 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
-</head>
+<style id="fundledger-functional-header-fix">
+#landingScreen .landing-hero{position:relative!important}
+#landingScreen .landing-hero::before{
+ content:"";position:absolute;left:0;right:0;top:0;height:96px;z-index:10;
+ background:linear-gradient(90deg,rgba(5,43,76,.99),rgba(8,54,89,.98),rgba(11,61,98,.94));
+ pointer-events:none
+}
+#landingScreen .landing-nav{z-index:30!important}
+#landingScreen .landing-nav *{pointer-events:auto}
+@media(max-width:760px){#landingScreen .landing-hero::before{height:88px}}
+</style></head>
 <body>
 
 <div id="landingScreen">
