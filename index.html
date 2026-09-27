@@ -2818,7 +2818,53 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
  #authScreen.public-auth-modal .auth-card{width:calc(100vw - 24px)!important;max-height:calc(100vh - 24px)!important;padding-top:42px!important}
 }
 </style>
-</head>
+<style id="fundledger-mobile-home-v2">
+@media (max-width:760px){
+  /* Phone header: separate from the hero so it never collides with iPhone status/browser UI. */
+  #landingScreen .landing-nav{
+    position:relative!important; top:auto!important; left:auto!important; right:auto!important;
+    z-index:20!important; min-height:74px!important;
+    padding:12px 14px!important;
+    padding-top:max(12px,env(safe-area-inset-top))!important;
+    background:#07365d!important;
+    display:flex!important; align-items:center!important; gap:8px!important;
+  }
+  #landingScreen .landing-brand{font-size:21px!important;gap:7px!important;white-space:nowrap!important;flex:1 1 auto!important;min-width:0!important}
+  #landingScreen .fl-logo{transform:scale(.82);transform-origin:left center;margin-right:-5px!important}
+  #landingScreen .landing-nav-links{gap:6px!important;flex:0 0 auto!important}
+  #landingScreen .landing-nav-links>a{display:none!important}
+  #landingScreen .landing-nav button{
+    min-height:42px!important;padding:0 10px!important;border-radius:10px!important;
+    font-size:13px!important;line-height:1!important;white-space:nowrap!important;background:transparent!important;
+    border:1.5px solid rgba(255,255,255,.92)!important;color:#fff!important;box-shadow:none!important
+  }
+  #landingScreen .landing-nav .create{background:transparent!important;border-color:rgba(255,255,255,.92)!important}
+
+  /* Show the complete desktop artwork on phones instead of zooming/cropping it. */
+  #landingScreen .landing-hero{
+    min-height:0!important;height:auto!important;aspect-ratio:3/2!important;
+    background-size:100% 100%!important;background-position:center top!important;background-repeat:no-repeat!important;
+    position:relative!important;overflow:hidden!important
+  }
+  #landingScreen .landing-hero-actions{
+    left:12px!important;right:12px!important;bottom:12px!important;gap:8px!important;display:flex!important
+  }
+  #landingScreen .landing-hero-actions .landing-cta{
+    flex:1 1 0!important;min-width:0!important;padding:11px 8px!important;border-radius:10px!important;
+    font-size:13px!important;text-align:center!important;white-space:nowrap!important
+  }
+  #landingScreen .landing-section{padding:42px 20px!important}
+  #landingScreen .landing-section h2{font-size:30px!important;line-height:1.15!important}
+}
+@media (max-width:390px){
+  #landingScreen .landing-nav{padding-left:9px!important;padding-right:9px!important;gap:4px!important}
+  #landingScreen .landing-brand{font-size:18px!important;gap:4px!important}
+  #landingScreen .fl-logo{transform:scale(.72);margin-right:-8px!important}
+  #landingScreen .landing-nav-links{gap:4px!important}
+  #landingScreen .landing-nav button{font-size:12px!important;padding:0 8px!important;min-height:40px!important}
+  #landingScreen .landing-hero-actions .landing-cta{font-size:12px!important;padding:10px 5px!important}
+}
+</style></head>
 <body>
 
 <div id="landingScreen">
