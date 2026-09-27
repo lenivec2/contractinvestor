@@ -13,7 +13,7 @@
 (function(){
  function msg(s){var e=document.getElementById("authError");if(e){e.textContent=s||"";e.style.display=s?"":"none";}}
  async function login(){
-  msg(""); if(typeof signIn==="function"){return signIn();}
+  msg("");
   var em=document.getElementById("authEmail"),pw=document.getElementById("authPassword");
   var email=(em&&em.value||"").trim(),password=(pw&&pw.value||"");
   if(!email||!password){msg("Enter your email and password.");return;}
@@ -2818,29 +2818,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
  #authScreen.public-auth-modal .auth-card{width:calc(100vw - 24px)!important;max-height:calc(100vh - 24px)!important;padding-top:42px!important}
 }
 </style>
-<style id="fundledger-matching-signup-styles">
-.auth-mode-heading{text-align:center;margin:-14px 0 18px}.auth-mode-heading.hidden{display:none!important}
-.auth-mode-title{font-size:25px;font-weight:850;color:#17365f}.auth-mode-subtitle{margin-top:5px;font-size:14px;color:#718096}
-#signUpFields .field label{font-weight:700;color:#17365f}#signUpFields input{padding:14px 15px!important;font-size:16px!important;border-radius:9px!important}
-#signUpFields .fundledger-terms-consent{margin-top:14px}#signUpFields .row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important}
-@media(max-width:560px){#signUpFields .row{grid-template-columns:1fr!important}.auth-mode-heading{margin:-8px 0 14px}}
-</style><style id="fundledger-hero-position-fix">
-/* Keep the header/nav in place while shifting the hero artwork lower. */
-.landing-hero{background-position:center 38px!important;}
-@media(max-width:760px){.landing-hero{background-position:center 28px!important;}}
-</style><style id="fundledger-public-create-button-white">
-#landingCreateBtn{
-  background:transparent!important;
-  color:#fff!important;
-  border:2px solid rgba(255,255,255,.92)!important;
-  box-shadow:none!important;
-}
-#landingCreateBtn:hover,#landingCreateBtn:focus{
-  background:rgba(255,255,255,.12)!important;
-  color:#fff!important;
-  border-color:#fff!important;
-}
-</style></head>
+</head>
 <body>
 
 <div id="landingScreen">
@@ -2866,7 +2844,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   <div class="auth-card"><button id="authModalCloseBtn" class="auth-modal-close hidden" type="button" aria-label="Close login or account window">×</button>
     <h2>Contract Payments</h2>
     <div class="auth-brand"><div class="fl-brand-lockup"><div class="fl-brand-row"><span class="fl-logo" aria-hidden="true"><i></i><i></i><i></i></span><span class="fl-wordmark">Fund<span class="ledger">Ledger</span></span></div><div class="fl-tagline">Contact Investing Made Easy</div></div></div>
-    <div id="authModeHeading" class="auth-mode-heading hidden"><div class="auth-mode-title">Create Account</div><div class="auth-mode-subtitle">Create your FundLedger account</div></div><p id="authSubtitle" class="muted"></p>
+    <p id="authSubtitle" class="muted"></p>
     <form id="authForm" autocomplete="on">
       <div id="signInFields">
         <div class="field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></div>
@@ -3907,8 +3885,19 @@ const FUNDLEDGER_TERMS_HTML=`<h3>FundLedger Terms of Service</h3><p><strong>Effe
 const FUNDLEDGER_PRIVACY_HTML=`<h3>FundLedger Privacy Policy</h3><p><strong>Effective date: September 26, 2026.</strong></p><h3>Information We Process</h3><p>FundLedger may process account information such as your email address, authentication information handled by our authentication provider, subscription/access status, service activity, and contract/payment information you choose to store.</p><h3>How Information Is Used</h3><p>Information is used to provide and secure FundLedger, authenticate accounts, synchronize data, provide requested features, administer Free and Pro access, troubleshoot the service, and understand service usage.</p><h3>Backups</h3><p>Exported backup files are under your control. You are responsible for securely storing exported backups and passwords used to protect them.</p><h3>Service Providers</h3><p>FundLedger may rely on third-party providers for hosting, authentication, cloud storage, payments, analytics, or advertising. Provider-specific disclosures may be added as those services are enabled.</p><h3>Your Choices</h3><p>You may use available account controls to manage your account, back up data, and, where available, request account deletion, subject to records that must be retained for legal, security, billing, or fraud-prevention purposes.</p><h3>Policy Updates</h3><p>This policy may be updated as FundLedger features and service providers change.</p>`;
 function openFundLedgerLegal(which){const modal=$("fundLedgerLegalModal"),title=$("fundLedgerLegalTitle"),body=$("fundLedgerLegalBody");if(!modal||!title||!body)return;const privacy=which==="privacy";title.textContent=privacy?"Privacy Policy":"Terms of Service";body.innerHTML=privacy?FUNDLEDGER_PRIVACY_HTML:FUNDLEDGER_TERMS_HTML;modal.classList.remove("hidden")}
 function closeFundLedgerLegal(){$("fundLedgerLegalModal")?.classList.add("hidden")}
-function showSignUpForm(){setAuthError("");$("signInFields")?.classList.add("hidden");$("signUpFields")?.classList.remove("hidden");$("authModeHeading")?.classList.remove("hidden");$("authSubtitle").textContent="";setTimeout(()=>$("signUpEmail")?.focus(),0)}
-function showSignInForm(){$("authSubtitle").textContent="";$("signUpFields")?.classList.add("hidden");$("signInFields")?.classList.remove("hidden");$("authModeHeading")?.classList.add("hidden");setAuthError("");$("authEmail")?.focus()}
+function showSignUpForm(){
+ setAuthError("");
+ const panel=$("signUpFields");
+ panel.classList.remove("hidden");
+ setTimeout(()=>$("signUpEmail").focus(),0);
+}
+function showSignInForm(){
+ $("authSubtitle").textContent="";
+ $("signUpFields").classList.add("hidden");
+ $("signInFields").classList.remove("hidden");
+ setAuthError("");
+ $("authEmail").focus();
+}
 async function signIn(){
  setAuthError("");
  if(!supabaseClient&&!initSupabaseClient())return;
@@ -4953,9 +4942,6 @@ $("landingLoginBtn")?.addEventListener("click",openPublicLogin);
 $("landingCreateBtn")?.addEventListener("click",openPublicSignup);
 $("heroFreeBtn")?.addEventListener("click",openPublicSignup);
 document.querySelectorAll(".public-create-account").forEach(b=>b.addEventListener("click",openPublicSignup));
-$("signUpBtn")?.addEventListener("click",e=>{e.preventDefault();showSignUpForm()});
-$("backToSignInBtn")?.addEventListener("click",e=>{e.preventDefault();showSignInForm()});
-$("createAccountBtn")?.addEventListener("click",e=>{e.preventDefault();signUp()});
 $("backToHomeBtn")?.addEventListener("click",showLanding);
 $("authModalCloseBtn")?.addEventListener("click",closePublicAuthModal);
 $("authScreen")?.addEventListener("click",e=>{if(e.target===$("authScreen")&&$("authScreen")?.classList.contains("public-auth-modal"))closePublicAuthModal()});
