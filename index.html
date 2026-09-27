@@ -2782,6 +2782,9 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
+<style id="fundledger-account-styles">
+.account-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.account-card{border:1px solid #dce8f5;border-radius:12px;padding:18px;background:#fff}.account-card h3{margin:0 0 8px;color:#17365f}.account-value{font-weight:800;color:#17365f;word-break:break-word}.account-danger{border-color:#f1c7c7;background:#fffafa}.account-danger h3{color:#b42318}.account-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}@media(max-width:700px){.account-grid{grid-template-columns:1fr}.account-actions button{width:100%}}
+</style>
 <style id="fundledger-plan-styles">
 .plan-badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:850;background:#eaf3ff;color:#147be8;margin-left:8px}.plan-badge.pro{background:#eaf8ef;color:#07853f}.fundledger-ad-slot{border:1px dashed #b8cbe0;border-radius:10px;min-height:72px;margin:14px 0;padding:10px;display:flex;align-items:center;justify-content:center;text-align:center;background:#f8fbff;color:#718096;font-size:12px}.fundledger-ad-slot strong{display:block;color:#52657d;margin-bottom:3px}.pro-gate{padding:24px;border:1px solid #dce8f5;border-radius:12px;background:#fff;text-align:center}.pro-gate h3{margin:0 0 8px;color:#17365f}.pro-gate .primary-btn{margin-top:12px}.plan-card{border:1px solid #dce8f5;border-radius:12px;padding:16px;margin-top:14px;background:#fff}.plan-card h3{margin:0 0 6px}.plan-features{margin:10px 0 0;padding-left:20px;color:#52657d}.plan-features li{margin:5px 0}
 </style>
@@ -2873,6 +2876,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <a class="nav-item" id="reportsNavLink" href="#reportsPanel"><span class="nav-icon">▥</span><span>Reports</span></a>
 <a href="#analyticsPanel" id="analyticsNavLink" class="nav-item hidden" data-admin-only="true">▥ <span>Analytics</span></a>
 <a class="nav-item" href="#planPanel"><span class="nav-icon">★</span><span>FundLedger Pro</span></a>
+<a class="nav-item" href="#accountPanel"><span class="nav-icon">●</span><span>My Account</span></a>
 <a class="nav-item" href="#settingsPanel"><span class="nav-icon">⚙</span><span>Settings</span></a>
 <a class="nav-item" href="#contactPanel"><span class="nav-icon">✉</span><span>Contact Us</span></a>
 <div id="contactNewMessage" class="contact-new-message" style="display:none" aria-hidden="true">NEW MESSAGE</div>
@@ -3032,6 +3036,18 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
     </div>
   </div>
   <div class="settings-actions"><button class="primary-btn" type="button" onclick="refreshCloudData()">↻ Refresh Data Now</button></div>
+</section>
+
+<section class="panel hidden" id="accountPanel">
+  <div class="section-head"><div><h2>My Account</h2><p class="muted" style="margin:0">Manage your FundLedger account, security, plan, and personal backup.</p></div></div>
+  <div class="account-grid">
+    <div class="account-card"><h3>Account Details</h3><p class="muted">Signed in as</p><div id="accountEmail" class="account-value">—</div><p class="muted" style="margin-top:14px">Member since</p><div id="accountCreated" class="account-value">—</div></div>
+    <div class="account-card"><h3>Your Plan</h3><div><span id="accountPlanName" class="account-value">Free</span> <span id="accountPlanBadge" class="plan-badge">FREE</span></div><p id="accountPlanDetail" class="muted" style="margin-top:10px">Up to 3 active contracts with ads.</p><div class="account-actions"><button class="primary-btn" type="button" onclick="showFundLedgerPlan()">View / Upgrade Plan</button></div></div>
+    <div class="account-card"><h3>Change Password</h3><p class="muted">Choose a new password for this FundLedger account.</p><div class="field"><label>New password</label><input id="accountNewPassword" type="password" minlength="8" autocomplete="new-password" placeholder="At least 8 characters"></div><div class="field" style="margin-top:10px"><label>Confirm new password</label><input id="accountConfirmPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Re-enter password"></div><div class="account-actions"><button class="primary-btn" type="button" onclick="changeFundLedgerPassword()">Update Password</button></div><p id="accountPasswordStatus" class="muted"></p></div>
+    <div class="account-card"><h3>Backup &amp; Recovery</h3><p class="muted">Download an encrypted copy of your contracts, payments, and preferences. Your backup password is required to restore it.</p><div class="account-actions"><button class="primary-btn" type="button" onclick="exportFundLedgerBackup()">Export Encrypted Backup</button><button type="button" onclick="chooseFundLedgerBackup()">Restore Backup</button></div></div>
+    <div class="account-card"><h3>Refresh Account Data</h3><p class="muted">Reload your latest FundLedger information from the cloud.</p><div class="account-actions"><button class="primary-btn" type="button" onclick="refreshCloudData()">Refresh My Data</button></div></div>
+    <div class="account-card account-danger"><h3>Delete Account</h3><p class="muted">Permanently deletes your FundLedger account and its cloud data. Export a backup first if you may need your records later.</p><div class="account-actions"><button class="danger-btn" type="button" onclick="deleteMyFundLedgerAccount()">Delete My Account</button></div><p id="accountDeleteStatus" class="muted"></p></div>
+  </div>
 </section>
 
 <section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><h3 style="margin-top:16px">FundLedger Pro — $5.99/month</h3><ul class="plan-features"><li>Unlimited active contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Secure checkout must be connected before live subscriptions can be charged.</p></div></section>
@@ -3599,11 +3615,11 @@ function setupNavScrolling(){
         /* Mobile: exactly one sidebar destination at a time. */
         const appScreen=document.getElementById("appScreen");
         const routeId=id==="#dashboard"?"dashboard":id.slice(1);
-  const allRoutePanels=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","planPanel","settingsPanel","contactPanel"];
+  const allRoutePanels=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","planPanel","accountPanel","settingsPanel","contactPanel"];
   allRoutePanels.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.add("hidden")});
   if(routeId!=="dashboard"&&target)target.classList.remove("hidden");
         if(appScreen) appScreen.dataset.mobileRoute=routeId;
-        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","planPanel","settingsPanel","contactPanel"];
+        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","planPanel","accountPanel","settingsPanel","contactPanel"];
         mobileRouteIds.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.toggle("hidden",route!==routeId)});
         if(routeId!=="dashboard") target.classList.remove("hidden");
         const content=document.querySelector(".content");
@@ -3624,6 +3640,7 @@ function setupNavScrolling(){
       updateAdminContactVisibility();
       if(id==="#reportsPanel") renderReports();
       if(id==="#settingsPanel") updateSettingsPanel();
+      if(id==="#accountPanel") updateMyAccountPanel();
       if(id==="#contactPanel") loadMyContactMessages();
     });
   });
@@ -5684,5 +5701,32 @@ async function adminCheckProAccess(){
  window.loadFundLedgerAnalytics=async function(){if(!isAdmin||!adminPinUnlocked||!supabaseClient)return;const period=document.getElementById("analyticsPeriod")?.value||"30";try{const {data,error}=await supabaseClient.rpc("admin_fundledger_analytics",{p_period:period});if(error)throw error;const d=Array.isArray(data)?data[0]:data;if(!d)return;const ids={visitors:"anVisitors",visits:"anVisits",users:"anUsers",active:"anActive",logins:"anLogins",new_accounts:"anNew"};Object.entries(ids).forEach(([k,id])=>{const e=document.getElementById(id);if(e)e.textContent=Number(d.current?.[k]||0).toLocaleString();const c=document.getElementById(id+"Compare");if(c){const cur=Number(d.current?.[k]||0),prev=Number(d.previous?.[k]||0),pct=prev?Math.round((cur-prev)/prev*100):0;c.textContent=(cur>=prev?"↑ ":"↓ ")+Math.abs(pct)+"% vs previous period"}});const visitors=Number(d.current?.visitors||0),newA=Number(d.current?.new_accounts||0);const cv=document.getElementById("anConversion");if(cv)cv.textContent=(visitors?newA/visitors*100:0).toFixed(1)+"%";const tr=Array.isArray(d.trend)?d.trend:[],mx=Math.max(1,...tr.map(x=>Number(x.visits||0)));const bars=tr.map(x=>`<i title="${Number(x.visits||0)} visits" style="height:${Math.max(5,Number(x.visits||0)/mx*100)}%"></i>`).join("");const ch=document.getElementById("analyticsTrend");if(ch)ch.innerHTML=bars||'<span class="muted">No visits recorded yet.</span>';const vb=document.getElementById("analyticsVisitorBars");if(vb)vb.innerHTML=bars;const paid=Number(d.current?.paid_subscribers||0),free=Number(d.current?.free_subscribers||0),trial=Number(d.current?.trial_subscribers||0),tot=paid+free+trial;[["anPaidSubscribers",paid],["anFreeSubscribers",free],["anTrialSubscribers",trial]].forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.textContent=v.toLocaleString()});[["anPaidBar",paid],["anFreeBar",free],["anTrialBar",trial]].forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.style.width=(tot?v/tot*100:0)+"%"});}catch(e){console.error("Analytics load failed",e);toast("Analytics could not be loaded.")}};
  document.addEventListener("DOMContentLoaded",()=>{document.getElementById("analyticsRefreshBtn")?.addEventListener("click",loadFundLedgerAnalytics);document.getElementById("analyticsPeriod")?.addEventListener("change",loadFundLedgerAnalytics)});
 })();
-</script></body>
+</script><script id="fundledger-my-account">
+function updateMyAccountPanel(){
+ const u=window.currentUser||currentUser;
+ const email=document.getElementById("accountEmail"), created=document.getElementById("accountCreated");
+ if(email)email.textContent=u?.email||"—";
+ if(created)created.textContent=u?.created_at?new Date(u.created_at).toLocaleDateString():"—";
+ const pro=typeof fundLedgerIsPro==="function"&&fundLedgerIsPro();
+ const name=document.getElementById("accountPlanName"), badge=document.getElementById("accountPlanBadge"), detail=document.getElementById("accountPlanDetail");
+ if(name)name.textContent=pro?"FundLedger Pro":"FundLedger Free";
+ if(badge){badge.textContent=pro?"PRO":"FREE";badge.classList.toggle("pro",pro)}
+ if(detail)detail.textContent=pro?"Unlimited active contracts, Reports, and no advertisements.":"Up to 3 active contracts with ads. Reports are not included.";
+}
+async function changeFundLedgerPassword(){
+ const p=document.getElementById("accountNewPassword")?.value||"", c=document.getElementById("accountConfirmPassword")?.value||"", st=document.getElementById("accountPasswordStatus");
+ if(p.length<8){if(st)st.textContent="Password must be at least 8 characters.";return}
+ if(p!==c){if(st)st.textContent="Passwords do not match.";return}
+ try{const {error}=await supabaseClient.auth.updateUser({password:p});if(error)throw error;if(st)st.textContent="Password updated successfully.";document.getElementById("accountNewPassword").value="";document.getElementById("accountConfirmPassword").value="";toast("Password updated")}catch(e){if(st)st.textContent=e.message||"Could not update password."}
+}
+async function deleteMyFundLedgerAccount(){
+ if(!currentUser)return;
+ const phrase=prompt('This permanently deletes your FundLedger account and cloud data. Type DELETE to continue.');
+ if(phrase!=="DELETE"){return}
+ if(!confirm("Final confirmation: permanently delete this FundLedger account? This cannot be undone."))return;
+ const st=document.getElementById("accountDeleteStatus");
+ try{const {error}=await supabaseClient.rpc("delete_my_fundledger_account");if(error)throw error;try{localStorage.clear()}catch(_e){};await supabaseClient.auth.signOut();location.reload()}catch(e){if(st)st.textContent=e.message||"Could not delete account. Make sure the latest Supabase setup has been run."}
+}
+</script>
+</body>
 </html>
