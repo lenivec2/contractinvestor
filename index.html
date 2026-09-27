@@ -2806,7 +2806,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   </section>
   <section id="pricingPublic" class="landing-section"><div class="landing-kicker">Choose Your Plan</div><h2>Simple plans for the way you track contracts.</h2><div class="landing-plans">
     <div class="landing-plan"><h3>FundLedger Free</h3><div class="landing-price">$0 <small>with ads</small></div><ul><li>Up to 3 active contracts</li><li>Core contract and payment tracking</li><li>Dashboard summaries</li><li>Advertisements displayed</li><li>Reports not included</li></ul><button class="landing-cta primary public-create-account" type="button">Create Free Account</button></div>
-    <div class="landing-plan pro"><h3>FundLedger Pro</h3><div class="landing-price">$5.99 <small>/ month</small></div><ul><li>Unlimited active contracts</li><li>Full contract and payment tracking</li><li>Reports section</li><li>Ad-free experience</li><li>All dashboard features</li></ul><button class="landing-cta primary public-create-account" type="button">Get FundLedger Pro</button></div>
+    <div class="landing-plan pro"><h3>FundLedger Pro</h3><div class="landing-price">$9.99 <small>/ month</small></div><ul><li>Unlimited active contracts</li><li>Full contract and payment tracking</li><li>Reports section</li><li>Ad-free experience</li><li>All dashboard features</li></ul><button class="landing-cta primary public-create-account" type="button">Get FundLedger Pro</button></div>
   </div></section>
   <footer class="landing-footer">© 2026 FundLedger &nbsp; • &nbsp; Contract investing made easy.</footer>
 </div>
@@ -3050,7 +3050,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   </div>
 </section>
 
-<section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><h3 style="margin-top:16px">FundLedger Pro — $5.99/month</h3><ul class="plan-features"><li>Unlimited active contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Secure checkout must be connected before live subscriptions can be charged.</p></div></section>
+<section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><h3 style="margin-top:16px">FundLedger Pro — $9.99/month</h3><ul class="plan-features"><li>Unlimited active contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Secure checkout must be connected before live subscriptions can be charged.</p></div></section>
 <section class="panel hidden" id="contactPanel">
   <div class="section-head"><div><h2>Contact Us</h2><p class="muted" style="margin:0">Send a message to the administrator.</p></div></div>
   <div id="adminAccessArea" class="admin-access-area hidden">
@@ -5683,7 +5683,7 @@ async function adminCheckProAccess(){
   const btn=document.getElementById("upgradeProBtn"); if(btn){btn.classList.toggle("hidden",pro);btn.disabled=pro}
  };
  window.showFundLedgerPlan=function(){const link=document.querySelector('.nav-item[href="#planPanel"]');if(link)link.click()};
- window.startFundLedgerProCheckout=function(){toast("FundLedger Pro checkout is ready to connect. Add your payment provider before accepting live $5.99 subscriptions.")};
+ window.startFundLedgerProCheckout=function(){toast("FundLedger Pro checkout is ready to connect. Add your payment provider before accepting live $9.99 subscriptions.")};
  document.addEventListener("DOMContentLoaded",applyFundLedgerPlan);
 })();
 </script>
