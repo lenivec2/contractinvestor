@@ -2781,6 +2781,10 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   #newContractPanel > .add-contract-quick-tips{display:none !important;}
 }
 </style>
+
+<style id="fundledger-plan-styles">
+.plan-badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:850;background:#eaf3ff;color:#147be8;margin-left:8px}.plan-badge.pro{background:#eaf8ef;color:#07853f}.fundledger-ad-slot{border:1px dashed #b8cbe0;border-radius:10px;min-height:72px;margin:14px 0;padding:10px;display:flex;align-items:center;justify-content:center;text-align:center;background:#f8fbff;color:#718096;font-size:12px}.fundledger-ad-slot strong{display:block;color:#52657d;margin-bottom:3px}.pro-gate{padding:24px;border:1px solid #dce8f5;border-radius:12px;background:#fff;text-align:center}.pro-gate h3{margin:0 0 8px;color:#17365f}.pro-gate .primary-btn{margin-top:12px}.plan-card{border:1px solid #dce8f5;border-radius:12px;padding:16px;margin-top:14px;background:#fff}.plan-card h3{margin:0 0 6px}.plan-features{margin:10px 0 0;padding-left:20px;color:#52657d}.plan-features li{margin:5px 0}
+</style>
 </head>
 <body>
 <div id="authScreen" class="auth-wrap">
@@ -2846,8 +2850,9 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <a class="nav-item" href="#contractsPanel"><span class="nav-icon">▣</span><span>Active Contracts</span></a>
 <a class="nav-item" href="#completedPanel"><span class="nav-icon">✓</span><span>Completed Contracts</span></a>
 <a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Payment History</span></a>
-<a class="nav-item" href="#reportsPanel"><span class="nav-icon">▥</span><span>Reports</span></a>
+<a class="nav-item" id="reportsNavLink" href="#reportsPanel"><span class="nav-icon">▥</span><span>Reports</span></a>
 <a href="#analyticsPanel" id="analyticsNavLink" class="nav-item hidden" data-admin-only="true">▥ <span>Analytics</span></a>
+<a class="nav-item" href="#planPanel"><span class="nav-icon">★</span><span>FundLedger Pro</span></a>
 <a class="nav-item" href="#settingsPanel"><span class="nav-icon">⚙</span><span>Settings</span></a>
 <a class="nav-item" href="#contactPanel"><span class="nav-icon">✉</span><span>Contact Us</span></a>
 <div id="contactNewMessage" class="contact-new-message" style="display:none" aria-hidden="true">NEW MESSAGE</div>
@@ -2863,6 +2868,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <div class="summary-card default" data-summary-key="default"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Defaulted Contracts</div><div class="summary-value" id="defaultContracts">0</div></div></div></div>
 <div class="summary-card default-loss" data-summary-key="defaultLoss"><div class="summary-top"><div class="summary-icon">−</div><div><div class="summary-label">Default Loss</div><div class="summary-value" id="defaultLoss">$0.00</div></div></div></div>
 </div>
+<div id="dashboardAdSlot" class="fundledger-ad-slot hidden"><div><strong>Advertisement</strong><span>Ad space for the FundLedger Free plan</span></div></div>
 <section class="panel" id="checkPanel"><h2>Add Payment / Check</h2><div class="row"><div class="field"><label>Payment Amount <span class="required-star" id="amountRequiredStar" aria-hidden="true">*</span></label><input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="$0.00" oninput="clearPaymentRequiredError('amount');updateBreakdown()" onchange="checkForDuplicateCheck(true)"></div><div class="field"><label>Payment Date <span class="required-star" id="dateRequiredStar" aria-hidden="true">*</span></label><input id="date" type="date" data-auto-today="1" onchange="this.dataset.autoToday='0';clearPaymentRequiredError('date');checkForDuplicateCheck(true)"></div><div class="field"><label>Date Received</label><input id="dateReceived" type="text" placeholder="Optional" onfocus="activateOptionalDate(this)" onblur="resetOptionalDate(this)"></div><div class="field"><label>Check #</label><input id="checkno" inputmode="numeric" placeholder="Optional" onchange="checkForDuplicateCheck(true)"></div></div><h3>Select Contract(s) for This Payment</h3><div class="choices" id="contractChoices"></div><h3>Manual Payment Breakdown</h3><div class="manual-box" id="manualBreakdown"></div><div class="check-form-actions"><button class="secondary" type="button" onclick="clearCheckEntry()">Cancel / Clear</button><button class="primary-btn save-check" id="saveCheckBtn" type="button" onclick="addCheck()" disabled>Save Payment</button></div></section>
 <section class="panel" id="newContractPanel"><h2>Add Contract</h2><p class="contract-form-intro">Enter the contract terms below. Projected results update automatically. <span class="add-contract-settings-hint">For additional fields, go to Settings → Add Contract Fields.</span></p><div class="row contract-entry-grid"><div class="contract-grid-heading details-heading">Contract Details</div><div class="field contract-name-field"><label>Contract Name / ID</label><input id="cname" placeholder="Contract #1" oninput="updateAddContractButton()"></div><div class="field contract-type-field" data-contract-field="contractType"><label>Contract Type</label><select id="ctype" onchange="applyContractTypeFields();updateAddContractButton()"><option value="Funding Agreement">Funding Agreement</option><option value="Revenue Share">Revenue Share</option><option value="Installment Contract">Installment Contract</option><option value="Loan / Note">Loan / Note</option><option value="Investment Agreement">Investment Agreement</option><option value="Fixed Return Agreement">Fixed Return Agreement</option><option value="Other">Other</option></select></div><div class="field contract-custom-type-field" id="customContractTypeField" style="display:none"><label>Custom Contract Type</label><input id="ccustomtype" type="text" placeholder="Ex: Partnership Agreement" oninput="updateAddContractButton()"></div><div class="contract-date-field field"><label>Contract Start Date</label><input id="cdate" type="date" onchange="updateAddContractButton()"></div><div class="field contract-maturity-field"><label>End / Maturity Date <span class="muted">(Optional)</span></label><input id="cmaturity" type="date"></div><div class="field contract-frequency-field" data-contract-field="paymentFrequency"><label>Payment Frequency</label><select id="cpaymentfreq"><option value="Weekly">Weekly</option><option value="Biweekly">Biweekly</option><option value="Monthly">Monthly</option><option value="Custom">Custom</option></select></div><div class="contract-grid-heading funding-heading">Funding &amp; Return</div><div class="field contract-share-field dynamic-contract-field" id="contractShareField" style="display:none"><label>Revenue Share (%)</label><input id="crevenueshare" type="number" inputmode="decimal" min="0" max="100" step="0.01" placeholder="Ex: 20%"></div><div class="field contract-interest-field dynamic-contract-field" id="contractInterestField" style="display:none"><label>Interest Rate (%)</label><input id="cinterestrate" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: 8%"></div><div class="field contract-invest-field"><label>Participant Funded Amount</label><input id="cinvest" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: $5,000" oninput="updateContractPaymentCalculation();updateAddContractButton()"></div><div class="field contract-referral-field"><label>Upfront Referral Fee <span class="muted">(Optional)</span></label><input id="creferral" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: $300" title="Optional upfront referral fee." oninput="updateContractPaymentCalculation();updateAddContractButton()" onblur="validateReferralFeeField();updateAddContractButton()"></div><div class="field contract-return-field"><label>Gross Return</label><input id="ctotalreturn" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex: $6,800" oninput="updateContractPaymentCalculation();updateAddContractButton()"></div><div class="field contract-fee-field"><label>Administrative Fee (%) <span class="muted">(Optional)</span></label><input id="cadminfee" type="number" inputmode="decimal" min="0" max="100" step="0.01" placeholder="Ex: 2%" title="Optional administrative fee percentage." oninput="updateContractPaymentCalculation();updateAddContractButton()" onblur="validateAdminFeeField();updateAddContractButton()"></div><div class="field contract-payments-field"><label>Total Expected Payments</label><input id="cpayments" type="number" inputmode="numeric" min="1" step="1" placeholder="Ex: 34" oninput="updateContractPaymentCalculation();updateAddContractButton()"></div><div class="field contract-amount-field"><label>Payment Amount</label><input id="cpreset" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Auto-calculated" oninput="updateContractPaymentOverride();updateAddContractButton()"></div><div class="contract-grid-heading">Additional Details <span class="muted" style="font-weight:600">— Optional</span></div><div class="field contract-check-field"><label>Funding Check #</label><input id="ccheckno" inputmode="numeric" placeholder="Optional"></div><div class="field" style="grid-column:span 2"><label>Notes <span class="muted">(Optional)</span></label><textarea id="cnotes" rows="2" placeholder="Optional contract notes"></textarea></div><div class="contract-grid-heading results-heading" id="projectedResultsHeading" role="button" tabindex="0" aria-expanded="true" onclick="toggleProjectedResults()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleProjectedResults()}"><span>Projected Results</span><button class="projected-results-toggle" type="button" tabindex="-1" aria-label="Minimize Projected Results"><span id="projectedResultsArrow">▲</span></button></div><div id="contractCalcSummary" class="contract-calc-summary"><div><span>Gross Return</span><strong id="contractCalcTotal">$0.00</strong></div><div class="fee-value"><span>Administrative Fee</span><strong id="contractCalcFee">$0.00</strong></div><div><span>Net Return</span><strong id="contractCalcNet">$0.00</strong></div><div><span>Payment Amount</span><strong id="contractCalcPayment">$0.00</strong></div></div></div><button type="button" class="participation-calculator-trigger" onclick="openParticipationCalculator()">View Participant Calculation <span class="participant-arrow">▾</span></button><div id="participationCalculatorModal" class="participation-modal" aria-hidden="true"><div class="participation-modal-backdrop" onclick="closeParticipationCalculator()"></div><div class="participation-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="participationCalculatorTitle"><button type="button" class="participation-modal-close" onclick="closeParticipationCalculator()" aria-label="Close">×</button><h3 id="participationCalculatorTitle">Participation Calculator</h3><p class="participation-calculator-help">Enter the full contract amounts and your funded portion without fees. The repayment uses your exact share; the displayed percentage is rounded.</p><div class="participation-calculator-grid"><div class="field"><label>Entire Contract Funded</label><input id="fullContractFunded" type="number" inputmode="decimal" min="0" step="0.01"></div><div class="field"><label>Entire Contract Repayment</label><input id="fullContractRepayment" type="number" inputmode="decimal" min="0" step="0.01"></div><div class="field"><label>My Funded Portion w/out Fees</label><input id="myFundedPortion" type="number" inputmode="decimal" min="0" step="0.01" placeholder="5,000"></div></div><div class="participation-result"><div><span>Your Participation Percentage</span><strong id="participationPercent">0.0%</strong></div><div><span>Your Repayment Portion</span><strong id="participationRepayment">$0.00</strong></div></div><button type="button" class="secondary-btn participation-modal-done" onclick="closeParticipationCalculator()">Close</button></div></div><div id="addContractValidation" class="contract-validation-msg">Complete the required fields to add this contract.</div><button id="addContractBtn" class="primary-btn" style="margin-top:8px" onclick="addContract()" disabled>＋ Add Contract</button>
 <div class="payment-quick-tips add-contract-quick-tips">
@@ -3008,6 +3014,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   <div class="settings-actions"><button class="primary-btn" type="button" onclick="refreshCloudData()">↻ Refresh Data Now</button></div>
 </section>
 
+<section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><h3 style="margin-top:16px">FundLedger Pro — $5.99/month</h3><ul class="plan-features"><li>Unlimited active contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Secure checkout must be connected before live subscriptions can be charged.</p></div></section>
 <section class="panel hidden" id="contactPanel">
   <div class="section-head"><div><h2>Contact Us</h2><p class="muted" style="margin:0">Send a message to the administrator.</p></div></div>
   <div id="adminAccessArea" class="admin-access-area hidden">
@@ -3564,6 +3571,7 @@ function setupNavScrolling(){
       const target=document.querySelector(id);
       if(!target) return;
       e.preventDefault();
+      if(id==="#reportsPanel"&&!fundLedgerIsPro()){toast("Reports are available with FundLedger Pro.");showFundLedgerPlan();return;}
       document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
       const dashboardSummary=$("dashboardSummary");
       if(dashboardSummary) dashboardSummary.classList.toggle("hidden",id!=="#dashboard");
@@ -3571,11 +3579,11 @@ function setupNavScrolling(){
         /* Mobile: exactly one sidebar destination at a time. */
         const appScreen=document.getElementById("appScreen");
         const routeId=id==="#dashboard"?"dashboard":id.slice(1);
-  const allRoutePanels=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","settingsPanel","contactPanel"];
+  const allRoutePanels=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","planPanel","settingsPanel","contactPanel"];
   allRoutePanels.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.add("hidden")});
   if(routeId!=="dashboard"&&target)target.classList.remove("hidden");
         if(appScreen) appScreen.dataset.mobileRoute=routeId;
-        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","settingsPanel","contactPanel"];
+        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","planPanel","settingsPanel","contactPanel"];
         mobileRouteIds.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.toggle("hidden",route!==routeId)});
         if(routeId!=="dashboard") target.classList.remove("hidden");
         const content=document.querySelector(".content");
@@ -3647,6 +3655,7 @@ window.addEventListener("resize",updateSummaryGridLayout);
 function setUserStatus(user){const el=$("userStatus");if(el)el.innerHTML=user?"Signed in as "+escape(user.email||"user")+(isAdmin?" <span class=\"admin-badge\">MASTER ADMIN</span>":""):"Not signed in"}
 function setAuthError(s){const el=$("authError");el.textContent=s||"";el.style.display=s?"block":"none"}
 function showApp(){
+  setTimeout(()=>window.loadFundLedgerPlan?.(),0);
   $("authScreen").classList.add("hidden");
   $("passwordRecoveryScreen").classList.add("hidden");
   $("appScreen").classList.remove("hidden");
@@ -3830,6 +3839,7 @@ async function signUp(){
  try{
   const {data:result,error}=await supabaseClient.auth.signUp({email,password});
   if(error){setAuthError(error.message);return}
+  if(result?.user)window.trackFundLedgerEvent?.("signup");
   if(result?.user && Array.isArray(result.user.identities) && result.user.identities.length===0){setAuthError("An account with that email may already exist. Try signing in or use Reset your password.");return}
   if(result?.session){toast("Account created"); setAuthError("");}
   else{setAuthError("Account created. Check your email to confirm your account, then sign in.")}
@@ -4339,6 +4349,7 @@ function updateAddContractButton(){
  if(msg)msg.textContent=missing.length?`Complete: ${missing.slice(0,3).join(", ")}${missing.length>3?"…":""}`:"Ready to add contract.";
 }
 function addContract(){
+ if(!fundLedgerIsPro() && data.contracts.filter(c=>!c.closed).length>=3){toast("Free plan supports up to 3 active contracts. Upgrade to FundLedger Pro for unlimited active contracts.");showFundLedgerPlan();return}
  let name=$("cname").value.trim(),inv=parseFloat($("cinvest").value)||0,referralFee=parseFloat($("creferral")?.value)||0,totalReturn=parseFloat($("ctotalreturn").value)||0,adminFee=parseFloat($("cadminfee").value)||0,preset=parseFloat($("cpreset").value)||0,payments=Math.max(0,parseInt($("cpayments").value,10)||0),date=$("cdate").value,checkno=$("ccheckno").value.trim(),contractType=$("ctype")?.value||"Other",customContractType=$("ccustomtype")?.value.trim()||"",revenueSharePercent=parseFloat($("crevenueshare")?.value)||0,interestRatePercent=parseFloat($("cinterestrate")?.value)||0,maturityDate=$("cmaturity")?.value||"",paymentFrequency=$("cpaymentfreq")?.value||"Custom",notes=$("cnotes")?.value.trim()||"";
  if(!name){toast("Enter a contract name");return}
  if(contractType==="Other"&&!customContractType){toast("Enter a custom contract type");return}
@@ -5582,6 +5593,30 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 document.getElementById("verifyEncryptionBtn")?.addEventListener("click",async()=>{const el=document.getElementById("encryptionStatus");if(!currentUser){if(el)el.textContent="Sign in first";return}try{await getOrCreateEncryptionSecret(currentUser.id);if(el)el.textContent="Encryption key available • recovery ready";toast("Encryption recovery is ready")}catch(e){console.error(e);if(el)el.textContent="Recovery setup required — run updated Supabase SQL";toast("Encryption recovery setup required")}});
 </script>
 
+<script id="fundledger-free-pro-plans">
+(function(){
+ window.fundLedgerPlan="free";
+ window.fundLedgerIsPro=function(){return window.fundLedgerPlan==="pro"||!!window.isAdmin};
+ window.loadFundLedgerPlan=async function(){
+  let plan="free";
+  try{
+   if(window.supabaseClient&&window.currentUser){const r=await supabaseClient.rpc("get_my_fundledger_plan");if(!r.error&&r.data)plan=String(r.data).toLowerCase()==="pro"?"pro":"free";}
+  }catch(e){console.warn("Plan lookup failed; using Free plan",e)}
+  window.fundLedgerPlan=plan; applyFundLedgerPlan(); return plan;
+ };
+ window.applyFundLedgerPlan=function(){
+  const pro=fundLedgerIsPro();
+  const reports=document.getElementById("reportsNavLink"); if(reports)reports.classList.toggle("hidden",!pro);
+  const ad=document.getElementById("dashboardAdSlot"); if(ad)ad.classList.toggle("hidden",pro);
+  const name=document.getElementById("currentPlanName"); if(name)name.textContent=pro?"FundLedger Pro":"Free";
+  const badge=document.getElementById("currentPlanBadge"); if(badge){badge.textContent=pro?"PRO":"FREE";badge.classList.toggle("pro",pro)}
+  const btn=document.getElementById("upgradeProBtn"); if(btn){btn.classList.toggle("hidden",pro);btn.disabled=pro}
+ };
+ window.showFundLedgerPlan=function(){const link=document.querySelector('.nav-item[href="#planPanel"]');if(link)link.click()};
+ window.startFundLedgerProCheckout=function(){toast("FundLedger Pro checkout is ready to connect. Add your payment provider before accepting live $5.99 subscriptions.")};
+ document.addEventListener("DOMContentLoaded",applyFundLedgerPlan);
+})();
+</script>
 <script id="fundledger-analytics">
 (function(){
  const visitorKey="fundledgerVisitorId";
