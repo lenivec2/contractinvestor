@@ -3679,6 +3679,12 @@ function restoreDefaultLayout(){
  applyContractTableColumnOrder("active");applyContractTableColumnOrder("completed");applyContractTableColumnOrder("history");
  updateSettingsPanel();save();toast("Default layout restored");
 }
+function collapseSettingsSections(){
+ const panel=document.getElementById("settingsPanel");
+ if(!panel)return;
+ panel.querySelectorAll("details").forEach(section=>{section.open=false;});
+}
+
 function updateSettingsPanel(){
  const email=$("settingsAccountEmail");if(email)email.textContent=currentUser?.email||"Not signed in";
  const refreshSelect=$("automaticDataRefreshSelect"),refreshHelp=$("automaticDataRefreshHelp"),refreshEnabled=automaticDataRefreshEnabled();
@@ -3744,7 +3750,8 @@ function setupNavScrolling(){
       if(id!=="#contactPanel")adminPinUnlocked=false;
       updateAdminContactVisibility();
       if(id==="#reportsPanel") renderReports();
-      if(id==="#settingsPanel") updateSettingsPanel();
+      if(id!=="#settingsPanel") collapseSettingsSections();
+      if(id==="#settingsPanel"){ collapseSettingsSections(); updateSettingsPanel(); }
       if(id==="#accountPanel") updateMyAccountPanel();
       if(id==="#contactPanel") loadMyContactMessages();
     });
