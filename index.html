@@ -4139,7 +4139,13 @@ async function loadCloudData(expectedUserId=null){
    saveLocalCache(userId,data);
    cloudDataReady=true;fundLedgerSuccessfulCloudRead=true;rememberFundLedgerGood(data);
    setSyncStatus(row.data.fundledger_encrypted?"Loaded encrypted data":"Loaded legacy data — encryption will apply on save");
+   // Re-render from the freshly loaded cloud dataset. The summary cards must
+   // be calculated after Supabase data replaces the initial empty dataset.
+   render();
    updateContractSummaryCounts();
+   // Keep the visible dashboard counts synchronized even if another UI update
+   // runs immediately after the cloud-load render.
+   requestAnimationFrame(()=>updateContractSummaryCounts());
    return true;
   }
   // A genuinely new user gets a brand-new empty dataset.
