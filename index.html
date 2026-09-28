@@ -4408,6 +4408,22 @@ function toggleProjectedResults(){
  const btn=heading.querySelector(".projected-results-toggle");
  if(btn)btn.setAttribute("aria-label",collapsed?"Show Projected Results":"Minimize Projected Results");
 }
+function ensureFundLedgerDataForRender(){
+ // Some Supabase/auth refresh events can briefly reset the in-memory dataset
+ // before the next cloud response arrives. Never render the contract tables
+ // from that temporary empty state when this signed-in user already has saved
+ // FundLedger records.
+ if(!currentUser)return data;
+ const hasContracts=Array.isArray(data?.contracts)&&data.contracts.length>0;
+ const hasChecks=Array.isArray(data?.checks)&&data.checks.length>0;
+ if(hasContracts||hasChecks)return data;
+ let recovered=getFundLedgerGood(currentUser.id);
+ if(!recovered)recovered=loadLocalCache(currentUser.id);
+ if(recovered&&hasFundLedgerRecords(recovered)){
+  data=normalizeFundLedgerData(recovered);
+ }
+ return data;
+}
 function updateContractNumberPlaceholder(){let n=data.contracts.length+1;$("cname").placeholder=`Contract #${n}`}
 let toastTimer=null;
 function toast(s,duration=1800){const element=$("toast");if(!element)return;clearTimeout(toastTimer);element.textContent=s;element.style.display="block";toastTimer=setTimeout(()=>element.style.display="none",duration)}
@@ -4980,7 +4996,7 @@ function activeContractRowsHtml(open){
  }).join('')||'<tr><td colspan="10" class="empty">No active contracts match your search.</td></tr>';
 }
 function renderActiveContractsTable(){
- const open=(data.contracts||[]).filter(c=>!c.closed);
+ const open=(data.contracts||[]).filter(c=>!isFundLedgerContractClosed(c));
  if(selectedActiveContractId!=null&&!open.some(c=>String(c.id)===String(selectedActiveContractId)))selectedActiveContractId=null;
  const body=document.getElementById('contracts');if(body)body.innerHTML=activeContractRowsHtml(open);
  updateActiveContractActionButtons();
@@ -5052,6 +5068,7 @@ function keepContractSummaryCountsFresh(){
  },250);
 }
 function render(){
+ ensureFundLedgerDataForRender();
  updateContractNumberPlaceholder();
  let open=data.contracts.filter(c=>!isFundLedgerContractClosed(c)),filterOpts=open.map(c=>`<option>${escape(c.name)}</option>`).join("");
  selectedChoiceIds=selectedChoiceIds.filter(id=>open.some(c=>c.id===id));
@@ -5105,7 +5122,7 @@ function runSelectedCompletedAction(action){
  if(action==='edit')editContract(id);else if(action==='restore')restoreContract(id);else if(action==='delete')removeContract(id);
 }
 function renderCompletedContracts(){
- let completed=(data.contracts||[]).filter(c=>c.closed);
+ let completed=(data.contracts||[]).filter(c=>isFundLedgerContractClosed(c));
  if(selectedCompletedContractId!=null&&!completed.some(c=>String(c.id)===String(selectedCompletedContractId)))selectedCompletedContractId=null;
  const countEl=document.getElementById('completedCount');if(countEl)countEl.textContent=`${completed.length} contract${completed.length===1?'':'s'} completed`;
  const term=(document.getElementById('completedContractSearch')?.value||'').trim().toLowerCase();
