@@ -2940,6 +2940,27 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
+
+<style id="fundledger-home-picture-target">
+/* Match the approved home-page reference: preserve the full 1536x1024 artwork proportions,
+   allow the viewport to crop only the excess bottom, and lower the top navigation slightly. */
+@media (min-width:761px){
+  #landingScreen .landing-nav{
+    top:14px!important;
+    background:transparent!important;
+    background-image:none!important;
+    box-shadow:none!important;
+  }
+  #landingScreen .landing-hero{
+    height:100vh!important;
+    min-height:0!important;
+    background-size:100% auto!important;
+    background-position:center top!important;
+    background-repeat:no-repeat!important;
+    margin:0!important;
+  }
+}
+</style>
 </head>
 <body>
 
