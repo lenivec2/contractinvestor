@@ -2949,6 +2949,11 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 <style id="fundledger-landing-popup-styles">
 /* Keep the public home page focused on the hero; informational content opens in accessible pop-ups. */
 #landingScreen>.landing-section,#landingScreen>.landing-footer{display:none!important}
+@media(max-width:760px){
+  /* Phones use a normal scrolling home page beneath the hero instead of leaving an empty viewport. */
+  #landingScreen>.landing-section{display:block!important;background:#f6f9fd!important}
+  #landingScreen>.landing-footer{display:block!important}
+}
 body.landing-info-open{overflow:hidden}
 .landing-info-modal{position:fixed;inset:0;z-index:6500;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,24,43,.7);backdrop-filter:blur(4px)}
 .landing-info-modal.hidden{display:none!important}
