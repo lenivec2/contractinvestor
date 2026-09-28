@@ -5006,11 +5006,10 @@ function isFundLedgerContractClosed(c){
  return status==="completed"||status==="default"||status==="defaulted"||status==="closed";
 }
 function updateContractSummaryCounts(){
- // Summary counts must follow the same authoritative dataset used by the
- // Active/Completed/Defaulted contract screens. During login/refresh there
- // can be a very short window where another auth event resets `data` before
- // the cloud snapshot is applied, so prefer the last known-good snapshot (or
- // the signed-in user's local recovery cache) when the live array is empty.
+ // The Summary Boxes must match the contracts the user can actually see.
+ // Use the live data first, but if an auth/cloud refresh temporarily leaves
+ // the in-memory array empty while the contract tables still contain rows,
+ // reconcile from those rendered rows instead of showing a misleading zero.
  let contracts=Array.isArray(data?.contracts)?data.contracts:[];
  if(currentUser&&contracts.length===0){
    const good=getFundLedgerGood(currentUser.id);
@@ -5020,8 +5019,17 @@ function updateContractSummaryCounts(){
      if(Array.isArray(cached?.contracts)&&cached.contracts.length)contracts=cached.contracts;
    }
  }
- const activeCount=contracts.filter(c=>!isFundLedgerContractClosed(c)).length;
- const allCount=contracts.length;
+ let activeCount=contracts.filter(c=>!isFundLedgerContractClosed(c)).length;
+ let allCount=contracts.length;
+
+ // Last-resort DOM reconciliation: the Active/Completed tables are rendered
+ // from the same contract records. This prevents the dashboard from showing
+ // 0 when those records are already visibly present after an async refresh.
+ const renderedActive=document.querySelectorAll('#contracts tr.contract-row').length;
+ const renderedCompleted=document.querySelectorAll('#completedContracts tr.contract-row').length;
+ if(activeCount===0 && renderedActive>0) activeCount=renderedActive;
+ if(allCount===0 && (renderedActive+renderedCompleted)>0) allCount=renderedActive+renderedCompleted;
+
  const activeEl=$("openContracts");
  const allEl=$("allContracts");
  if(activeEl)activeEl.textContent=String(activeCount);
@@ -5065,7 +5073,7 @@ return sum+(left*(parseFloat(c.paymentAmount)||0));
 const totalRemainingReceivableEl=$("totalRemainingReceivable");
 if(totalRemainingReceivableEl) totalRemainingReceivableEl.textContent=money(totalRemainingReceivable);$("profit").textContent=money(overallProfit);const previousPeriodProfit=fundLedgerPreviousProfitPeriods();if($("previousWeekProfit"))$("previousWeekProfit").textContent=money(previousPeriodProfit.week);if($("previousMonthProfit"))$("previousMonthProfit").textContent=money(previousPeriodProfit.month);if($("previousWeekReceived"))$("previousWeekReceived").textContent=money(previousPeriodProfit.weekReceived);if($("previousMonthReceived"))$("previousMonthReceived").textContent=money(previousPeriodProfit.monthReceived);const profitCard=$("profit")?.closest(".summary-card.profit");if(profitCard){profitCard.classList.toggle("positive",overallProfit>0);profitCard.classList.toggle("negative",overallProfit<0);}updateContractSummaryCounts();
  let paidInFull=data.contracts.filter(c=>c.closed&&!c.defaulted).length,defaultContracts=data.contracts.filter(c=>c.closed&&c.defaulted),defaultLoss=defaultContracts.reduce((sum,c)=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+x.paymentAmount,0);return sum+Math.max(0,((parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0))-rec)},0);
- $("allContracts").textContent=allContractsCount;$("paidInFull").textContent=paidInFull;$("defaultContracts").textContent=defaultContracts.length;$("defaultLoss").textContent=money(defaultLoss);
+ /* Summary contract counts are updated by updateContractSummaryCounts(). */ $("paidInFull").textContent=paidInFull;$("defaultContracts").textContent=defaultContracts.length;$("defaultLoss").textContent=money(defaultLoss);
  $("reportInvested").textContent=money(invested);$("reportReceived").textContent=money(received);$("reportProfit").textContent=money(overallProfit);$("reportProfit").classList.toggle("gain",overallProfit>0);$("reportProfit").classList.toggle("loss",overallProfit<0);$("reportAllContracts").textContent=allContractsCount;$("reportOpenContracts").textContent=open.length;$("reportPaidInFull").textContent=paidInFull;$("reportDefaultContracts").textContent=defaultContracts.length;$("reportDefaultLoss").textContent=money(defaultLoss);
  renderCheckHistory();
  renderContractChoices(); renderCompletedContracts(); renderReports();
