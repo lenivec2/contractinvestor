@@ -4142,10 +4142,7 @@ async function loadCloudData(expectedUserId=null){
    // Re-render from the freshly loaded cloud dataset. The summary cards must
    // be calculated after Supabase data replaces the initial empty dataset.
    render();
-   updateContractSummaryCounts();
-   // Keep the visible dashboard counts synchronized even if another UI update
-   // runs immediately after the cloud-load render.
-   requestAnimationFrame(()=>updateContractSummaryCounts());
+   keepContractSummaryCountsFresh();
    return true;
   }
   // A genuinely new user gets a brand-new empty dataset.
@@ -4379,7 +4376,7 @@ async function initCloud(){
   sessionData={session:null};
  }
  currentUser=sessionData.session?.user||null;
- if(currentUser){const accessAllowed=await enforceAccountAccess();if(accessAllowed){if($("contactEmail"))$("contactEmail").value=currentUser.email||"";cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showApp();setUserStatus(currentUser);setSyncStatus("Loading cloud data…");await loadCloudData(currentUser?.id);startFundLedgerRealtime(currentUser?.id);await initAdmin();setDateIssuedToToday(true);render()}}else{cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showLanding();render()}
+ if(currentUser){const accessAllowed=await enforceAccountAccess();if(accessAllowed){if($("contactEmail"))$("contactEmail").value=currentUser.email||"";cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showApp();setUserStatus(currentUser);setSyncStatus("Loading cloud data…");await loadCloudData(currentUser?.id);startFundLedgerRealtime(currentUser?.id);await initAdmin();setDateIssuedToToday(true);render();keepContractSummaryCountsFresh()}}else{cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));showLanding();render()}
  supabaseClient.auth.onAuthStateChange(async (_event,session)=>{
    if(_event==="PASSWORD_RECOVERY"){
     showPasswordRecovery();
@@ -4398,7 +4395,7 @@ async function initCloud(){
     if(!appAlreadyVisible)showApp();
     setUserStatus(currentUser);
     setSyncStatus("Loading cloud data…");
-    loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;startFundLedgerRealtime(effectiveUser.id);await initAdmin();setDateIssuedToToday(true);render()});
+    loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;startFundLedgerRealtime(effectiveUser.id);await initAdmin();setDateIssuedToToday(true);render();keepContractSummaryCountsFresh()});
    }else{stopFundLedgerRealtime();currentUser=null;isAdmin=false;adminPinUnlocked=false;currentUserRestrictions={login_banned:false,messages_blocked:false};cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));setUserStatus(null);showLanding();render()}
  });
 }
@@ -5009,7 +5006,20 @@ function isFundLedgerContractClosed(c){
  return status==="completed"||status==="default"||status==="defaulted"||status==="closed";
 }
 function updateContractSummaryCounts(){
- const contracts=Array.isArray(data?.contracts)?data.contracts:[];
+ // Summary counts must follow the same authoritative dataset used by the
+ // Active/Completed/Defaulted contract screens. During login/refresh there
+ // can be a very short window where another auth event resets `data` before
+ // the cloud snapshot is applied, so prefer the last known-good snapshot (or
+ // the signed-in user's local recovery cache) when the live array is empty.
+ let contracts=Array.isArray(data?.contracts)?data.contracts:[];
+ if(currentUser&&contracts.length===0){
+   const good=getFundLedgerGood(currentUser.id);
+   if(Array.isArray(good?.contracts)&&good.contracts.length)contracts=good.contracts;
+   if(contracts.length===0){
+     const cached=loadLocalCache(currentUser.id);
+     if(Array.isArray(cached?.contracts)&&cached.contracts.length)contracts=cached.contracts;
+   }
+ }
  const activeCount=contracts.filter(c=>!isFundLedgerContractClosed(c)).length;
  const allCount=contracts.length;
  const activeEl=$("openContracts");
@@ -5021,6 +5031,17 @@ function updateContractSummaryCounts(){
  if(reportActive)reportActive.textContent=String(activeCount);
  if(reportAll)reportAll.textContent=String(allCount);
  return {activeCount,allCount};
+}
+function keepContractSummaryCountsFresh(){
+ updateContractSummaryCounts();
+ // Auth/session refreshes can trigger a final render shortly after the cloud
+ // load completes. Re-sync the two dashboard cards for a short settling
+ // period so they cannot remain visually stuck at their initial zero values.
+ let ticks=0;
+ const timer=setInterval(()=>{
+   updateContractSummaryCounts();
+   if(++ticks>=20)clearInterval(timer);
+ },250);
 }
 function render(){
  updateContractNumberPlaceholder();
