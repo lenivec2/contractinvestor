@@ -2942,9 +2942,8 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </style>
 
 <style id="fundledger-home-picture-target">
-/* Match the approved home-page reference: preserve the full 1536x1024 artwork proportions.
-   On short/minimized desktop windows, keep the full image in the document so the table and
-   pen remain reachable by scrolling instead of being clipped at the viewport boundary. */
+/* Match the approved home-page reference: preserve the full 1536x1024 artwork proportions,
+   allow the viewport to crop only the excess bottom, and lower the top navigation slightly. */
 @media (min-width:761px){
   #landingScreen .landing-nav{
     top:14px!important;
@@ -2953,7 +2952,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
     box-shadow:none!important;
   }
   #landingScreen .landing-hero{
-    height:max(100vh, calc(100vw * 2 / 3))!important;
+    height:100vh!important;
     min-height:0!important;
     background-size:100% auto!important;
     background-position:center top!important;
