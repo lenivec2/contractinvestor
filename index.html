@@ -5996,3 +5996,35 @@ async function deleteMyFundLedgerAccount(){
   }
 }
 </style>
+<style id="fundledger-home-hero-buttons-final">
+/* Final home-page hero CTA placement: bottom-left, transparent buttons. */
+#landingScreen .landing-hero-actions{
+  left:clamp(28px,5vw,80px) !important;
+  right:auto !important;
+  bottom:56px !important;
+  display:flex !important;
+  gap:12px !important;
+}
+#landingScreen .landing-hero-actions .landing-cta,
+#landingScreen .landing-hero-actions .landing-cta.primary{
+  background:rgba(7,40,70,.18) !important;
+  border:1px solid rgba(255,255,255,.82) !important;
+  color:#fff !important;
+  box-shadow:none !important;
+}
+#landingScreen .landing-hero-actions .landing-cta.primary:hover,
+#landingScreen .landing-hero-actions .landing-cta:hover{
+  background:rgba(7,40,70,.30) !important;
+}
+@media(max-width:760px){
+  #landingScreen .landing-hero-actions{
+    left:20px !important;
+    right:auto !important;
+    bottom:28px !important;
+  }
+  #landingScreen .landing-hero-actions .landing-cta{
+    flex:0 0 auto !important;
+    padding:10px 14px !important;
+  }
+}
+</style>
