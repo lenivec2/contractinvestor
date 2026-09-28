@@ -5972,4 +5972,27 @@ async function deleteMyFundLedgerAccount(){
 }
 </script>
 </body>
-</html>
+</html><style id="fundledger-home-nav-final-adjustment">
+/* Final home-page navigation adjustment: keep the artwork untouched, move the nav group left,
+   and make Create Account an outline button with no blue fill. */
+@media (min-width:761px){
+  #landingScreen .landing-nav-links{
+    transform:translateX(-150px)!important;
+  }
+  #landingScreen .landing-nav .create{
+    background:transparent!important;
+    background-image:none!important;
+    border:1px solid rgba(255,255,255,.85)!important;
+    color:#fff!important;
+    box-shadow:none!important;
+  }
+}
+@media (max-width:760px){
+  #landingScreen .landing-nav .create{
+    background:transparent!important;
+    background-image:none!important;
+    border:1px solid rgba(255,255,255,.85)!important;
+    color:#fff!important;
+  }
+}
+</style>
