@@ -5694,6 +5694,39 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 })();
 </script>
 
+<script id="settings-collapse-on-navigation">
+(function(){
+  function closeSettingsSections(){
+    document.querySelectorAll('#settingsPanel details.settings-native-dropdown, #settingsPanel details.appearance-group').forEach(function(details){
+      details.open=false;
+    });
+  }
+
+  function handleSettingsNavigation(){
+    var active=document.querySelector('.nav-item.active');
+    var isSettings=active && active.getAttribute('href')==='#settingsPanel';
+    if(isSettings){
+      closeSettingsSections();
+    }else{
+      // Reset while leaving Settings so the next visit always starts collapsed.
+      closeSettingsSections();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    closeSettingsSections();
+    document.querySelectorAll('.nav-item').forEach(function(item){
+      item.addEventListener('click',function(){
+        // Let the existing navigation handler update the active item first.
+        setTimeout(handleSettingsNavigation,0);
+      });
+    });
+  });
+
+  window.addEventListener('pageshow',closeSettingsSections);
+})();
+</script>
+
 <script id="mobile-settings-desktop-style-script">
 (function(){
  function mark(){
