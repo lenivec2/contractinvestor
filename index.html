@@ -1339,53 +1339,28 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </style>
 
 <style id="create-account-popup-fix">
-/* Create Account: use the same centered pop-up style as Password Reset. */
+/* Create Account: share the same card, overlay, and close button as Sign In. */
 #signUpFields{
-  position:fixed!important;
-  left:50%!important;
-  top:50%!important;
-  transform:translate(-50%,-50%)!important;
-  width:min(430px,calc(100vw - 32px))!important;
-  max-height:calc(100vh - 32px)!important;
-  overflow:auto!important;
-  z-index:1001!important;
+  position:static!important;
+  transform:none!important;
+  width:100%!important;
+  max-height:none!important;
+  overflow:visible!important;
   margin:0!important;
-  padding:24px!important;
-  background:#fff!important;
-  border:1px solid #dbe7f4!important;
-  border-radius:16px!important;
-  box-shadow:0 20px 60px rgba(16,47,85,.28)!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
 }
-#signUpFields:not(.hidden)::before{
-  content:"";
-  position:fixed;
-  z-index:-1;
-  left:50%;
-  top:50%;
-  width:100vw;
-  height:100vh;
-  transform:translate(-50%,-50%);
-  background:rgba(16,47,85,.38);
-}
-#signUpFields::after{
-  content:"Create your FundLedger account";
-  display:block;
-  position:absolute;
-  top:24px;
-  left:24px;
-  right:24px;
-  font-size:20px;
-  font-weight:800;
-  color:#17365f;
-  pointer-events:none;
-}
-#signUpFields .field:first-child{margin-top:34px!important}
-#signUpFields .row{grid-template-columns:1fr 1fr!important}
-#signUpFields .row button{width:100%!important}
+#signUpFields::before,#signUpFields::after{display:none!important;content:none!important}
+#signUpFields .field:first-child{margin-top:0!important}
+#signUpFields input:not([type="checkbox"]){padding:14px 15px!important;font-size:16px!important}
+#signUpFields #termsConsent{width:auto!important;flex:0 0 auto!important}
+#signUpFields .row{display:flex!important;justify-content:center!important;align-items:center!important;gap:12px!important}
 @media(max-width:600px){
-  #signUpFields{width:calc(100vw - 24px)!important;padding:20px!important}
-  #signUpFields::after{top:20px;left:20px;right:20px}
-  #signUpFields .row{grid-template-columns:1fr!important}
+  #signUpFields .row{display:grid!important;grid-template-columns:1fr!important}
+  #signUpFields .row button{width:100%!important}
 }
 </style>
 
@@ -4075,6 +4050,8 @@ function openFundLedgerLegal(which){const modal=$("fundLedgerLegalModal"),title=
 function closeFundLedgerLegal(){$("fundLedgerLegalModal")?.classList.add("hidden")}
 function showSignUpForm(){
  setAuthError("");
+ $("signInFields").classList.add("hidden");
+ $("authSubtitle").textContent="Create your FundLedger account";
  const panel=$("signUpFields");
  panel.classList.remove("hidden");
  setTimeout(()=>$("signUpEmail").focus(),0);
