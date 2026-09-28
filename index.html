@@ -2971,15 +2971,37 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   }
 }
 </style>
+<style id="fundledger-landing-popup-styles">
+/* Keep the public home page focused on the hero; informational content opens in accessible pop-ups. */
+#landingScreen>.landing-section,#landingScreen>.landing-footer{display:none!important}
+body.landing-info-open{overflow:hidden}
+.landing-info-modal{position:fixed;inset:0;z-index:6500;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,24,43,.7);backdrop-filter:blur(4px)}
+.landing-info-modal.hidden{display:none!important}
+.landing-info-card{position:relative;width:min(980px,100%);max-height:calc(100vh - 40px);overflow:auto;border:1px solid rgba(255,255,255,.3);border-radius:18px;background:#f8fbff;box-shadow:0 26px 80px rgba(0,0,0,.38);color:#17365f}
+.landing-info-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;border-bottom:1px solid #dce8f5;background:rgba(248,251,255,.97)}
+.landing-info-head h2{margin:0;font-size:28px;color:#17365f}
+.landing-info-close{display:grid;place-items:center;width:42px;height:42px;min-width:42px;padding:0;border:1px solid #cbdced;border-radius:50%;background:#fff;color:#52657d;font-size:29px;line-height:1;cursor:pointer}
+.landing-info-close:hover,.landing-info-close:focus{background:#ffe8ea;border-color:#ef9aa3;color:#c8283b;outline:none}
+.landing-info-body{padding:24px}
+.landing-info-body>p{max-width:760px;margin:0;color:#52657d;font-size:18px;line-height:1.65}
+.landing-info-body .landing-features,.landing-info-body .landing-plans{margin-top:0}
+.landing-explore-btn{display:none}
+.landing-popup-menu{display:grid;gap:12px}
+.landing-popup-menu button{width:100%;padding:16px 18px;border:1px solid #cbdced;border-radius:11px;background:#fff;color:#17365f;font-weight:850;text-align:left;cursor:pointer}
+.landing-popup-menu button:hover,.landing-popup-menu button:focus{background:#eaf3ff;border-color:#8fc3f5;outline:none}
+.landing-info-legal{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:26px;padding-top:18px;border-top:1px solid #dce8f5;color:#718096;font-size:13px}
+.landing-info-legal button{border:0;background:transparent;padding:0;color:#147be8;font:inherit;font-weight:800;text-decoration:underline;cursor:pointer}
+@media(max-width:760px){#landingScreen .landing-explore-btn{display:block!important;width:42px!important;min-width:42px!important;padding:0!important;font-size:22px!important}.landing-info-modal{padding:10px}.landing-info-card{max-height:calc(100vh - 20px);border-radius:14px}.landing-info-head{padding:16px 18px}.landing-info-head h2{font-size:23px}.landing-info-body{padding:18px}.landing-info-body .landing-features,.landing-info-body .landing-plans{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
 <div id="landingScreen">
   <nav class="landing-nav">
     <div class="landing-brand"><span class="fl-logo" aria-hidden="true"><i></i><i></i><i></i></span><span>Fund<b>Ledger</b></span></div>
-    <div class="landing-nav-links"><a href="#aboutPublic">About</a><a href="#featuresPublic">Features</a><a href="#pricingPublic">Pricing</a><button id="landingLoginBtn" type="button">Log In</button><button id="landingCreateBtn" class="create" type="button">Create Account</button></div>
+    <div class="landing-nav-links"><a href="#aboutPublic" data-landing-modal="about">About</a><a href="#featuresPublic" data-landing-modal="features">Features</a><a href="#pricingPublic" data-landing-modal="pricing">Pricing</a><button id="landingExploreBtn" class="landing-explore-btn" type="button" aria-label="Open About, Features, and Pricing">☰</button><button id="landingLoginBtn" type="button">Log In</button><button id="landingCreateBtn" class="create" type="button">Create Account</button></div>
   </nav>
-  <section class="landing-hero"><div class="landing-hero-actions"><button id="heroFreeBtn" class="landing-cta" type="button">Create Free Account</button><a class="landing-cta" href="#pricingPublic">View Plans</a></div></section>
+  <section class="landing-hero"><div class="landing-hero-actions"><button id="heroFreeBtn" class="landing-cta" type="button">Create Free Account</button><a class="landing-cta" href="#pricingPublic" data-landing-modal="pricing">View Plans</a></div></section>
   <section id="aboutPublic" class="landing-section"><div class="landing-kicker">About FundLedger</div><h2>Contract Investing Made Easy</h2><p>FundLedger helps you organize contract funding, record payments, monitor remaining receivables, and understand contract performance from one clear dashboard.</p>
     <div id="featuresPublic" class="landing-features"><div class="landing-feature"><div>▣</div><h3>Track Contracts</h3><p>Keep active, completed, and defaulted contracts organized in one place.</p></div><div class="landing-feature"><div>$</div><h3>Record Payments</h3><p>Track payments and checks while keeping contract balances up to date.</p></div><div class="landing-feature"><div>↗</div><h3>Monitor Performance</h3><p>See funding, received amounts, remaining receivables, and profit or loss.</p></div></div>
   </section>
@@ -2988,6 +3010,12 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
     <div class="landing-plan pro"><h3>FundLedger Pro</h3><div class="landing-price">$9.99 <small>/ month</small></div><ul><li>Unlimited contracts</li><li>Full contract and payment tracking</li><li>Reports section</li><li>Ad-free experience</li><li>All dashboard features</li></ul><button class="landing-cta primary public-create-account" type="button">Get FundLedger Pro</button></div>
   </div></section>
   <footer class="landing-footer">© 2026 FundLedger &nbsp; • &nbsp; Contract investing made easy.<div class="landing-legal-links"><button type="button" onclick="openFundLedgerLegal('terms')">Terms of Service</button><span>•</span><button type="button" onclick="openFundLedgerLegal('privacy')">Privacy Policy</button></div></footer>
+</div>
+<div id="landingInfoModal" class="landing-info-modal hidden" role="dialog" aria-modal="true" aria-labelledby="landingInfoTitle" aria-hidden="true">
+  <div class="landing-info-card">
+    <div class="landing-info-head"><h2 id="landingInfoTitle">About FundLedger</h2><button id="landingInfoClose" class="landing-info-close" type="button" aria-label="Close information window">×</button></div>
+    <div id="landingInfoBody" class="landing-info-body"></div>
+  </div>
 </div>
 <div id="fundLedgerLegalModal" class="fundledger-legal-modal hidden" role="dialog" aria-modal="true" aria-labelledby="fundLedgerLegalTitle"><div class="fundledger-legal-card"><div class="fundledger-legal-head"><h2 id="fundLedgerLegalTitle">Terms of Service</h2><button type="button" aria-label="Close" onclick="closeFundLedgerLegal()">×</button></div><div id="fundLedgerLegalBody" class="fundledger-legal-body"></div><div class="fundledger-legal-actions"><button type="button" onclick="closeFundLedgerLegal()">Close</button></div></div></div><div id="authScreen" class="auth-wrap hidden">
   <div class="auth-chart-bg" aria-hidden="true"><div class="auth-chart-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><svg viewBox="0 0 1000 420" preserveAspectRatio="none"><polyline points="0,380 115,330 230,270 350,215 470,190 585,145 710,115 825,70 1000,15"/><g><circle cx="115" cy="330" r="8"/><circle cx="230" cy="270" r="8"/><circle cx="350" cy="215" r="8"/><circle cx="470" cy="190" r="8"/><circle cx="585" cy="145" r="8"/><circle cx="710" cy="115" r="8"/><circle cx="825" cy="70" r="8"/><circle cx="1000" cy="15" r="8"/></g></svg></div>
@@ -5120,8 +5148,27 @@ function exportCSV(){
 function clearData(){if(confirm(currentUser?"Delete ALL contracts and checks from your cloud account? This cannot be undone.":"Delete all contracts and checks from this device?")){data={contracts:[],checks:[]};save();render();toast("Data deleted")}}
 setDateIssuedToToday(true);
 /* public landing page navigation */
-function openPublicLogin(){const auth=$("authScreen");auth?.classList.add("public-auth-modal");showSignInForm();showAuth();setTimeout(()=>$("authEmail")?.focus(),0)}
-function openPublicSignup(){const auth=$("authScreen");auth?.classList.add("public-auth-modal");showSignUpForm();showAuth();setTimeout(()=>$("signUpEmail")?.focus(),0)}
+const landingInfoTitles={menu:"Explore FundLedger",about:"About FundLedger",features:"FundLedger Features",pricing:"Choose Your Plan"};
+function landingInfoMarkup(section){
+ if(section==="menu")return '<div class="landing-popup-menu"><button type="button" data-popup-section="about">About FundLedger</button><button type="button" data-popup-section="features">Features</button><button type="button" data-popup-section="pricing">Pricing and Plans</button></div>';
+ if(section==="about")return `<p>${$("aboutPublic")?.querySelector(":scope>p")?.innerHTML||""}</p><div class="landing-info-legal"><span>© 2026 FundLedger</span><span>•</span><button type="button" onclick="closeLandingInfo();openFundLedgerLegal('terms')">Terms of Service</button><span>•</span><button type="button" onclick="closeLandingInfo();openFundLedgerLegal('privacy')">Privacy Policy</button></div>`;
+ if(section==="features")return `<div class="landing-features">${$("featuresPublic")?.innerHTML||""}</div>`;
+ if(section==="pricing")return `<div class="landing-plans">${$("pricingPublic")?.querySelector(".landing-plans")?.innerHTML||""}</div>`;
+ return "";
+}
+function openLandingInfo(section){
+ const modal=$("landingInfoModal"),body=$("landingInfoBody"),title=$("landingInfoTitle");if(!modal||!body||!title)return;
+ title.textContent=landingInfoTitles[section]||"FundLedger";body.innerHTML=landingInfoMarkup(section);modal.classList.remove("hidden");modal.setAttribute("aria-hidden","false");document.body.classList.add("landing-info-open");
+ body.querySelectorAll(".public-create-account").forEach(b=>b.addEventListener("click",openPublicSignup));body.querySelectorAll("[data-popup-section]").forEach(b=>b.addEventListener("click",()=>openLandingInfo(b.dataset.popupSection)));setTimeout(()=>$("landingInfoClose")?.focus(),0);
+}
+function closeLandingInfo(){const modal=$("landingInfoModal");if(!modal)return;modal.classList.add("hidden");modal.setAttribute("aria-hidden","true");document.body.classList.remove("landing-info-open")}
+document.querySelectorAll("[data-landing-modal]").forEach(link=>link.addEventListener("click",e=>{e.preventDefault();openLandingInfo(link.dataset.landingModal)}));
+$("landingExploreBtn")?.addEventListener("click",()=>openLandingInfo("menu"));
+$("landingInfoClose")?.addEventListener("click",closeLandingInfo);
+$("landingInfoModal")?.addEventListener("click",e=>{if(e.target===$("landingInfoModal"))closeLandingInfo()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("landingInfoModal")?.classList.contains("hidden"))closeLandingInfo()});
+function openPublicLogin(){closeLandingInfo();const auth=$("authScreen");auth?.classList.add("public-auth-modal");showSignInForm();showAuth();setTimeout(()=>$('authEmail')?.focus(),0)}
+function openPublicSignup(){closeLandingInfo();const auth=$("authScreen");auth?.classList.add("public-auth-modal");showSignUpForm();showAuth();setTimeout(()=>$('signUpEmail')?.focus(),0)}
 $("landingLoginBtn")?.addEventListener("click",openPublicLogin);
 $("landingCreateBtn")?.addEventListener("click",openPublicSignup);
 $("heroFreeBtn")?.addEventListener("click",openPublicSignup);
