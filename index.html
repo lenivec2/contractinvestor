@@ -4055,6 +4055,7 @@ async function loadCloudData(expectedUserId=null){
     data=normalizeFundLedgerData(cached);
     cloudDataReady=true;fundLedgerSuccessfulCloudRead=true;rememberFundLedgerGood(data);
     render();
+    updateContractSummaryCounts();
     setSyncStatus("Recovered device data — saving to cloud…");
     await syncToCloud();
     setSyncStatus("Recovered data saved to cloud");
@@ -4065,6 +4066,8 @@ async function loadCloudData(expectedUserId=null){
    saveLocalCache(userId,data);
    cloudDataReady=true;fundLedgerSuccessfulCloudRead=true;rememberFundLedgerGood(data);
    setSyncStatus(row.data.fundledger_encrypted?"Loaded encrypted data":"Loaded legacy data — encryption will apply on save");
+   render();
+   updateContractSummaryCounts();
    return true;
   }
   // A genuinely new user gets a brand-new empty dataset.
@@ -4901,8 +4904,28 @@ function activeContractRowsHtml(open){
    return `<tr class="contract-row ${selected?'active-contract-selected':''}" onclick="if(!event.target.closest('input'))selectActiveContract(${c.id},true)"><td class="active-select-col"><input class="active-contract-check" data-contract-id="${c.id}" type="checkbox" ${selected?'checked':''} aria-label="Select ${escape(c.name)}" onclick="event.stopPropagation();selectActiveContract(${c.id},this.checked)"></td><td data-column-key="name"><b>${escape(c.name)}</b></td><td data-column-key="dayOpened">${escape(c.openedDate||c.date||'—')}</td><td data-column-key="invested">${money((parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0))}</td><td data-column-key="paid">${money(paid)}</td><td data-column-key="breakEven"><span class="${breakEven>0.009?'break-even-needed':'break-even-zero'}">${money(breakEven)}</span></td><td data-column-key="remainingBalance">${money(remainingBalance)}</td><td data-column-key="amountPerCheck">${c.paymentAmount>0?money(c.paymentAmount):'—'}</td><td data-column-key="expectedPayments">${expected||'—'}</td><td data-column-key="paymentsLeft">${expected?left:'—'}</td></tr>`;
  }).join('')||'<tr><td colspan="10" class="empty">No active contracts match your search.</td></tr>';
 }
+function isFundLedgerContractClosed(c){
+ const v=c?.closed;
+ if(v===true||v===1||String(v).toLowerCase()==="true"||String(v).toLowerCase()==="closed")return true;
+ const status=String(c?.status||c?.contractStatus||"").trim().toLowerCase();
+ return status==="completed"||status==="default"||status==="defaulted"||status==="closed";
+}
+function updateContractSummaryCounts(){
+ const contracts=Array.isArray(data?.contracts)?data.contracts:[];
+ const activeCount=contracts.filter(c=>!isFundLedgerContractClosed(c)).length;
+ const allCount=contracts.length;
+ const activeEl=$("openContracts");
+ const allEl=$("allContracts");
+ if(activeEl)activeEl.textContent=String(activeCount);
+ if(allEl)allEl.textContent=String(allCount);
+ const reportActive=$("reportOpenContracts");
+ const reportAll=$("reportAllContracts");
+ if(reportActive)reportActive.textContent=String(activeCount);
+ if(reportAll)reportAll.textContent=String(allCount);
+ return {activeCount,allCount};
+}
 function renderActiveContractsTable(){
- const open=(data.contracts||[]).filter(c=>!c.closed);
+ const open=(data.contracts||[]).filter(c=>!isFundLedgerContractClosed(c));
  if(selectedActiveContractId!=null&&!open.some(c=>String(c.id)===String(selectedActiveContractId)))selectedActiveContractId=null;
  const body=document.getElementById('contracts');if(body)body.innerHTML=activeContractRowsHtml(open);
  updateActiveContractActionButtons();
@@ -4931,7 +4954,7 @@ function fundLedgerPreviousProfitPeriods(){
 }
 function render(){
  updateContractNumberPlaceholder();
- let open=data.contracts.filter(c=>!c.closed),filterOpts=open.map(c=>`<option>${escape(c.name)}</option>`).join("");
+ let open=data.contracts.filter(c=>!isFundLedgerContractClosed(c)),filterOpts=open.map(c=>`<option>${escape(c.name)}</option>`).join("");
  selectedChoiceIds=selectedChoiceIds.filter(id=>open.some(c=>c.id===id));
  breakdownRows=breakdownRows.map(r=>open.some(c=>c.name===r.contract)?r:{contract:"",amount:""});
  renderManualBreakdown();
@@ -4948,9 +4971,9 @@ const left=Math.max(0,expected-receivedCount);
 return sum+(left*(parseFloat(c.paymentAmount)||0));
 },0);
 const totalRemainingReceivableEl=$("totalRemainingReceivable");
-if(totalRemainingReceivableEl) totalRemainingReceivableEl.textContent=money(totalRemainingReceivable);$("profit").textContent=money(overallProfit);const previousPeriodProfit=fundLedgerPreviousProfitPeriods();if($("previousWeekProfit"))$("previousWeekProfit").textContent=money(previousPeriodProfit.week);if($("previousMonthProfit"))$("previousMonthProfit").textContent=money(previousPeriodProfit.month);const profitCard=$("profit")?.closest(".summary-card.profit");if(profitCard){profitCard.classList.toggle("positive",overallProfit>0);profitCard.classList.toggle("negative",overallProfit<0);}$("openContracts").textContent=open.length;
+if(totalRemainingReceivableEl) totalRemainingReceivableEl.textContent=money(totalRemainingReceivable);$("profit").textContent=money(overallProfit);const previousPeriodProfit=fundLedgerPreviousProfitPeriods();if($("previousWeekProfit"))$("previousWeekProfit").textContent=money(previousPeriodProfit.week);if($("previousMonthProfit"))$("previousMonthProfit").textContent=money(previousPeriodProfit.month);const profitCard=$("profit")?.closest(".summary-card.profit");if(profitCard){profitCard.classList.toggle("positive",overallProfit>0);profitCard.classList.toggle("negative",overallProfit<0);}updateContractSummaryCounts();
  let paidInFull=data.contracts.filter(c=>c.closed&&!c.defaulted).length,defaultContracts=data.contracts.filter(c=>c.closed&&c.defaulted),defaultLoss=defaultContracts.reduce((sum,c)=>{let rec=data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+x.paymentAmount,0);return sum+Math.max(0,((parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0))-rec)},0);
- $("allContracts").textContent=data.contracts.length;$("paidInFull").textContent=paidInFull;$("defaultContracts").textContent=defaultContracts.length;$("defaultLoss").textContent=money(defaultLoss);
+ updateContractSummaryCounts();$("paidInFull").textContent=paidInFull;$("defaultContracts").textContent=defaultContracts.length;$("defaultLoss").textContent=money(defaultLoss);
  $("reportInvested").textContent=money(invested);$("reportReceived").textContent=money(received);$("reportProfit").textContent=money(overallProfit);$("reportProfit").classList.toggle("gain",overallProfit>0);$("reportProfit").classList.toggle("loss",overallProfit<0);$("reportAllContracts").textContent=data.contracts.length;$("reportOpenContracts").textContent=open.length;$("reportPaidInFull").textContent=paidInFull;$("reportDefaultContracts").textContent=defaultContracts.length;$("reportDefaultLoss").textContent=money(defaultLoss);
  renderCheckHistory();
  renderContractChoices(); renderCompletedContracts(); renderReports();
@@ -4958,6 +4981,7 @@ if(totalRemainingReceivableEl) totalRemainingReceivableEl.textContent=money(tota
  applyDashboardAppearance();
  applyActiveContractColumns();
  applyCompletedContractColumns();
+ updateContractSummaryCounts();
  updateRemainingPaymentLabels();
 }
 let selectedCompletedContractId=null;
@@ -4981,7 +5005,7 @@ function runSelectedCompletedAction(action){
  if(action==='edit')editContract(id);else if(action==='restore')restoreContract(id);else if(action==='delete')removeContract(id);
 }
 function renderCompletedContracts(){
- let completed=(data.contracts||[]).filter(c=>c.closed);
+ let completed=(data.contracts||[]).filter(c=>isFundLedgerContractClosed(c));
  if(selectedCompletedContractId!=null&&!completed.some(c=>String(c.id)===String(selectedCompletedContractId)))selectedCompletedContractId=null;
  const countEl=document.getElementById('completedCount');if(countEl)countEl.textContent=`${completed.length} contract${completed.length===1?'':'s'} completed`;
  const term=(document.getElementById('completedContractSearch')?.value||'').trim().toLowerCase();
