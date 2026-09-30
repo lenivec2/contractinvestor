@@ -4704,7 +4704,7 @@ function addCheck(){
  if(new Set(allocations.map(x=>x.contract)).size!==allocations.length){toast("Choose different contracts for each allocation");return}
  let allocated=allocations.reduce((sum,x)=>sum+x.paymentAmount,0);
  if(Math.abs(allocated-amount)>.009){toast(allocated<amount?`Allocate the remaining ${money(amount-allocated)} before saving`:`Allocations are ${money(allocated-amount)} over the Payment Amount`);return}
- let now=Date.now();allocations.forEach((x,index)=>{data.checks.push({id:now+index,contract:x.contract,paymentDate:date,dateReceived:dateReceived||"",paymentAmount:x.paymentAmount,checkno,verified:false});});
+ let now=Date.now(),paymentGroupId=`payment-${now}-${Math.random().toString(36).slice(2,8)}`;allocations.forEach((x,index)=>{data.checks.push({id:now+index,paymentGroupId,contract:x.contract,paymentDate:date,dateReceived:dateReceived||"",paymentAmount:x.paymentAmount,checkno,verified:false});});
  // Automatically complete any contract whose final expected payment was just recorded.
  const affectedContracts=new Set(allocations.map(x=>x.contract));
  affectedContracts.forEach(contractName=>{
@@ -4971,14 +4971,22 @@ function renderContractChoices(){
 }
 function updateHistorySearchInput(){let type=$("historySearchType")?.value||'dateIssued',input=$("historySearch"),label=$("historySearchLabel");if(!input)return;let config={dateIssued:['Payment Date','date','Search by payment date'],dateReceived:['Date Received','date','Search by date received'],amount:['Payment Amount','number','Search by payment received'],contract:['Contract Name / ID','search','Search by contract name'],checkno:['Check Number','search','Search by check number']}[type]||['Payment Date','date','Search'];label.textContent=config[0];input.type=config[1];input.placeholder=config[2];input.step=config[1]==='number'?'0.01':undefined;if(config[1]!=='number')input.removeAttribute('step');renderCheckHistory()}
 function clearHistorySearch(){let input=$("historySearch");if(input)input.value='';renderCheckHistory()}
+function checkHistoryGroupKey(check){
+ if(check?.paymentGroupId)return `group:${check.paymentGroupId}`;
+ const checkNumber=normalizedCheckNumber(check?.checkno);
+ if(checkNumber)return `legacy-check:${String(check?.paymentDate||"")}:${checkNumber}`;
+ return `row:${String(check?.id??"")}`;
+}
 function checkHistorySequence(check){
  const ordered=data.checks.slice().sort((a,b)=>{
   const aDate=String(a.dateReceived||a.paymentDate||""),bDate=String(b.dateReceived||b.paymentDate||"");if(aDate!==bDate)return aDate.localeCompare(bDate);
   return String(a.id??"").localeCompare(String(b.id??""),undefined,{numeric:true});
  });
- const index=ordered.findIndex(item=>item===check||(check?.id!=null&&String(item.id)===String(check.id)));return index>=0?index+1:1;
+ const groupKey=checkHistoryGroupKey(check),groups=[];
+ ordered.forEach(item=>{const key=checkHistoryGroupKey(item);if(!groups.includes(key))groups.push(key)});
+ const index=groups.indexOf(groupKey);return index>=0?index+1:1;
 }
-function renderCheckHistory(){let f=$("filter")?.value||'',historyChecks=data.checks.filter(x=>!f||x.contract===f),historyType=$("historySearchType")?.value||'dateIssued',historyTerm=$("historySearch")?.value||'';if(historyTerm){let term=historyTerm.trim().toLowerCase();historyChecks=historyChecks.filter(x=>{let value=historyType==='dateReceived'?(x.dateReceived||''):historyType==='amount'?String(parseFloat(x.paymentAmount)||0):historyType==='contract'?String(x.contract||''):historyType==='checkno'?String(x.checkno||''):String(x.paymentDate||'');return value.toLowerCase().includes(term)})}$("history").innerHTML=historyChecks.map(x=>`<tr><td data-column-key="sequence"><b>#${checkHistorySequence(x)}</b></td><td data-column-key="dateIssued">${escape(x.paymentDate||"")}</td><td data-column-key="dateReceived">${escape(x.dateReceived||"")||'—'}</td><td data-column-key="amount">${money(x.paymentAmount)}</td><td data-column-key="contract">${escape(x.contract||"")}</td><td data-column-key="checkno">${escape(x.checkno)||'—'}</td><td data-column-key="actions"><div class="actions"><button class="table-action" onclick="editCheck(${x.id})">Edit</button><button class="danger" onclick="deleteCheck(${x.id})">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No checks match your search.</td></tr>';applyCheckHistoryColumns()}
+function renderCheckHistory(){let f=$("filter")?.value||'',historyChecks=data.checks.filter(x=>!f||x.contract===f),historyType=$("historySearchType")?.value||'dateIssued',historyTerm=$("historySearch")?.value||'';if(historyTerm){let term=historyTerm.trim().toLowerCase();historyChecks=historyChecks.filter(x=>{let value=historyType==='dateReceived'?(x.dateReceived||''):historyType==='amount'?String(parseFloat(x.paymentAmount)||0):historyType==='contract'?String(x.contract||''):historyType==='checkno'?String(x.checkno||''):String(x.paymentDate||'');return value.toLowerCase().includes(term)})}const displayedPaymentGroups=new Set();$("history").innerHTML=historyChecks.map(x=>{const groupKey=checkHistoryGroupKey(x),sequence=displayedPaymentGroups.has(groupKey)?'':`<b>#${checkHistorySequence(x)}</b>`;displayedPaymentGroups.add(groupKey);return `<tr><td data-column-key="sequence">${sequence}</td><td data-column-key="dateIssued">${escape(x.paymentDate||"")}</td><td data-column-key="dateReceived">${escape(x.dateReceived||"")||'—'}</td><td data-column-key="amount">${money(x.paymentAmount)}</td><td data-column-key="contract">${escape(x.contract||"")}</td><td data-column-key="checkno">${escape(x.checkno)||'—'}</td><td data-column-key="actions"><div class="actions"><button class="table-action" onclick="editCheck(${x.id})">Edit</button><button class="danger" onclick="deleteCheck(${x.id})">Delete</button></div></td></tr>`}).join('')||'<tr><td colspan="7" class="empty">No checks match your search.</td></tr>';applyCheckHistoryColumns()}
 let selectedActiveContractId=null;
 function updateActiveContractActionButtons(){
  const valid=(data.contracts||[]).some(c=>!c.closed&&String(c.id)===String(selectedActiveContractId));
