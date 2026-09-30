@@ -189,6 +189,14 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #newContractPanel .results-heading.results-collapsed + #contractCalcSummary{display:none!important}
 
 /* FundLedger simplified Settings UX */
+.settings-card.settings-appearance{padding:0;overflow:hidden;background:#fff;border:2px solid #147be8;box-shadow:0 10px 28px rgba(20,123,232,.14)}
+.app-appearance-header{display:flex;align-items:center;gap:15px;padding:20px 22px;background:linear-gradient(135deg,#102f57 0%,#147be8 100%);color:#fff}
+.app-appearance-icon{display:grid;place-items:center;width:48px;height:48px;flex:0 0 48px;border:1px solid rgba(255,255,255,.45);border-radius:12px;background:rgba(255,255,255,.14);font-size:25px}
+.app-appearance-header h3{margin:0!important;color:#fff!important;font-size:22px!important}
+.app-appearance-header p{margin:4px 0 0!important;color:#e6f1ff!important;font-size:13px;line-height:1.4}
+.appearance-settings-list{padding:18px 20px 20px}
+.settings-appearance .appearance-group{margin:0!important;padding:15px 16px!important;border:1px solid #dce8f5!important;border-radius:10px;background:#f8fbff}
+.settings-appearance .appearance-group+.appearance-group{margin-top:12px!important}
 .settings-appearance .appearance-option{cursor:pointer;min-height:48px}
 .settings-appearance .appearance-option input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:42px;height:24px;border-radius:999px;background:#cbd5e1;position:relative;flex:0 0 auto;transition:.18s ease;border:0;cursor:pointer}
 .settings-appearance .appearance-option input[type="checkbox"]::after{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.18s ease}
@@ -196,9 +204,9 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 .settings-appearance .appearance-option input[type="checkbox"]:checked::after{transform:translateX(18px)}
 .settings-appearance .appearance-option input[type="checkbox"]:focus-visible{outline:3px solid rgba(20,123,232,.25);outline-offset:2px}
 .settings-tip{margin:10px 0 0;padding:9px 11px;border-radius:8px;background:#eef6ff;color:#24527a;font-size:13px;font-weight:650}
-.settings-reset-card{margin-top:22px;padding-top:20px;border-top:1px solid #dce8f5;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.settings-reset-card{grid-column:1/-1;margin-top:0;padding:16px;border:1px solid #dce8f5;border-radius:10px;background:#f8fbff;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .settings-reset-card p{margin:4px 0 0}
-@media(max-width:600px){.settings-reset-card .danger-btn,.settings-reset-card button{width:100%}}
+@media(max-width:600px){.app-appearance-header{padding:17px 16px}.app-appearance-icon{width:42px;height:42px;flex-basis:42px}.app-appearance-header h3{font-size:19px!important}.appearance-settings-list{padding:14px}.settings-reset-card .danger-btn,.settings-reset-card button{width:100%}}
 
 #completedPanel .completed-contracts-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;flex-wrap:wrap!important;margin-bottom:12px!important}
 #completedPanel .completed-contracts-head h2{margin:0!important}
@@ -2762,6 +2770,11 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 </style>
 <style id="fundledger-plan-styles">
 .plan-badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:850;background:#eaf3ff;color:#147be8;margin-left:8px}.plan-badge.pro{background:#eaf8ef;color:#07853f}.fundledger-ad-slot{border:1px dashed #b8cbe0;border-radius:10px;min-height:72px;margin:14px 0;padding:10px;display:flex;align-items:center;justify-content:center;text-align:center;background:#f8fbff;color:#718096;font-size:12px}.fundledger-ad-slot strong{display:block;color:#52657d;margin-bottom:3px}.pro-gate{padding:24px;border:1px solid #dce8f5;border-radius:12px;background:#fff;text-align:center}.pro-gate h3{margin:0 0 8px;color:#17365f}.pro-gate .primary-btn{margin-top:12px}.plan-card{border:1px solid #dce8f5;border-radius:12px;padding:16px;margin-top:14px;background:#fff}.plan-card h3{margin:0 0 6px}.plan-features{margin:10px 0 0;padding-left:20px;color:#52657d}.plan-features li{margin:5px 0}
+.promo-redeem-card{border:2px solid #147be8;border-radius:14px;padding:18px;margin-top:16px;background:linear-gradient(135deg,#f8fbff,#eef6ff);box-shadow:0 8px 24px rgba(20,123,232,.1)}
+.promo-redeem-card h3{margin:0 0 5px;color:#17365f}.promo-code-row{display:flex;gap:10px;align-items:stretch;margin-top:14px}.promo-code-row input{flex:1;min-width:0;text-transform:uppercase;letter-spacing:1px;font-weight:800}.promo-code-row button{min-width:150px}.promo-status{margin:10px 0 0;color:#52657d;font-size:13px}.promo-status.success{color:#07853f;font-weight:750}.promo-status.error{color:#b4232f;font-weight:750}
+.admin-promo-card{border:1px solid #b9d8ff;background:#f7fbff}.admin-promo-grid{display:grid;grid-template-columns:1.25fr .65fr .75fr .9fr;gap:10px;align-items:end;margin-top:14px}.admin-promo-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.admin-promo-list{margin-top:14px;display:grid;gap:9px}.admin-promo-item{display:grid;grid-template-columns:minmax(120px,1.2fr) repeat(3,minmax(90px,.7fr)) auto;gap:10px;align-items:center;padding:11px 12px;border:1px solid #d7e4f2;border-radius:9px;background:#fff}.admin-promo-item strong{color:#17365f}.promo-state{font-size:11px;font-weight:850;border-radius:999px;padding:5px 8px;width:max-content}.promo-state.active{background:#e5f7ec;color:#08733d}.promo-state.inactive{background:#fdebed;color:#b4232f}
+@media(max-width:800px){.admin-promo-grid{grid-template-columns:1fr 1fr}.admin-promo-item{grid-template-columns:1fr 1fr}.admin-promo-item button{width:100%}}
+@media(max-width:560px){.promo-code-row{flex-direction:column}.promo-code-row button{width:100%}.admin-promo-grid{grid-template-columns:1fr}.admin-promo-item{grid-template-columns:1fr}}
 </style>
 
 <style id="fundledger-public-landing-styles">
@@ -3148,7 +3161,8 @@ body.landing-info-open{overflow:hidden}
     <div class="settings-card"><h3>Payment Date</h3><p class="settings-status">Local date enabled</p><p style="margin-top:8px">New payments use the current date from this device.</p></div>
     <div class="settings-card"><h3>Data Storage</h3><p>Your contracts and payments are securely associated with your signed-in account.</p></div>
     <div class="settings-card settings-appearance">
-      <h3>Appearance</h3>
+      <div class="app-appearance-header"><span class="app-appearance-icon" aria-hidden="true">◫</span><div><h3>App Appearance &amp; Layout</h3><p>Customize what appears across the Dashboard, contract forms, and data tables.</p></div></div>
+      <div class="appearance-settings-list">
       <details class="appearance-group settings-native-dropdown"><summary>Dashboard Sections</summary><div class="settings-native-dropdown-content">
         <p>Select which sections appear when you open the Dashboard. Hidden sections can still be opened from the sidebar.</p>
         <div class="appearance-options">
@@ -3216,11 +3230,12 @@ body.landing-info-open{overflow:hidden}
           <label class="appearance-option"><span>Actions</span><input type="checkbox" data-history-column-toggle="actions" onchange="updateCheckHistoryColumnAppearance(this)"></label>
         </div>
       </div></details>
+      </div>
+    </div>
       <div class="settings-card"><h3>Backup &amp; Recovery</h3><p>Export a private encrypted copy of your contracts, payments, and preferences, or restore one if needed.</p><div class="settings-actions" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="primary-btn" type="button" onclick="exportFundLedgerBackup()">Export Encrypted Backup</button><button type="button" onclick="chooseFundLedgerBackup()">Restore Backup</button><input id="fundLedgerBackupFile" type="file" accept=".fundledger,.json,application/json" style="display:none" onchange="restoreFundLedgerBackup(this.files?.[0]);this.value=''"></div><p class="settings-status" id="fundLedgerBackupStatus" style="margin-top:10px">No backup action in progress.</p></div><div class="settings-reset-card">
         <div><h4 style="margin:0">Reset Layout</h4><p>Restore dashboard boxes and table columns to their default visibility and order.</p></div>
         <button class="danger-btn hidden" type="button" onclick="restoreDefaultLayout()">↻ Restore Default Layout</button>
       </div>
-    </div>
   </div>
   <div class="settings-actions"><button class="primary-btn" type="button" onclick="refreshCloudData()">↻ Refresh Data Now</button></div>
 </section>
@@ -3237,7 +3252,7 @@ body.landing-info-open{overflow:hidden}
   </div>
 </section>
 
-<section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><h3 style="margin-top:16px">FundLedger Pro — $9.99/month</h3><ul class="plan-features"><li>Unlimited contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Secure checkout must be connected before live subscriptions can be charged.</p></div></section>
+<section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><p id="planAccessDetail" class="muted" style="margin-top:9px">Free plan access.</p><h3 style="margin-top:16px">FundLedger Pro — $9.99/month</h3><ul class="plan-features"><li>Unlimited contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Secure checkout must be connected before live subscriptions can be charged.</p></div><div class="promo-redeem-card"><h3>Have a Promo Code?</h3><p class="muted">Enter your code to activate free FundLedger Pro time. No credit card is required.</p><div class="promo-code-row"><input id="fundLedgerPromoCode" type="text" maxlength="32" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Example: FUNDLEDGER6" onkeydown="if(event.key==='Enter'){event.preventDefault();redeemFundLedgerPromoCode()}"><button id="redeemPromoCodeBtn" class="primary-btn" type="button" onclick="redeemFundLedgerPromoCode()">Redeem Code</button></div><p id="promoRedeemStatus" class="promo-status" role="status"></p></div></section>
 <section class="panel hidden" id="contactPanel">
   <div class="section-head"><div><h2>Contact Us</h2><p class="muted" style="margin:0">Send a message to the administrator.</p></div></div>
   <div id="adminAccessArea" class="admin-access-area hidden">
@@ -3254,6 +3269,7 @@ body.landing-info-open{overflow:hidden}
     <div id="adminPanel" class="panel hidden" style="margin-top:14px">
       <div class="admin-panel-head"><h2>Admin Dashboard</h2><div class="admin-panel-actions"><button id="adminChangePinBtn" class="secondary" type="button">Change PIN</button><button id="adminLockBtn" class="secondary" type="button">Lock Dashboard</button></div></div>
       <p class="muted">Master account view. Regular users only see their own data.</p><div class="plan-card" id="adminProAccessCard"><h3>Pro Access Management</h3><p class="muted">Give a user a custom-length Pro trial, complimentary Pro access for friends/family, or return the account to Free. This does not change their contracts or payments.</p><div class="row" style="align-items:end"><div class="field" style="flex:2;min-width:220px"><label>User email</label><input id="adminProEmail" type="email" placeholder="user@example.com"></div><div class="field" style="flex:1;min-width:180px"><label>Trial ends</label><input id="adminProTrialEnd" type="date"></div></div><div class="row" style="margin-top:10px;flex-wrap:wrap"><button class="primary-btn" type="button" onclick="adminSetProAccess('trial')">Give Custom Trial</button><button class="secondary" type="button" onclick="adminSetProAccess('complimentary')">Give Free Pro Access</button><button class="secondary" type="button" onclick="adminSetProAccess('free')">Return to Free</button><button class="secondary" type="button" onclick="adminCheckProAccess()">Check Access</button></div><div id="adminProAccessStatus" class="muted" style="margin-top:10px">Enter a registered user's email.</div></div>
+      <div class="plan-card admin-promo-card" id="adminPromoCodesCard"><h3>Promo Code Management</h3><p class="muted">Create a reusable code that gives each eligible account a set number of free Pro months. Codes are checked securely by Supabase.</p><div class="admin-promo-grid"><div class="field"><label>Promo code</label><input id="adminPromoCode" type="text" maxlength="32" autocapitalize="characters" spellcheck="false" placeholder="FUNDLEDGER6"></div><div class="field"><label>Free months</label><input id="adminPromoMonths" type="number" min="1" max="120" step="1" value="6"></div><div class="field"><label>Maximum uses</label><input id="adminPromoMaxUses" type="number" min="1" step="1" placeholder="Unlimited"></div><div class="field"><label>Code expires</label><input id="adminPromoExpires" type="date"></div></div><div class="admin-promo-actions"><button class="primary-btn" type="button" onclick="createFundLedgerPromoCode()">Create Promo Code</button><button class="secondary" type="button" onclick="loadAdminPromoCodes()">Refresh Codes</button></div><div id="adminPromoStatus" class="muted" style="margin-top:10px">Create a code or refresh to view existing codes.</div><div id="adminPromoList" class="admin-promo-list"></div></div>
       <div id="adminAnalytics" class="admin-analytics">
         
         <div class="analytics-cards">
@@ -3505,7 +3521,7 @@ async function updateAdminContactVisibility(){
  $("adminPinHelp").textContent=hasPin?"Enter your four-digit PIN to continue.":"Create a four-digit PIN for the Admin Dashboard on this device.";
  $("adminPinConfirmField").classList.toggle("hidden",hasPin);
  $("adminPinUnlockBtn").textContent=hasPin?"Unlock Admin Dashboard":"Create PIN";
- if(adminPinUnlocked){gate.classList.add("hidden");panel.classList.remove("hidden");if(window.loadFundLedgerAnalytics)window.loadFundLedgerAnalytics()}
+ if(adminPinUnlocked){gate.classList.add("hidden");panel.classList.remove("hidden");if(window.loadFundLedgerAnalytics)window.loadFundLedgerAnalytics();if(window.loadAdminPromoCodes)window.loadAdminPromoCodes()}
  else{gate.classList.remove("hidden");panel.classList.add("hidden");setTimeout(()=>$("adminPinInput")?.focus(),0)}
 }
 async function submitAdminPin(){
@@ -5945,16 +5961,70 @@ async function adminCheckProAccess(){
  try{const {data,error}=await supabaseClient.rpc("admin_get_fundledger_access",{p_email:email});if(error)throw error;const d=Array.isArray(data)?data[0]:data;let label=d?.plan==="pro"?"FundLedger Pro":"Free";if(d?.provider==="admin_complimentary")label+=" — complimentary";if(d?.status==="trialing")label+=` — trial through ${new Date(d.current_period_end).toLocaleDateString()}`;if(status)status.textContent=label}catch(e){if(status)status.textContent=e.message||"Could not check access."}
 }
 </script>
+<script id="fundledger-promo-codes">
+(function(){
+ function html(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]))}
+ function normalizedCode(value){return String(value||"").toUpperCase().replace(/\s+/g,"").trim()}
+ function dateLabel(value){if(!value)return "No expiration";const d=new Date(value);return Number.isNaN(d.getTime())?"—":d.toLocaleDateString()}
+ window.redeemFundLedgerPromoCode=async function(){
+  const input=document.getElementById("fundLedgerPromoCode"),button=document.getElementById("redeemPromoCodeBtn"),status=document.getElementById("promoRedeemStatus");
+  const code=normalizedCode(input?.value);if(input)input.value=code;
+  if(!code){if(status){status.className="promo-status error";status.textContent="Enter a promo code."}return}
+  if(!currentUser||!supabaseClient){if(status){status.className="promo-status error";status.textContent="Sign in before redeeming a promo code."}return}
+  try{
+   if(button){button.disabled=true;button.textContent="Checking…"}if(status){status.className="promo-status";status.textContent="Checking your promo code…"}
+   const {data,error}=await supabaseClient.rpc("redeem_fundledger_promo_code",{p_code:code});if(error)throw error;
+   const result=Array.isArray(data)?data[0]:data;
+   if(status){status.className="promo-status success";status.textContent=`Success — ${Number(result?.months||0)} months of FundLedger Pro added. Pro is active through ${dateLabel(result?.pro_until)}.`}
+   if(input)input.value="";await window.loadFundLedgerPlan?.();window.trackFundLedgerEvent?.("promo_redeemed");toast("Promo code redeemed — FundLedger Pro is active.");
+  }catch(e){console.error("Promo redemption failed",e);if(status){status.className="promo-status error";status.textContent=e.message||"This promo code could not be redeemed."}}
+  finally{if(button){button.disabled=false;button.textContent="Redeem Code"}}
+ };
+ window.createFundLedgerPromoCode=async function(){
+  if(!isAdmin||!adminPinUnlocked){toast("Unlock the Admin Dashboard first.");return}
+  const code=normalizedCode(document.getElementById("adminPromoCode")?.value),months=parseInt(document.getElementById("adminPromoMonths")?.value,10),maxRaw=document.getElementById("adminPromoMaxUses")?.value||"",expiryRaw=document.getElementById("adminPromoExpires")?.value||"",status=document.getElementById("adminPromoStatus");
+  if(!/^[A-Z0-9-]{4,32}$/.test(code)){if(status)status.textContent="Use 4–32 letters, numbers, or hyphens.";return}
+  if(!Number.isInteger(months)||months<1||months>120){if(status)status.textContent="Free months must be between 1 and 120.";return}
+  const maxUses=maxRaw===""?null:parseInt(maxRaw,10);if(maxUses!==null&&(!Number.isInteger(maxUses)||maxUses<1)){if(status)status.textContent="Maximum uses must be at least 1 or left blank.";return}
+  const expiresAt=expiryRaw?new Date(expiryRaw+"T23:59:59").toISOString():null;
+  try{
+   if(status)status.textContent="Creating secure promo code…";
+   const {data,error}=await supabaseClient.rpc("admin_create_fundledger_promo_code",{p_code:code,p_duration_months:months,p_max_redemptions:maxUses,p_expires_at:expiresAt});if(error)throw error;
+   const result=Array.isArray(data)?data[0]:data;if(status)status.textContent=`${result?.code||code} created: ${months} free Pro months${maxUses?`, up to ${maxUses} uses`:" with unlimited uses"}. Save this code—the full code is not displayed again.`;
+   document.getElementById("adminPromoCode").value="";await loadAdminPromoCodes();toast("Promo code created.");
+  }catch(e){console.error("Promo creation failed",e);if(status)status.textContent=e.message||"Could not create promo code."}
+ };
+ window.loadAdminPromoCodes=async function(){
+  if(!isAdmin||!adminPinUnlocked||!supabaseClient)return;
+  const list=document.getElementById("adminPromoList"),status=document.getElementById("adminPromoStatus");
+  try{
+   const {data,error}=await supabaseClient.rpc("admin_list_fundledger_promo_codes");if(error)throw error;
+   const rows=Array.isArray(data)?data:[];
+   if(list)list.innerHTML=rows.length?rows.map(row=>{const state=!row.active?"DISABLED":row.available?"ACTIVE":(row.expires_at&&new Date(row.expires_at)<=new Date()?"EXPIRED":"EXHAUSTED");return `<div class="admin-promo-item"><div><strong>${html(row.code_hint||"Promo code")}</strong><div class="muted">${Number(row.duration_months||0)} Pro months</div></div><div><span class="muted">Uses</span><div>${Number(row.redemption_count||0)} / ${row.max_redemptions==null?"∞":Number(row.max_redemptions)}</div></div><div><span class="muted">Expires</span><div>${html(dateLabel(row.expires_at))}</div></div><span class="promo-state ${row.available?"active":"inactive"}">${state}</span><button class="secondary" type="button" onclick="setFundLedgerPromoCodeActive('${html(row.id)}',${row.active?"false":"true"})">${row.active?"Disable":"Enable"}</button></div>`}).join(""):'<div class="muted">No promo codes created yet.</div>';
+   if(status&&rows.length)status.textContent=`${rows.length} promo code${rows.length===1?"":"s"} available.`;
+  }catch(e){console.error("Promo list failed",e);if(status)status.textContent=e.message||"Could not load promo codes."}
+ };
+ window.setFundLedgerPromoCodeActive=async function(id,active){
+  if(!isAdmin||!adminPinUnlocked)return;
+  try{const {error}=await supabaseClient.rpc("admin_set_fundledger_promo_code_active",{p_code_id:id,p_active:!!active});if(error)throw error;await loadAdminPromoCodes();toast(active?"Promo code enabled.":"Promo code disabled.")}catch(e){const status=document.getElementById("adminPromoStatus");if(status)status.textContent=e.message||"Could not update promo code."}
+ };
+})();
+</script>
 <script id="fundledger-free-pro-plans">
 (function(){
  window.fundLedgerPlan="free";
- window.fundLedgerIsPro=function(){return window.fundLedgerPlan==="pro"||!!window.isAdmin};
+ window.fundLedgerPlanDetails={plan:"free",source:"free",expires_at:null};
+ window.fundLedgerIsPro=function(){return window.fundLedgerPlan==="pro"||!!isAdmin};
  window.loadFundLedgerPlan=async function(){
-  let plan="free";
+  let plan="free",details={plan:"free",source:"free",expires_at:null};
   try{
-   if(window.supabaseClient&&window.currentUser){const r=await supabaseClient.rpc("get_my_fundledger_plan");if(!r.error&&r.data)plan=String(r.data).toLowerCase()==="pro"?"pro":"free";}
+   if(supabaseClient&&currentUser){
+    const detailed=await supabaseClient.rpc("get_my_fundledger_plan_details");
+    if(!detailed.error&&detailed.data){details=Array.isArray(detailed.data)?detailed.data[0]:detailed.data;plan=String(details?.plan||"free").toLowerCase()==="pro"?"pro":"free";}
+    else{const fallback=await supabaseClient.rpc("get_my_fundledger_plan");if(!fallback.error&&fallback.data)plan=String(fallback.data).toLowerCase()==="pro"?"pro":"free";details.plan=plan;}
+   }
   }catch(e){console.warn("Plan lookup failed; using Free plan",e)}
-  window.fundLedgerPlan=plan; applyFundLedgerPlan(); return plan;
+  window.fundLedgerPlan=plan;window.fundLedgerPlanDetails=details||{plan,source:plan};applyFundLedgerPlan();return plan;
  };
  window.applyFundLedgerPlan=function(){
   const pro=fundLedgerIsPro();
@@ -5963,10 +6033,14 @@ async function adminCheckProAccess(){
   const name=document.getElementById("currentPlanName"); if(name)name.textContent=pro?"FundLedger Pro":"Free";
   const badge=document.getElementById("currentPlanBadge"); if(badge){badge.textContent=pro?"PRO":"FREE";badge.classList.toggle("pro",pro)}
   const btn=document.getElementById("upgradeProBtn"); if(btn){btn.classList.toggle("hidden",pro);btn.disabled=pro}
+  const detail=document.getElementById("planAccessDetail"),info=window.fundLedgerPlanDetails||{};
+  if(detail){if(isAdmin)detail.textContent="Administrator Pro access.";else if(pro&&info.expires_at)detail.textContent=`Pro access active through ${new Date(info.expires_at).toLocaleDateString()}${info.source==="promo"?" through a promo code":""}.`;else if(pro)detail.textContent="FundLedger Pro access is active.";else detail.textContent="Free plan access."}
+  if(typeof updateMyAccountPanel==="function")updateMyAccountPanel();
  };
  window.showFundLedgerPlan=function(){const link=document.querySelector('.nav-item[href="#planPanel"]');if(link)link.click()};
  window.startFundLedgerProCheckout=function(){toast("FundLedger Pro checkout is ready to connect. Add your payment provider before accepting live $9.99 subscriptions.")};
  document.addEventListener("DOMContentLoaded",applyFundLedgerPlan);
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden&&currentUser)window.loadFundLedgerPlan()});
 })();
 </script>
 <script id="fundledger-analytics">
@@ -5993,7 +6067,7 @@ function updateMyAccountPanel(){
  const name=document.getElementById("accountPlanName"), badge=document.getElementById("accountPlanBadge"), detail=document.getElementById("accountPlanDetail");
  if(name)name.textContent=pro?"FundLedger Pro":"FundLedger Free";
  if(badge){badge.textContent=pro?"PRO":"FREE";badge.classList.toggle("pro",pro)}
- if(detail)detail.textContent=pro?"Unlimited contracts, Reports, and no advertisements.":"Manage up to 3 contracts with ads. Reports are not included.";
+ if(detail){const info=window.fundLedgerPlanDetails||{};detail.textContent=pro?(info.expires_at?`Unlimited contracts, Reports, and no advertisements through ${new Date(info.expires_at).toLocaleDateString()}.`:"Unlimited contracts, Reports, and no advertisements."):"Manage up to 3 contracts with ads. Reports are not included.";}
 }
 async function changeFundLedgerPassword(){
  const p=document.getElementById("accountNewPassword")?.value||"", c=document.getElementById("accountConfirmPassword")?.value||"", st=document.getElementById("accountPasswordStatus");
