@@ -2344,7 +2344,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 }
 </style>
 
-<style id="mobile-single-route-view-fix">@media(max-width:700px){#appScreen[data-mobile-route] #checkPanel,#appScreen[data-mobile-route] #newContractPanel,#appScreen[data-mobile-route] #contractsPanel,#appScreen[data-mobile-route] #completedPanel,#appScreen[data-mobile-route] #historyPanel,#appScreen[data-mobile-route] #reportsPanel,#appScreen[data-mobile-route] #settingsPanel,#appScreen[data-mobile-route] #contactPanel{display:none!important}#appScreen[data-mobile-route="checkPanel"] #checkPanel,#appScreen[data-mobile-route="newContractPanel"] #newContractPanel,#appScreen[data-mobile-route="contractsPanel"] #contractsPanel,#appScreen[data-mobile-route="completedPanel"] #completedPanel,#appScreen[data-mobile-route="historyPanel"] #historyPanel,#appScreen[data-mobile-route="reportsPanel"] #reportsPanel,#appScreen[data-mobile-route="settingsPanel"] #settingsPanel,#appScreen[data-mobile-route="contactPanel"] #contactPanel{display:block!important}#appScreen[data-mobile-route="dashboard"] #dashboardSummary{display:grid!important}#appScreen[data-mobile-route]:not([data-mobile-route="dashboard"]) #dashboardSummary{display:none!important}}</style><style id="admin-analytics-style">
+<style id="mobile-single-route-view-fix">@media(max-width:700px){#appScreen[data-mobile-route] #checkPanel,#appScreen[data-mobile-route] #newContractPanel,#appScreen[data-mobile-route] #contractsPanel,#appScreen[data-mobile-route] #completedPanel,#appScreen[data-mobile-route] #historyPanel,#appScreen[data-mobile-route] #trashPanel,#appScreen[data-mobile-route] #reportsPanel,#appScreen[data-mobile-route] #settingsPanel,#appScreen[data-mobile-route] #contactPanel{display:none!important}#appScreen[data-mobile-route="checkPanel"] #checkPanel,#appScreen[data-mobile-route="newContractPanel"] #newContractPanel,#appScreen[data-mobile-route="contractsPanel"] #contractsPanel,#appScreen[data-mobile-route="completedPanel"] #completedPanel,#appScreen[data-mobile-route="historyPanel"] #historyPanel,#appScreen[data-mobile-route="trashPanel"] #trashPanel,#appScreen[data-mobile-route="reportsPanel"] #reportsPanel,#appScreen[data-mobile-route="settingsPanel"] #settingsPanel,#appScreen[data-mobile-route="contactPanel"] #contactPanel{display:block!important}#appScreen[data-mobile-route="dashboard"] #dashboardSummary{display:grid!important}#appScreen[data-mobile-route]:not([data-mobile-route="dashboard"]) #dashboardSummary{display:none!important}}</style><style id="admin-analytics-style">
 .admin-analytics{margin:18px 0;padding:18px;border:1px solid #d9e4f2;border-radius:16px;background:#f8fbff}.admin-analytics-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}.admin-analytics-head h3{margin:0}.admin-analytics-controls{display:flex;gap:8px;flex-wrap:wrap}.analytics-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}.analytics-card{background:#fff;border:1px solid #d9e4f2;border-radius:14px;padding:14px}.analytics-card span{display:block;font-weight:700}.analytics-card strong{display:block;font-size:26px;margin:5px 0}.analytics-card small{color:#5b6f8c}.analytics-card small.up{color:#16833a}.analytics-card small.down{color:#b42318}.analytics-chart-card{background:#fff;border:1px solid #d9e4f2;border-radius:14px;padding:14px;margin-bottom:14px}.analytics-chart-title{display:flex;justify-content:space-between;gap:10px}.analytics-chart{height:190px;display:flex;align-items:flex-end;gap:4px;padding-top:18px;overflow-x:auto}.analytics-bar{min-width:12px;flex:1;background:#2d83df;border-radius:5px 5px 0 0;position:relative}.analytics-bar:hover:after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#17385f;color:#fff;padding:4px 6px;border-radius:5px;white-space:nowrap;font-size:11px;z-index:5}.analytics-table-wrap{overflow:auto}.analytics-table-wrap table{min-width:720px}@media(max-width:700px){.analytics-cards{grid-template-columns:1fr 1fr}.admin-analytics{padding:12px}.analytics-card strong{font-size:22px}}@media(max-width:420px){.analytics-cards{grid-template-columns:1fr}}
 </style><style id="admin-privacy-style">.admin-privacy-note{margin-top:14px;padding:13px 14px;border:1px solid #d9e4f2;border-radius:12px;background:#fff}</style>
 <style id="mobile-active-contract-actions-polish">
@@ -3073,6 +3073,7 @@ body.landing-info-open{overflow:hidden}
 <a class="nav-item" href="#contractsPanel"><span class="nav-icon">▣</span><span>Active Contracts</span></a>
 <a class="nav-item" href="#completedPanel"><span class="nav-icon">✓</span><span>Completed Contracts</span></a>
 <a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Payment History</span></a>
+<a class="nav-item" href="#trashPanel"><span class="nav-icon">🗑</span><span>Trash</span></a>
 <a class="nav-item" id="reportsNavLink" href="#reportsPanel"><span class="nav-icon">▥</span><span>Reports</span></a>
 <a href="#analyticsPanel" id="analyticsNavLink" class="nav-item hidden" data-admin-only="true">▥ <span>Analytics</span></a>
 <a class="nav-item" href="#planPanel"><span class="nav-icon">★</span><span>FundLedger Pro</span></a>
@@ -3111,6 +3112,7 @@ body.landing-info-open{overflow:hidden}
 <div class="dashboard-grid">
 
 <select id="filter" class="hidden"><option value="">All contracts</option></select><section class="panel" id="historyPanel"><div class="section-head"><h2>Payment History</h2><button class="secondary" onclick="exportCSV()">⇩ Export CSV</button></div><div class="history-search-box"><div class="field"><label>Search Payment History By</label><select id="historySearchType" onchange="updateHistorySearchInput()"><option value="dateIssued">Payment Date</option><option value="dateReceived">Date Received</option><option value="amount">Payment Amount</option><option value="contract">Contract Name / ID</option><option value="checkno">Check Number</option></select></div><div class="field history-search-input"><label id="historySearchLabel">Payment Date</label><input id="historySearch" type="date" oninput="renderCheckHistory()" autocomplete="off"></div><div class="field history-clear-field"><label>&nbsp;</label><button type="button" class="secondary" onclick="clearHistorySearch()">Clear Search</button></div></div><div class="scroll"><table><thead><tr><th data-column-key="sequence">#</th><th data-column-key="dateIssued">Payment Date</th><th data-column-key="dateReceived">Date Received</th><th data-column-key="amount">Payment Amount</th><th data-column-key="contract">Contracts</th><th data-column-key="checkno">Check #</th><th data-column-key="actions">Actions</th></tr></thead><tbody id="history"></tbody></table></div></section>
+<section class="panel hidden" id="trashPanel"><div class="section-head trash-head"><div><h2>Trash</h2><p class="muted" style="margin:0">Restore items deleted by mistake or permanently empty the Trash.</p></div><button id="emptyTrashBtn" class="danger" type="button" onclick="emptyTrash()">Empty Trash</button></div><div class="trash-summary"><span id="trashCount">0 items</span></div><div class="trash-section"><h3>Deleted Contracts</h3><div id="trashContracts" class="trash-list"></div></div><div class="trash-section"><h3>Deleted Payments</h3><div id="trashChecks" class="trash-list"></div></div></section>
 <section class="panel hidden" id="reportsPanel">
   <div class="section-head report-head"><div><h2>Reports</h2><p class="muted" style="margin:0">View detailed performance, payment activity, and contract results.</p></div><button class="secondary" type="button" onclick="exportFullReport()">⇩ Export Full Report</button></div>
   <div class="report-grid report-kpis">
@@ -3352,8 +3354,8 @@ let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
 let cloudLoadInFlight=false; let fundLedgerRealtimeChannel=null; let realtimeApplyInFlight=false;
-const EMPTY_DATA={contracts:[],checks:[],preferences:{automaticDataRefresh:true,dashboardCards:{invested:true,received:true,profit:true,active:true,all:true,paid:true,default:true,defaultLoss:true},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{summary:true,payments:false,addContract:false,activeContracts:false,completedContracts:false,checkHistory:false,reports:false},activeContractColumns:{name:true,dayOpened:true,invested:true,paid:true,breakEven:true,remainingBalance:true,amountPerCheck:true,expectedPayments:true,paymentsLeft:true,actions:true},completedContractColumns:{contract:true,dayOpened:true,dayClosed:true,invested:true,received:true,remainingPayment:true,gainLoss:true,status:true,action:true},checkHistoryColumns:{sequence:true,dateIssued:true,dateReceived:true,amount:true,contract:true,checkno:true,actions:true},activeContractColumnOrder:[],completedContractColumnOrder:[],checkHistoryColumnOrder:[],projectedResultsOrder:[]}};
-let data={contracts:[],checks:[]};
+const EMPTY_DATA={contracts:[],checks:[],trash:{contracts:[],checks:[]},preferences:{automaticDataRefresh:true,dashboardCards:{invested:true,received:true,profit:true,active:true,all:true,paid:true,default:true,defaultLoss:true},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{summary:true,payments:false,addContract:false,activeContracts:false,completedContracts:false,checkHistory:false,reports:false},activeContractColumns:{name:true,dayOpened:true,invested:true,paid:true,breakEven:true,remainingBalance:true,amountPerCheck:true,expectedPayments:true,paymentsLeft:true,actions:true},completedContractColumns:{contract:true,dayOpened:true,dayClosed:true,invested:true,received:true,remainingPayment:true,gainLoss:true,status:true,action:true},checkHistoryColumns:{sequence:true,dateIssued:true,dateReceived:true,amount:true,contract:true,checkno:true,actions:true},activeContractColumnOrder:[],completedContractColumnOrder:[],checkHistoryColumnOrder:[],projectedResultsOrder:[]}};
+let data={contracts:[],checks:[],trash:{contracts:[],checks:[]}};
 // Data-model compatibility layer: converts legacy FundLedger field names to the
 // current terminology when old local/cloud records are loaded. New saves use
 // the new field names, so existing users migrate automatically without losing data.
@@ -3361,6 +3363,9 @@ function normalizeFundLedgerData(snapshot){
  const out=(snapshot&&typeof snapshot==='object')?snapshot:JSON.parse(JSON.stringify(EMPTY_DATA));
  out.contracts=Array.isArray(out.contracts)?out.contracts:[];
  out.checks=Array.isArray(out.checks)?out.checks:[];
+ out.trash=(out.trash&&typeof out.trash==='object')?out.trash:{};
+ out.trash.contracts=Array.isArray(out.trash.contracts)?out.trash.contracts:[];
+ out.trash.checks=Array.isArray(out.trash.checks)?out.trash.checks:[];
  out.contracts.forEach(c=>{
   if(c.fundedAmount==null&&c.invested!=null)c.fundedAmount=c.invested;
   if(c.totalExpectedPayments==null&&c.expectedPayments!=null)c.totalExpectedPayments=c.expectedPayments;
@@ -3435,7 +3440,7 @@ function saveLocalCache(userId,snapshot){
  // existing FundLedger data already present in Safari/iPhone local storage.
  try{localStorage.setItem(localKey(userId),JSON.stringify(snapshot))}catch(e){console.error("Local FundLedger recovery cache could not be saved",e)}
 }
-function hasFundLedgerRecords(v){return !!(v&&((Array.isArray(v.contracts)&&v.contracts.length)||(Array.isArray(v.checks)&&v.checks.length)))}
+function hasFundLedgerRecords(v){return !!(v&&((Array.isArray(v.contracts)&&v.contracts.length)||(Array.isArray(v.checks)&&v.checks.length)||(Array.isArray(v.trash?.contracts)&&v.trash.contracts.length)||(Array.isArray(v.trash?.checks)&&v.trash.checks.length)))}
 let removedBreakdownContracts=new Set();
 let selectedChoiceIds=[];
 let breakdownRows=[];
@@ -3824,11 +3829,11 @@ function setupNavScrolling(){
         /* Mobile: exactly one sidebar destination at a time. */
         const appScreen=document.getElementById("appScreen");
         const routeId=id==="#dashboard"?"dashboard":id.slice(1);
-  const allRoutePanels=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","planPanel","accountPanel","settingsPanel","contactPanel"];
+  const allRoutePanels=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","trashPanel","reportsPanel","analyticsPanel","planPanel","accountPanel","settingsPanel","contactPanel"];
   allRoutePanels.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.add("hidden")});
   if(routeId!=="dashboard"&&target)target.classList.remove("hidden");
         if(appScreen) appScreen.dataset.mobileRoute=routeId;
-        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","reportsPanel","analyticsPanel","planPanel","accountPanel","settingsPanel","contactPanel"];
+        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","trashPanel","reportsPanel","analyticsPanel","planPanel","accountPanel","settingsPanel","contactPanel"];
         mobileRouteIds.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.toggle("hidden",route!==routeId)});
         if(routeId!=="dashboard") target.classList.remove("hidden");
         const content=document.querySelector(".content");
@@ -3848,6 +3853,7 @@ function setupNavScrolling(){
       if(id!=="#contactPanel")adminPinUnlocked=false;
       updateAdminContactVisibility();
       if(id==="#reportsPanel") renderReports();
+      if(id==="#trashPanel") renderTrash();
       if(id!=="#settingsPanel") collapseSettingsSections();
       if(id==="#settingsPanel"){ collapseSettingsSections(); updateSettingsPanel(); }
       if(id==="#accountPanel") updateMyAccountPanel();
@@ -4829,11 +4835,23 @@ function toggleContractChoice(id){
  }
 }
 
+function ensureTrashData(){
+ if(!data.trash||typeof data.trash!=='object')data.trash={};
+ if(!Array.isArray(data.trash.contracts))data.trash.contracts=[];
+ if(!Array.isArray(data.trash.checks))data.trash.checks=[];
+ return data.trash;
+}
+function cleanTrashMetadata(item){
+ const restored={...item};delete restored.deletedAt;delete restored.trashParentContractId;return restored;
+}
 function removeContract(id){
  let contract=data.contracts.find(c=>c.id===id);if(!contract)return;
  let count=data.checks.filter(x=>x.contract===contract.name).length;
- if(!confirm(`Remove ${contract.name}${count?` and its ${count} recorded check${count===1?'':'s'}`:''}?`))return;
- data.contracts=data.contracts.filter(c=>c.id!==id);data.checks=data.checks.filter(x=>x.contract!==contract.name);save();render();toast("Contract removed");
+ if(!confirm(`Move ${contract.name}${count?` and its ${count} recorded payment${count===1?'':'s'}`:''} to Trash? You can restore ${count?'them':'it'} later.`))return;
+ const trash=ensureTrashData(),deletedAt=new Date().toISOString(),relatedChecks=data.checks.filter(x=>x.contract===contract.name);
+ trash.contracts.push({...contract,deletedAt});
+ relatedChecks.forEach(check=>trash.checks.push({...check,deletedAt,trashParentContractId:contract.id}));
+ data.contracts=data.contracts.filter(c=>c.id!==id);data.checks=data.checks.filter(x=>x.contract!==contract.name);selectedActiveContractId=null;selectedCompletedContractId=null;save();render();toast("Contract moved to Trash");
 }
 function closeContract(id){
  let contract=data.contracts.find(c=>c.id===id);if(!contract||contract.closed)return;
@@ -4960,9 +4978,38 @@ function saveEditedContract(id){
 }
 function deleteCheck(id){
  let check=data.checks.find(c=>c.id===id);if(!check)return;
- if(confirm(`Delete this check of ${money(check.paymentAmount)} for ${check.contract}?`)){
-  data.checks=data.checks.filter(c=>c.id!==id);save();render();toast("Check deleted");
+ if(confirm(`Move this payment of ${money(check.paymentAmount)} for ${check.contract} to Trash? You can restore it later.`)){
+  ensureTrashData().checks.push({...check,deletedAt:new Date().toISOString()});
+  data.checks=data.checks.filter(c=>c.id!==id);save();render();toast("Payment moved to Trash");
  }
+}
+function renderTrash(){
+ const trash=ensureTrashData(),contractsEl=$("trashContracts"),checksEl=$("trashChecks"),count=trash.contracts.length+trash.checks.length;
+ if($("trashCount"))$("trashCount").textContent=`${count} item${count===1?'':'s'} in Trash`;
+ if($("emptyTrashBtn"))$("emptyTrashBtn").disabled=count===0;
+ if(contractsEl)contractsEl.innerHTML=trash.contracts.length?trash.contracts.map(c=>{const related=trash.checks.filter(x=>String(x.trashParentContractId)===String(c.id)).length;return `<article class="trash-item"><div><strong>${escape(c.name||'Unnamed contract')}</strong><span>Contract${related?` • ${related} payment${related===1?'':'s'}`:''}</span><small>Deleted ${escape(c.deletedAt?new Date(c.deletedAt).toLocaleString():'Recently')}</small></div><div class="trash-actions"><button class="table-action" type="button" onclick="restoreTrashedContract('${escape(String(c.id))}')">Restore</button><button class="danger" type="button" onclick="permanentlyDeleteTrashItem('contract','${escape(String(c.id))}')">Delete Permanently</button></div></article>`}).join(''):'<div class="trash-empty">No deleted contracts.</div>';
+ if(checksEl)checksEl.innerHTML=trash.checks.length?trash.checks.map(c=>`<article class="trash-item"><div><strong>${money(c.paymentAmount)} • ${escape(c.contract||'Unknown contract')}</strong><span>Payment Date: ${escape(c.paymentDate||'—')} • Check #: ${escape(c.checkno||'—')}</span><small>${c.trashParentContractId?'Stored with deleted contract • ':''}Deleted ${escape(c.deletedAt?new Date(c.deletedAt).toLocaleString():'Recently')}</small></div><div class="trash-actions"><button class="table-action" type="button" onclick="restoreTrashedCheck('${escape(String(c.id))}')">Restore</button><button class="danger" type="button" onclick="permanentlyDeleteTrashItem('check','${escape(String(c.id))}')">Delete Permanently</button></div></article>`).join(''):'<div class="trash-empty">No deleted payments.</div>';
+}
+function restoreTrashedContract(id){
+ const trash=ensureTrashData(),index=trash.contracts.findIndex(c=>String(c.id)===String(id));if(index<0)return;
+ const contract=trash.contracts[index];if(data.contracts.some(c=>String(c.name||'').toLowerCase()===String(contract.name||'').toLowerCase())){toast("A contract with this name already exists");return}
+ const restoredContract=cleanTrashMetadata(contract);if(data.contracts.some(c=>String(c.id)===String(restoredContract.id)))restoredContract.id=Date.now();
+ const related=trash.checks.filter(c=>String(c.trashParentContractId)===String(contract.id));
+ related.forEach((check,i)=>{const restored=cleanTrashMetadata(check);if(data.checks.some(c=>String(c.id)===String(restored.id)))restored.id=Date.now()+i;data.checks.push(restored)});
+ data.contracts.push(restoredContract);trash.contracts.splice(index,1);trash.checks=trash.checks.filter(c=>String(c.trashParentContractId)!==String(contract.id));save();render();toast(`Contract restored${related.length?` with ${related.length} payment${related.length===1?'':'s'}`:''}`);
+}
+function restoreTrashedCheck(id){
+ const trash=ensureTrashData(),index=trash.checks.findIndex(c=>String(c.id)===String(id));if(index<0)return;const check=trash.checks[index];
+ if(check.trashParentContractId&&trash.contracts.some(c=>String(c.id)===String(check.trashParentContractId))){toast("Restore the contract to restore this payment");return}
+ if(!data.contracts.some(c=>c.name===check.contract)){toast("Restore its contract first");return}
+ const restored=cleanTrashMetadata(check);if(data.checks.some(c=>String(c.id)===String(restored.id)))restored.id=Date.now();data.checks.push(restored);trash.checks.splice(index,1);save();render();toast("Payment restored");
+}
+function permanentlyDeleteTrashItem(type,id){
+ const trash=ensureTrashData(),label=type==='contract'?'contract':'payment';if(!confirm(`Permanently delete this ${label}? This cannot be undone.`))return;
+ if(type==='contract'){trash.contracts=trash.contracts.filter(c=>String(c.id)!==String(id));trash.checks=trash.checks.filter(c=>String(c.trashParentContractId)!==String(id))}else trash.checks=trash.checks.filter(c=>String(c.id)!==String(id));const allowEmpty=!hasFundLedgerRecords(data);if(allowEmpty)fundLedgerAllowEmptyWrite=true;save();if(allowEmpty)setTimeout(()=>{fundLedgerAllowEmptyWrite=false},2000);render();toast(`${label[0].toUpperCase()+label.slice(1)} permanently deleted`);
+}
+function emptyTrash(){
+ const trash=ensureTrashData(),count=trash.contracts.length+trash.checks.length;if(!count){toast("Trash is already empty");return}if(!confirm(`Permanently delete all ${count} item${count===1?'':'s'} in Trash? This cannot be undone.`))return;trash.contracts=[];trash.checks=[];const allowEmpty=!hasFundLedgerRecords(data);if(allowEmpty)fundLedgerAllowEmptyWrite=true;save();if(allowEmpty)setTimeout(()=>{fundLedgerAllowEmptyWrite=false},2000);render();toast("Trash emptied");
 }
 function verify(id){let x=data.checks.find(c=>c.id===id);x.verified=!x.verified;save();render()}
 function renderContractChoices(){
@@ -5091,7 +5138,7 @@ if(totalRemainingReceivableEl) totalRemainingReceivableEl.textContent=money(tota
  updateContractSummaryCounts();$("paidInFull").textContent=paidInFull;$("defaultContracts").textContent=defaultContracts.length;$("defaultLoss").textContent=money(defaultLoss);
  $("reportInvested").textContent=money(invested);$("reportReceived").textContent=money(received);$("reportProfit").textContent=money(overallProfit);$("reportProfit").classList.toggle("gain",overallProfit>0);$("reportProfit").classList.toggle("loss",overallProfit<0);$("reportAllContracts").textContent=data.contracts.length;$("reportOpenContracts").textContent=open.length;$("reportPaidInFull").textContent=paidInFull;$("reportDefaultContracts").textContent=defaultContracts.length;$("reportDefaultLoss").textContent=money(defaultLoss);
  renderCheckHistory();
- renderContractChoices(); renderCompletedContracts(); renderReports();
+ renderContractChoices(); renderCompletedContracts(); renderReports(); renderTrash();
  updateBreakdown();
  applyDashboardAppearance();
  applyActiveContractColumns();
@@ -5620,6 +5667,10 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 @media (max-width:1179px){.panel.page-summary-layout>.page-summary-side{display:none!important}}
 .page-summary-side{display:none}.page-summary-card{border:1px solid #d6e4f3;border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 1px 3px rgba(14,49,91,.05)}
 .page-summary-card h3{margin:0;padding:11px 13px;background:#edf5ff;color:#17365f;font-size:14px;font-weight:800;border-bottom:1px solid #d6e4f3}.page-summary-list{padding:5px 12px 9px}.page-summary-row{display:flex;justify-content:space-between;gap:12px;padding:8px 1px;border-bottom:1px solid #e8eef5;font-size:12px;color:#425a78}.page-summary-row:last-child{border-bottom:0}.page-summary-row strong{color:#17365f;text-align:right;overflow-wrap:anywhere}.page-summary-row.good strong{color:#07853f}.page-summary-row.warn strong{color:#c92020}
+</style>
+<style id="fundledger-trash-style">
+#trashPanel{max-width:100%}.trash-head{align-items:flex-start}.trash-summary{margin:12px 0 18px;padding:10px 13px;border:1px solid #d8e4f1;border-radius:10px;background:#f7faff;color:#294766;font-weight:800}.trash-section{margin-top:18px}.trash-section h3{margin:0 0 10px;color:#17365f}.trash-list{display:grid;gap:10px}.trash-item{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px;border:1px solid #dce6f1;border-radius:12px;background:#fff}.trash-item>div:first-child{display:flex;flex-direction:column;gap:4px;min-width:0}.trash-item strong{color:#17365f}.trash-item span,.trash-item small{color:#5a6f89}.trash-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.trash-empty{padding:20px;border:1px dashed #ccd9e7;border-radius:12px;text-align:center;color:#64748b;background:#fbfdff}#emptyTrashBtn:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:700px){#trashPanel{padding:14px!important}.trash-head{display:flex!important;gap:10px!important}.trash-head>div{min-width:0}.trash-head #emptyTrashBtn{width:auto!important;flex:0 0 auto!important}.trash-item{align-items:flex-start;flex-direction:column}.trash-actions{width:100%;display:grid;grid-template-columns:1fr}.trash-actions button{width:100%}}
 </style>
 <script id="page-specific-summary-panels-js">
 (function(){
