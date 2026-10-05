@@ -3268,18 +3268,8 @@ body.landing-info-open{overflow:hidden}
 <section class="panel hidden" id="contactPanel">
   <div class="section-head"><div><h2 id="contactPanelTitle">Contact Us</h2><p class="muted" id="contactPanelSubtitle" style="margin:0">Send a message to the administrator.</p></div><button id="contactAdminBackBtn" class="secondary hidden" type="button" onclick="showAdminHome()">← Back to Admin</button></div>
   <div id="adminAccessArea" class="admin-access-area hidden">
-    <div id="adminPinGate" class="admin-pin-gate">
-      <h3 id="adminPinTitle">Admin Dashboard Locked</h3>
-      <p id="adminPinHelp" class="muted" style="margin:0">Enter your four-digit PIN to continue.</p>
-      <div class="admin-pin-row">
-        <div class="field"><label for="adminPinInput">4-digit PIN</label><input id="adminPinInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="••••"></div>
-        <div class="field hidden" id="adminPinConfirmField"><label for="adminPinConfirm">Confirm PIN</label><input id="adminPinConfirm" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="••••"></div>
-        <button id="adminPinUnlockBtn" class="primary-btn" type="button">Unlock Admin Dashboard</button>
-      </div>
-      <div id="adminPinStatus" class="muted" style="margin-top:10px"></div>
-    </div>
-    <div id="adminPanel" class="panel hidden" style="margin-top:14px">
-      <div class="admin-panel-head"><h2>Admin Dashboard</h2><div class="admin-panel-actions"><button id="adminChangePinBtn" class="secondary" type="button">Change PIN</button><button id="adminLockBtn" class="secondary" type="button">Lock Dashboard</button></div></div>
+    <div id="adminPanel" class="panel" style="margin-top:14px">
+      <div class="admin-panel-head"><h2>Admin Dashboard</h2></div>
       <p class="muted">Master account view. Regular users only see their own data.</p><div class="plan-card" id="adminProAccessCard"><h3>Pro Access Management</h3><p class="muted">Give a user a custom-length Pro trial, complimentary Pro access for friends/family, or return the account to Free. This does not change their contracts or payments.</p><div class="row" style="align-items:end"><div class="field" style="flex:2;min-width:220px"><label>User email</label><input id="adminProEmail" type="email" placeholder="user@example.com"></div><div class="field" style="flex:1;min-width:180px"><label>Trial ends</label><input id="adminProTrialEnd" type="date"></div></div><div class="row" style="margin-top:10px;flex-wrap:wrap"><button class="primary-btn" type="button" onclick="adminSetProAccess('trial')">Give Custom Trial</button><button class="secondary" type="button" onclick="adminSetProAccess('complimentary')">Give Free Pro Access</button><button class="secondary" type="button" onclick="adminSetProAccess('free')">Return to Free</button><button class="secondary" type="button" onclick="adminCheckProAccess()">Check Access</button></div><div id="adminProAccessStatus" class="muted" style="margin-top:10px">Enter a registered user's email.</div></div>
       <div class="plan-card admin-promo-card" id="adminPromoCodesCard"><h3>Promo Code Management</h3><p class="muted">Create a reusable code that gives each eligible account a set number of free Pro months. Codes are checked securely by Supabase.</p><div class="admin-promo-grid"><div class="field"><label>Promo code</label><input id="adminPromoCode" type="text" maxlength="32" autocapitalize="characters" spellcheck="false" placeholder="FUNDLEDGER6"></div><div class="field"><label>Free months</label><input id="adminPromoMonths" type="number" min="1" max="120" step="1" value="6"></div><div class="field"><label>Maximum uses</label><input id="adminPromoMaxUses" type="number" min="1" step="1" placeholder="Unlimited"></div><div class="field"><label>Code expires</label><input id="adminPromoExpires" type="date"></div></div><div class="admin-promo-actions"><button class="primary-btn" type="button" onclick="createFundLedgerPromoCode()">Create Promo Code</button><button class="secondary" type="button" onclick="loadAdminPromoCodes()">Refresh Codes</button></div><div id="adminPromoStatus" class="muted" style="margin-top:10px">Create a code or refresh to view existing codes.</div><div id="adminPromoList" class="admin-promo-list"></div></div>
       <div id="adminAnalytics" class="admin-analytics"><div class="admin-tool-grid"><div class="admin-tool-card"><strong>Contact Messages</strong><p class="muted">Read, reply to, save, restore, or delete customer conversations.</p><button class="primary-btn" type="button" onclick="openAdminWorkspacePanel('contactPanel')">Open Contact Inbox</button></div><div class="admin-tool-card"><strong>Analytics</strong><p class="muted">View visitors, accounts, subscriptions, conversion, and growth.</p><button class="primary-btn" type="button" onclick="openAdminWorkspacePanel('analyticsPanel')">Open Analytics</button></div></div></div>
@@ -3347,7 +3337,6 @@ let adminRows=[];
 let currentUserRestrictions={login_banned:false,messages_blocked:false};
 let selectedAdminUserId="";
 let selectedAdminRestrictions={login_banned:false,messages_blocked:false};
-let adminPinUnlocked=false;
 let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
@@ -3506,54 +3495,23 @@ function startFundLedgerRealtime(userId){
  .subscribe(status=>{if(status==="SUBSCRIBED"&&currentUser?.id===userId)setSyncStatus("Cloud sync live")});
 }
 function setSyncStatus(s){const el=$("syncStatus");if(el)el.textContent=s}
-function adminPinStorageKey(){return currentUser?`fundledgerAdminPinHash:${currentUser.id}`:""}
-async function hashAdminPin(pin){
- const bytes=new TextEncoder().encode(`FundLedger:${currentUser?.id||"admin"}:${pin}`);
- const digest=await crypto.subtle.digest("SHA-256",bytes);
- return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("");
-}
 function adminContactIsSelected(){return document.querySelector('.nav-item.active')?.getAttribute("href")==="#adminPanelPage"}
 async function updateAdminContactVisibility(){
- const area=$("adminAccessArea"),gate=$("adminPinGate"),panel=$("adminPanel");
- if(!area||!gate||!panel)return;
+ const area=$("adminAccessArea"),panel=$("adminPanel");
+ if(!area||!panel)return;
  const host=$("adminAccessHost");
  if(host&&!host.contains(area))host.appendChild(area);
  const showArea=!!isAdmin&&adminContactIsSelected();
  area.classList.toggle("hidden",!showArea);
- if(!showArea){panel.classList.add("hidden");gate.classList.add("hidden");return}
- const hasPin=!!localStorage.getItem(adminPinStorageKey());
- $("adminPinTitle").textContent=hasPin?"Admin Dashboard Locked":"Create Admin PIN";
- $("adminPinHelp").textContent=hasPin?"Enter your four-digit PIN to continue.":"Create a four-digit PIN for the Admin Dashboard on this device.";
- $("adminPinConfirmField").classList.toggle("hidden",hasPin);
- $("adminPinUnlockBtn").textContent=hasPin?"Unlock Admin Dashboard":"Create PIN";
- if(adminPinUnlocked){gate.classList.add("hidden");panel.classList.remove("hidden");if(window.loadAdminPromoCodes)window.loadAdminPromoCodes()}
- else{gate.classList.remove("hidden");panel.classList.add("hidden");setTimeout(()=>$("adminPinInput")?.focus(),0)}
-}
-async function submitAdminPin(){
- if(!isAdmin)return;
- const pin=$("adminPinInput")?.value||"",confirmPin=$("adminPinConfirm")?.value||"",status=$("adminPinStatus"),key=adminPinStorageKey(),saved=localStorage.getItem(key);
- if(!/^\d{4}$/.test(pin)){if(status)status.textContent="Enter exactly four numbers.";return}
- if(!saved){
-  if(pin!==confirmPin){if(status)status.textContent="The PINs do not match.";return}
-  localStorage.setItem(key,await hashAdminPin(pin));
- }else if(await hashAdminPin(pin)!==saved){if(status)status.textContent="Incorrect PIN.";$("adminPinInput").value="";return}
- adminPinUnlocked=true;
- if(status)status.textContent="";
- $("adminPinInput").value="";$("adminPinConfirm").value="";
- await updateAdminContactVisibility();
-}
-function lockAdminDashboard(){adminPinUnlocked=false;updateAdminContactVisibility()}
-function changeAdminPin(){
- if(!isAdmin||!adminPinUnlocked)return;
- if(!confirm("Change the Admin Dashboard PIN? You will create a new four-digit PIN now."))return;
- localStorage.removeItem(adminPinStorageKey());setContactMessagingMounted(false);adminPinUnlocked=false;updateAdminContactVisibility();
+ panel.classList.toggle("hidden",!showArea);
+ if(showArea&&window.loadAdminPromoCodes)window.loadAdminPromoCodes();
 }
 function showAdminHome(){
  const link=$("adminNavLink");
  if(link)link.click();
 }
 function openAdminWorkspacePanel(panelId){
- if(!isAdmin||!adminPinUnlocked){showAdminHome();return}
+ if(!isAdmin){showAdminHome();return}
  const target=$(panelId);if(!target)return;
  document.querySelectorAll(".panel").forEach(panel=>panel.classList.add("hidden"));
  target.classList.remove("hidden");
@@ -3876,7 +3834,6 @@ function setupNavScrolling(){
       item.classList.add("active");
       if(id==="#dashboard")applyDashboardSections();
       setContactMessagingMounted(id==="#contactPanel");
-      if(id!=="#adminPanelPage")adminPinUnlocked=false;
       updateAdminContactVisibility();
       if(id==="#reportsPanel") renderReports();
       if(id==="#trashPanel") renderTrash();
@@ -3956,7 +3913,7 @@ function showApp(){
   const appScreen=$("appScreen"); setContactMessagingMounted(false); if(appScreen) appScreen.dataset.mobileRoute="dashboard";
   document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
   const dash=document.querySelector('.nav-item[href="#dashboard"]'); if(dash) dash.classList.add("active");
-  adminPinUnlocked=false;updateAdminContactVisibility();
+  updateAdminContactVisibility();
   const content=document.querySelector(".content"); if(content) content.scrollTop=0;
   window.scrollTo(0,0);
 }
@@ -4026,7 +3983,6 @@ function applyAdminAnalyticsVisibility(){
 function setAnalyticsPeriod(v,b){const p=document.getElementById("analyticsPeriod");if(p)p.value=v;document.querySelectorAll(".analytics-periods>button").forEach(x=>x.classList.toggle("active",x===b));document.getElementById("analyticsCustomRange")?.classList.toggle("hidden",v!=="custom");if(v!=="custom")loadFundLedgerAnalytics()}
 async function initAdmin(){
  isAdmin=!!(currentUser&&currentUser.app_metadata&&currentUser.app_metadata.role==="admin");applyAdminAnalyticsVisibility();
- adminPinUnlocked=false;
  await updateAdminContactVisibility();
  applyMessagingRestriction();
  setUserStatus(currentUser);
@@ -4167,7 +4123,7 @@ async function signOut(){
  cloudDataReady=false;
  data=JSON.parse(JSON.stringify(EMPTY_DATA));
  if(supabaseClient)await supabaseClient.auth.signOut();
- currentUser=null;isAdmin=false;adminPinUnlocked=false;currentUserRestrictions={login_banned:false,messages_blocked:false};showLanding();setUserStatus(null);setSyncStatus("Not signed in");
+ currentUser=null;isAdmin=false;currentUserRestrictions={login_banned:false,messages_blocked:false};showLanding();setUserStatus(null);setSyncStatus("Not signed in");
  render();
 }
 async function loadCloudData(expectedUserId=null){
@@ -4473,7 +4429,7 @@ async function initCloud(){
     setUserStatus(currentUser);
     setSyncStatus("Loading cloud data…");
     loadCloudData(effectiveUser.id).then(async()=>{if(!currentUser||currentUser.id!==effectiveUser.id)return;startFundLedgerRealtime(effectiveUser.id);await initAdmin();setDateIssuedToToday(true);render()});
-   }else{stopFundLedgerRealtime();currentUser=null;isAdmin=false;adminPinUnlocked=false;currentUserRestrictions={login_banned:false,messages_blocked:false};cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));setUserStatus(null);showLanding();render()}
+   }else{stopFundLedgerRealtime();currentUser=null;isAdmin=false;currentUserRestrictions={login_banned:false,messages_blocked:false};cloudDataReady=false;data=JSON.parse(JSON.stringify(EMPTY_DATA));setUserStatus(null);showLanding();render()}
  });
 }
 function toggleProjectedResults(){
@@ -5285,10 +5241,6 @@ $("forgotPasswordBtn").addEventListener("click",()=>{
 $("sendResetBtn").addEventListener("click",sendPasswordReset);
 $("cancelResetBtn").addEventListener("click",()=>{$("resetPanel").classList.add("hidden");setAuthError("")});
 $("updatePasswordBtn").addEventListener("click",updatePassword);
-$("adminPinUnlockBtn").addEventListener("click",submitAdminPin);
-$("adminLockBtn").addEventListener("click",lockAdminDashboard);
-$("adminChangePinBtn").addEventListener("click",changeAdminPin);
-["adminPinInput","adminPinConfirm"].forEach(id=>{$(id).addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,4)});$(id).addEventListener("keydown",e=>{if(e.key==="Enter")submitAdminPin()})});
 window.addEventListener("focus",()=>{if(currentUser&&!isAdmin)enforceAccountAccess()});
 updateRemainingPaymentLabels();
 const selectedContractReportLabelObserverTarget=$("selectedContractReport");
@@ -6084,7 +6036,7 @@ async function adminCheckProAccess(){
   finally{if(button){button.disabled=false;button.textContent="Redeem Code"}}
  };
  window.createFundLedgerPromoCode=async function(){
-  if(!isAdmin||!adminPinUnlocked){toast("Unlock the Admin Dashboard first.");return}
+  if(!isAdmin){toast("Administrator access is required.");return}
   const code=normalizedCode(document.getElementById("adminPromoCode")?.value),months=parseInt(document.getElementById("adminPromoMonths")?.value,10),maxRaw=document.getElementById("adminPromoMaxUses")?.value||"",expiryRaw=document.getElementById("adminPromoExpires")?.value||"",status=document.getElementById("adminPromoStatus");
   if(!/^[A-Z0-9-]{4,32}$/.test(code)){if(status)status.textContent="Use 4–32 letters, numbers, or hyphens.";return}
   if(!Number.isInteger(months)||months<1||months>120){if(status)status.textContent="Free months must be between 1 and 120.";return}
@@ -6098,7 +6050,7 @@ async function adminCheckProAccess(){
   }catch(e){console.error("Promo creation failed",e);if(status)status.textContent=e.message||"Could not create promo code."}
  };
  window.loadAdminPromoCodes=async function(){
-  if(!isAdmin||!adminPinUnlocked||!supabaseClient)return;
+  if(!isAdmin||!supabaseClient)return;
   const list=document.getElementById("adminPromoList"),status=document.getElementById("adminPromoStatus");
   try{
    const {data,error}=await supabaseClient.rpc("admin_list_fundledger_promo_codes");if(error)throw error;
@@ -6108,7 +6060,7 @@ async function adminCheckProAccess(){
   }catch(e){console.error("Promo list failed",e);if(status)status.textContent=e.message||"Could not load promo codes."}
  };
  window.setFundLedgerPromoCodeActive=async function(id,active){
-  if(!isAdmin||!adminPinUnlocked)return;
+  if(!isAdmin)return;
   try{const {error}=await supabaseClient.rpc("admin_set_fundledger_promo_code_active",{p_code_id:id,p_active:!!active});if(error)throw error;await loadAdminPromoCodes();toast(active?"Promo code enabled.":"Promo code disabled.")}catch(e){const status=document.getElementById("adminPromoStatus");if(status)status.textContent=e.message||"Could not update promo code."}
  };
 })();
@@ -6188,7 +6140,7 @@ async function adminCheckProAccess(){
    const currentNew=Number(d.current?.new_accounts||0),previousNew=Number(d.previous?.new_accounts||0),accountBars=analyticsElement("analyticsAccountBars");if(accountBars)accountBars.innerHTML=simpleBars([{label:"Previous",value:previousNew},{label:"Current",value:currentNew}],["bar-previous","bar-current"]);
    setAnalyticsStatus(`Updated ${new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}. Analytics collects activity from this version forward.`,"success");
   }catch(e){
-   console.error("Analytics load failed",e);const message=String(e?.message||e||"");const setup=/admin_fundledger_analytics|track_fundledger_event|schema cache|function/i.test(message);setAnalyticsStatus(setup?"Analytics setup needs the updated FundLedger Supabase SQL. Run the included SQL file, then refresh this page.":`Analytics could not be loaded: ${message||"Please try again."}`,"error");
+   console.error("Analytics load failed",e);const message=String(e?.message||e||"");const adminRole=/admin only|admin access required/i.test(message),setup=/admin_fundledger_analytics|track_fundledger_event|schema cache|function/i.test(message);setAnalyticsStatus(adminRole?"Analytics permission needs the included RUN_THIS_ADMIN_ANALYTICS_FIX.sql file. Run it once in Supabase, then refresh this page.":setup?"Analytics setup needs the updated FundLedger Supabase SQL. Run the included SQL file, then refresh this page.":`Analytics could not be loaded: ${message||"Please try again."}`,"error");
   }finally{if(refresh)refresh.disabled=false}
  };
 })();
