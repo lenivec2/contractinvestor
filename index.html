@@ -2356,6 +2356,17 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #reportsPanel .flow-arrow{display:none}
 @media(max-width:430px){#reportsPanel .money-flow{grid-template-columns:1fr}}
 </style>
+<style id="reports-summary-layout-overlap-fix">
+/* The right-side Report Summary reduces the width of the report body. Keep
+   report sections in one dependable column so Export and Payment Reports
+   cannot spill into each other. */
+#reportsPanel.page-summary-layout>.page-main-content{width:100%;min-width:0;overflow:hidden}
+#reportsPanel.page-summary-layout .reports-columns{grid-template-columns:minmax(0,1fr)!important;width:100%;min-width:0}
+#reportsPanel.page-summary-layout .reports-columns>div{width:100%;min-width:0}
+#reportsPanel.page-summary-layout .report-box{width:100%;max-width:100%;min-width:0;box-sizing:border-box;overflow:hidden}
+#reportsPanel.page-summary-layout .payment-report-layout{grid-template-columns:minmax(240px,.75fr) minmax(0,1.25fr);width:100%;min-width:0}
+@media(max-width:900px){#reportsPanel.page-summary-layout .payment-report-layout{grid-template-columns:1fr!important}}
+</style>
 <style id="mobile-active-contract-actions-polish">
 @media (max-width:700px){
   /* Compact professional Active Contracts action toolbar */
@@ -2777,6 +2788,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 
 <style id="fundledger-account-styles">
 .account-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.account-card{border:1px solid #dce8f5;border-radius:12px;padding:18px;background:#fff}.account-card h3{margin:0 0 8px;color:#17365f}.account-value{font-weight:800;color:#17365f;word-break:break-word}.account-danger{border-color:#f1c7c7;background:#fffafa}.account-danger h3{color:#b42318}.account-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}@media(max-width:700px){.account-grid{grid-template-columns:1fr}.account-actions button{width:100%}}
+.account-plan-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}.account-plan-details>div,.referral-stats>div{padding:10px 11px;border:1px solid #e0e9f3;border-radius:9px;background:#f8fbff;min-width:0}.account-plan-details span,.referral-stats span,.referral-code-box span{display:block;color:#6a7d92;font-size:12px}.account-plan-details strong,.referral-stats strong{display:block;color:#17365f;margin-top:4px;overflow-wrap:anywhere}.account-plan-details .account-referral-reward-row{grid-column:1/-1}.account-referral-card{background:linear-gradient(135deg,#f7fbff,#fff)}.referral-code-box{margin-top:14px;padding:14px;border:2px dashed #6faeea;border-radius:11px;background:#eef7ff}.referral-code-box strong{display:block;margin-top:5px;color:#126fc7;font-size:24px;letter-spacing:1.5px}.referral-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}@media(max-width:430px){.account-plan-details,.referral-stats{grid-template-columns:1fr}.account-plan-details .account-referral-reward-row{grid-column:auto}}
 </style>
 <style id="fundledger-plan-styles">
 .plan-badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:850;background:#eaf3ff;color:#147be8;margin-left:8px}.plan-badge.pro{background:#eaf8ef;color:#07853f}.fundledger-ad-slot{border:1px dashed #b8cbe0;border-radius:10px;min-height:72px;margin:14px 0;padding:10px;display:flex;align-items:center;justify-content:center;text-align:center;background:#f8fbff;color:#718096;font-size:12px}.fundledger-ad-slot strong{display:block;color:#52657d;margin-bottom:3px}.pro-gate{padding:24px;border:1px solid #dce8f5;border-radius:12px;background:#fff;text-align:center}.pro-gate h3{margin:0 0 8px;color:#17365f}.pro-gate .primary-btn{margin-top:12px}.plan-card{border:1px solid #dce8f5;border-radius:12px;padding:16px;margin-top:14px;background:#fff}.plan-card h3{margin:0 0 6px}.plan-features{margin:10px 0 0;padding-left:20px;color:#52657d}.plan-features li{margin:5px 0}
@@ -3264,7 +3276,8 @@ body.landing-info-open{overflow:hidden}
   <div class="section-head"><div><h2>My Account</h2><p class="muted" style="margin:0">Manage your FundLedger account, security, plan, and personal backup.</p></div></div>
   <div class="account-grid">
     <div class="account-card"><h3>Account Details</h3><p class="muted">Signed in as</p><div id="accountEmail" class="account-value">—</div><p class="muted" style="margin-top:14px">Member since</p><div id="accountCreated" class="account-value">—</div></div>
-    <div class="account-card"><h3>Your Plan</h3><div><span id="accountPlanName" class="account-value">Free</span> <span id="accountPlanBadge" class="plan-badge">FREE</span></div><p id="accountPlanDetail" class="muted" style="margin-top:10px">Manage up to 3 contracts with ads.</p><div class="account-actions"><button class="primary-btn" type="button" onclick="showFundLedgerPlan()">View / Upgrade Plan</button></div></div>
+    <div class="account-card account-plan-card"><h3>Your Plan</h3><div><span id="accountPlanName" class="account-value">Free</span> <span id="accountPlanBadge" class="plan-badge">FREE</span></div><p id="accountPlanDetail" class="muted" style="margin-top:10px">Manage up to 3 contracts with ads.</p><div class="account-plan-details"><div><span>Plan status</span><strong id="accountPlanStatus">Free</strong></div><div><span id="accountPlanDateLabel">Renewal date</span><strong id="accountPlanDate">—</strong></div><div><span>Next charge</span><strong id="accountNextCharge">—</strong></div><div><span>Auto-renewal</span><strong id="accountAutoRenewal">Off</strong></div><div class="account-referral-reward-row"><span>Referral rewards</span><strong id="accountReferralReward">No free months available</strong></div></div><div class="account-actions"><button class="primary-btn" type="button" onclick="showFundLedgerPlan()">View / Upgrade Plan</button></div></div>
+    <div class="account-card account-referral-card"><h3>Refer a Friend</h3><p class="muted">Your friend receives 50% off their first paid month. After that month is completed, you earn one free month of FundLedger Pro.</p><div class="referral-code-box"><span>Your referral code</span><strong id="myReferralCode">Loading…</strong></div><div class="account-actions"><button class="primary-btn" type="button" onclick="copyMyReferralCode()">Copy Code</button><button type="button" onclick="shareMyReferralCode()">Share Referral</button></div><div class="referral-stats"><div><span>Successful referrals</span><strong id="mySuccessfulReferrals">0</strong></div><div><span>Pending referrals</span><strong id="myPendingReferrals">0</strong></div><div><span>Free months earned</span><strong id="myReferralMonthsEarned">0</strong></div><div><span>Free months available</span><strong id="myReferralMonthsAvailable">0</strong></div></div><p id="myReferralStatus" class="muted"></p></div>
     <div class="account-card"><h3>Change Password</h3><p class="muted">Choose a new password for this FundLedger account.</p><div class="field"><label>New password</label><input id="accountNewPassword" type="password" minlength="8" autocomplete="new-password" placeholder="At least 8 characters"></div><div class="field" style="margin-top:10px"><label>Confirm new password</label><input id="accountConfirmPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Re-enter password"></div><div class="account-actions"><button class="primary-btn" type="button" onclick="changeFundLedgerPassword()">Update Password</button></div><p id="accountPasswordStatus" class="muted"></p></div>
     <div class="account-card"><h3>Backup &amp; Recovery</h3><p class="muted">Download an encrypted copy of your contracts, payments, and preferences. Your backup password is required to restore it.</p><div class="account-actions"><button class="primary-btn" type="button" onclick="exportFundLedgerBackup()">Export Encrypted Backup</button><button type="button" onclick="chooseFundLedgerBackup()">Restore Backup</button></div></div>
     <div class="account-card"><h3>Refresh Account Data</h3><p class="muted">Reload your latest FundLedger information from the cloud.</p><div class="account-actions"><button class="primary-btn" type="button" onclick="refreshCloudData()">Refresh My Data</button></div></div>
@@ -3272,7 +3285,7 @@ body.landing-info-open{overflow:hidden}
   </div>
 </section>
 
-<section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><p id="planAccessDetail" class="muted" style="margin-top:9px">Free plan access.</p><h3 style="margin-top:16px">FundLedger Pro — $9.99/month</h3><ul class="plan-features"><li>Unlimited contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Secure checkout must be connected before live subscriptions can be charged.</p></div><div class="promo-redeem-card"><h3>Have a Promo Code?</h3><p class="muted">Enter your code to activate free FundLedger Pro time. No credit card is required.</p><div class="promo-code-row"><input id="fundLedgerPromoCode" type="text" maxlength="32" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Example: FUNDLEDGER6" onkeydown="if(event.key==='Enter'){event.preventDefault();redeemFundLedgerPromoCode()}"><button id="redeemPromoCodeBtn" class="primary-btn" type="button" onclick="redeemFundLedgerPromoCode()">Redeem Code</button></div><p id="promoRedeemStatus" class="promo-status" role="status"></p></div></section>
+<section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><p id="planAccessDetail" class="muted" style="margin-top:9px">Free plan access.</p><h3 style="margin-top:16px">FundLedger Pro — $9.99/month</h3><ul class="plan-features"><li>Unlimited contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Secure checkout must be connected before live subscriptions can be charged.</p></div><div class="promo-redeem-card"><h3>Have a Promo or Referral Code?</h3><p class="muted">Promo codes add free Pro time. Referral codes give a new subscriber 50% off their first paid month.</p><div class="promo-code-row"><input id="fundLedgerPromoCode" type="text" maxlength="32" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Enter promo or referral code" onkeydown="if(event.key==='Enter'){event.preventDefault();redeemFundLedgerPromoCode()}"><button id="redeemPromoCodeBtn" class="primary-btn" type="button" onclick="redeemFundLedgerPromoCode()">Apply Code</button></div><p id="promoRedeemStatus" class="promo-status" role="status"></p></div></section>
 <section class="panel hidden" id="contactPanel">
   <div class="section-head"><div><h2 id="contactPanelTitle">Contact Us</h2><p class="muted" id="contactPanelSubtitle" style="margin:0">Send a message to the administrator.</p></div><button id="contactAdminBackBtn" class="secondary hidden" type="button" onclick="showAdminHome()">← Back to Admin</button></div>
   <div id="adminAccessArea" class="admin-access-area hidden">
@@ -6033,16 +6046,22 @@ async function adminCheckProAccess(){
  window.redeemFundLedgerPromoCode=async function(){
   const input=document.getElementById("fundLedgerPromoCode"),button=document.getElementById("redeemPromoCodeBtn"),status=document.getElementById("promoRedeemStatus");
   const code=normalizedCode(input?.value);if(input)input.value=code;
-  if(!code){if(status){status.className="promo-status error";status.textContent="Enter a promo code."}return}
-  if(!currentUser||!supabaseClient){if(status){status.className="promo-status error";status.textContent="Sign in before redeeming a promo code."}return}
+  if(!code){if(status){status.className="promo-status error";status.textContent="Enter a promo or referral code."}return}
+  if(!currentUser||!supabaseClient){if(status){status.className="promo-status error";status.textContent="Sign in before applying a code."}return}
   try{
-   if(button){button.disabled=true;button.textContent="Checking…"}if(status){status.className="promo-status";status.textContent="Checking your promo code…"}
-   const {data,error}=await supabaseClient.rpc("redeem_fundledger_promo_code",{p_code:code});if(error)throw error;
+   if(button){button.disabled=true;button.textContent="Checking…"}if(status){status.className="promo-status";status.textContent="Checking your code…"}
+   const {data,error}=await supabaseClient.rpc("redeem_fundledger_code",{p_code:code});if(error)throw error;
    const result=Array.isArray(data)?data[0]:data;
-   if(status){status.className="promo-status success";status.textContent=`Success — ${Number(result?.months||0)} months of FundLedger Pro added. Pro is active through ${dateLabel(result?.pro_until)}.`}
-   if(input)input.value="";await window.loadFundLedgerPlan?.();window.trackFundLedgerEvent?.("promo_redeemed");toast("Promo code redeemed — FundLedger Pro is active.");
-  }catch(e){console.error("Promo redemption failed",e);if(status){status.className="promo-status error";status.textContent=e.message||"This promo code could not be redeemed."}}
-  finally{if(button){button.disabled=false;button.textContent="Redeem Code"}}
+   if(result?.code_type==="referral"){
+    if(status){status.className="promo-status success";status.textContent="Referral accepted — 50% off your first paid month will be applied when you upgrade."}
+    toast("Referral code accepted — 50% off your first paid month.");
+   }else{
+    if(status){status.className="promo-status success";status.textContent=`Success — ${Number(result?.months||0)} months of FundLedger Pro added. Pro is active through ${dateLabel(result?.pro_until)}.`}
+    window.trackFundLedgerEvent?.("promo_redeemed");toast("Promo code redeemed — FundLedger Pro is active.");
+   }
+   if(input)input.value="";await window.loadFundLedgerPlan?.();await window.loadMyReferralSummary?.();
+  }catch(e){console.error("Code redemption failed",e);if(status){status.className="promo-status error";status.textContent=e.message||"This code could not be applied."}}
+  finally{if(button){button.disabled=false;button.textContent="Apply Code"}}
  };
  window.createFundLedgerPromoCode=async function(){
   if(!isAdmin){toast("Administrator access is required.");return}
@@ -6156,7 +6175,40 @@ async function adminCheckProAccess(){
   }finally{if(refresh)refresh.disabled=false}
  };
 })();
-</script><script id="fundledger-my-account">
+</script>
+<script id="fundledger-member-referrals">
+(function(){
+ let referralSummary=null;
+ function setText(id,value){const e=document.getElementById(id);if(e)e.textContent=value}
+ window.loadMyReferralSummary=async function(){
+  if(!currentUser||!supabaseClient)return;
+  const status=document.getElementById("myReferralStatus");
+  try{
+   const {data,error}=await supabaseClient.rpc("get_my_fundledger_referral_summary");if(error)throw error;
+   referralSummary=Array.isArray(data)?data[0]:data;
+   setText("myReferralCode",referralSummary?.referral_code||"—");
+   setText("mySuccessfulReferrals",Number(referralSummary?.successful_referrals||0).toLocaleString());
+   setText("myPendingReferrals",Number(referralSummary?.pending_referrals||0).toLocaleString());
+   setText("myReferralMonthsEarned",Number(referralSummary?.free_months_earned||0).toLocaleString());
+   setText("myReferralMonthsAvailable",Number(referralSummary?.free_months_available||0).toLocaleString());
+   if(status)status.textContent="Rewards are added after a referred member completes their first paid month.";
+  }catch(e){console.error("Referral summary failed",e);setText("myReferralCode","Run the updated Supabase SQL");if(status)status.textContent=e.message||"Referral information could not be loaded."}
+ };
+ window.copyMyReferralCode=async function(){
+  const code=referralSummary?.referral_code||document.getElementById("myReferralCode")?.textContent||"";
+  if(!code||code.includes("Loading")||code.includes("Supabase")){toast("Referral code is still loading.");return}
+  try{await navigator.clipboard.writeText(code);toast("Referral code copied.")}catch(e){prompt("Copy your referral code:",code)}
+ };
+ window.shareMyReferralCode=async function(){
+  const code=referralSummary?.referral_code||document.getElementById("myReferralCode")?.textContent||"";
+  if(!code||code.includes("Loading")||code.includes("Supabase")){toast("Referral code is still loading.");return}
+  const text=`Use my FundLedger referral code ${code} for 50% off your first paid month.`;
+  if(navigator.share){try{await navigator.share({title:"FundLedger Referral",text,url:location.origin});return}catch(e){if(e?.name==="AbortError")return}}
+  try{await navigator.clipboard.writeText(`${text} ${location.origin}`);toast("Referral message copied.")}catch(e){prompt("Copy and share:",`${text} ${location.origin}`)}
+ };
+})();
+</script>
+<script id="fundledger-my-account">
 function updateMyAccountPanel(){
  const u=window.currentUser||currentUser;
  const email=document.getElementById("accountEmail"), created=document.getElementById("accountCreated");
@@ -6166,7 +6218,16 @@ function updateMyAccountPanel(){
  const name=document.getElementById("accountPlanName"), badge=document.getElementById("accountPlanBadge"), detail=document.getElementById("accountPlanDetail");
  if(name)name.textContent=pro?"FundLedger Pro":"FundLedger Free";
  if(badge){badge.textContent=pro?"PRO":"FREE";badge.classList.toggle("pro",pro)}
- if(detail){const info=window.fundLedgerPlanDetails||{};detail.textContent=pro?(info.expires_at?`Unlimited contracts, Reports, and no advertisements through ${new Date(info.expires_at).toLocaleDateString()}.`:"Unlimited contracts, Reports, and no advertisements."):"Manage up to 3 contracts with ads. Reports are not included.";}
+ const info=window.fundLedgerPlanDetails||{},dateValue=info.renews_at||info.expires_at||null,autoRenew=!!info.auto_renew,freeMonths=Number(info.free_months_available||0);
+ if(detail)detail.textContent=pro?(dateValue?`Unlimited contracts, Reports, and no advertisements through ${new Date(dateValue).toLocaleDateString()}.`:"Unlimited contracts, Reports, and no advertisements."):"Manage up to 3 contracts with ads. Reports are not included.";
+ const status=document.getElementById("accountPlanStatus"),dateLabel=document.getElementById("accountPlanDateLabel"),date=document.getElementById("accountPlanDate"),charge=document.getElementById("accountNextCharge"),renewal=document.getElementById("accountAutoRenewal"),reward=document.getElementById("accountReferralReward");
+ if(status)status.textContent=isAdmin?"Administrator access":(pro?(String(info.status||"active").replace(/^./,c=>c.toUpperCase())):"Free");
+ if(dateLabel)dateLabel.textContent=autoRenew?"Next billing date":(pro?"Pro access expires":"Renewal date");
+ if(date)date.textContent=dateValue?new Date(dateValue).toLocaleDateString():"—";
+ if(charge)charge.textContent=isAdmin?"No charge":(autoRenew?(freeMonths>0?"Free referral month, then $9.99":"$9.99"):"No charge scheduled");
+ if(renewal)renewal.textContent=autoRenew?"On":"Off";
+ if(reward)reward.textContent=freeMonths>0?`${freeMonths} free month${freeMonths===1?"":"s"} available`:"No free months available";
+ window.loadMyReferralSummary?.();
 }
 async function changeFundLedgerPassword(){
  const p=document.getElementById("accountNewPassword")?.value||"", c=document.getElementById("accountConfirmPassword")?.value||"", st=document.getElementById("accountPasswordStatus");
