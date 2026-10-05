@@ -5141,7 +5141,7 @@ function fundLedgerPreviousProfitPeriods(){
  const previousMonday=new Date(currentMonday);previousMonday.setDate(currentMonday.getDate()-7);
  const previousMonthStart=new Date(today.getFullYear(),today.getMonth()-1,1),currentMonthStart=new Date(today.getFullYear(),today.getMonth(),1);
  let week=0,month=0;
- for(const check of data.checks){const d=fundLedgerLocalDate(check.dateReceived||check.paymentDate);if(!d)continue;const p=fundLedgerPaymentProfit(check);if(d>=previousMonday&&d<currentMonday)week+=p;if(d>=previousMonthStart&&d<currentMonthStart)month+=p}
+ for(const check of data.checks){const d=fundLedgerLocalDate(check.paymentDate||check.dateReceived);if(!d)continue;const p=fundLedgerPaymentProfit(check);if(d>=previousMonday&&d<currentMonday)week+=p;if(d>=previousMonthStart&&d<currentMonthStart)month+=p}
  return {week,month};
 }
 function render(){
