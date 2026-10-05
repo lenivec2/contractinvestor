@@ -52,7 +52,8 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 .admin-summary-wrap{margin-top:18px}.admin-summary-title{font-size:18px;font-weight:800;color:#17365f;margin:0 0 10px}.admin-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 20px}.admin-summary-grid .summary-card{min-height:92px}.admin-summary-grid .summary-label{font-size:12px;font-weight:700;margin-bottom:9px}.admin-summary-grid .summary-value{font-size:19px;font-weight:800;color:#12345a}.admin-summary-grid .summary-card.received .summary-value{color:#008a45}.admin-summary-grid .summary-card.profit .summary-value{color:#12345a}.admin-summary-grid .summary-card.profit.positive .summary-value{color:#008a45}.admin-summary-grid .summary-card.profit.negative .summary-value{color:#d32f2f}.admin-summary-grid .summary-card.active .summary-value{color:#12345a}.admin-summary-grid .summary-card.default .summary-value,.admin-summary-grid .summary-card.default-loss .summary-value{color:#d32f2f}
 .admin-user-controls{margin-top:14px;padding:16px;border:1px solid #d7e4f2;border-radius:10px;background:#f8fbff}.admin-control-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.admin-control-status{display:flex;gap:8px;flex-wrap:wrap}.access-badge{display:inline-flex;align-items:center;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}.access-badge.allowed{background:#e8f7ef;color:#08733d}.access-badge.blocked{background:#fdebed;color:#b4232f}.access-badge.muted{background:#fff2d8;color:#8a5700}.admin-control-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.admin-ban-btn{background:#d92d20;color:#fff;border:0;border-radius:7px;padding:10px 14px;font-weight:800}.admin-unban-btn{background:#0b8a4b;color:#fff;border:0;border-radius:7px;padding:10px 14px;font-weight:800}.admin-mute-btn{background:#f4a100;color:#3f2a00;border:0;border-radius:7px;padding:10px 14px;font-weight:800}.admin-allow-btn{background:#147be8;color:#fff;border:0;border-radius:7px;padding:10px 14px;font-weight:800}.admin-control-note{margin:10px 0 0;font-size:12px;color:#64748b}
 .admin-access-area{margin:0 0 20px}.admin-pin-gate{padding:18px;border:1px solid #cbdced;border-radius:10px;background:#f8fbff}.admin-pin-gate h3{margin:0 0 6px}.admin-pin-row{display:flex;gap:10px;align-items:end;max-width:520px;margin-top:14px}.admin-pin-row .field{max-width:210px}.admin-pin-row input{letter-spacing:7px;font-weight:800;text-align:center}.admin-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.admin-panel-head h2{margin:0}.admin-panel-actions{display:flex;gap:8px;flex-wrap:wrap}
-@media(max-width:700px){.admin-pin-row{flex-direction:column;align-items:stretch;max-width:none}.admin-pin-row .field{max-width:none}.admin-pin-row button{width:100%}.admin-panel-head{align-items:flex-start;flex-direction:column}.admin-panel-actions{width:100%}.admin-panel-actions button{flex:1}}
+.admin-tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.admin-tool-card{background:#fff;border:1px solid #d4e2f0;border-radius:14px;padding:18px}.admin-tool-card strong{display:block;font-size:18px;color:#173b67}.admin-tool-card p{min-height:42px;margin:7px 0 14px}.admin-return-button{margin:0 0 14px}.admin-access-area>#adminPanel{margin-left:0!important;margin-right:0!important}
+@media(max-width:700px){.admin-pin-row{flex-direction:column;align-items:stretch;max-width:none}.admin-pin-row .field{max-width:none}.admin-pin-row button{width:100%}.admin-panel-head{align-items:flex-start;flex-direction:column}.admin-panel-actions{width:100%}.admin-panel-actions button{flex:1}.admin-tool-grid{grid-template-columns:1fr}.admin-tool-card p{min-height:0}}
 @media(max-width:950px){.admin-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.admin-summary-grid{grid-template-columns:1fr 1fr;gap:10px}.admin-summary-grid .summary-card{min-height:94px;padding:12px}.admin-summary-grid .summary-value{font-size:18px;line-height:1.15;word-break:break-word}.admin-summary-grid .summary-icon{width:34px;height:34px;font-size:18px}}
 
@@ -3076,11 +3077,11 @@ body.landing-info-open{overflow:hidden}
 <a class="nav-item" href="#historyPanel"><span class="nav-icon">◷</span><span>Payment History</span></a>
 <a class="nav-item" href="#trashPanel"><span class="nav-icon">🗑</span><span>Trash</span></a>
 <a class="nav-item" id="reportsNavLink" href="#reportsPanel"><span class="nav-icon">▥</span><span>Reports</span></a>
-<a href="#analyticsPanel" id="analyticsNavLink" class="nav-item hidden" data-admin-only="true">▥ <span>Analytics</span></a>
+<a href="#adminPanelPage" id="adminNavLink" class="nav-item hidden" data-admin-only="true"><span class="nav-icon">◆</span><span>Admin</span></a>
 <a class="nav-item" href="#planPanel"><span class="nav-icon">★</span><span>FundLedger Pro</span></a>
 <a class="nav-item" href="#accountPanel"><span class="nav-icon">●</span><span>My Account</span></a>
 <a class="nav-item" href="#settingsPanel"><span class="nav-icon">⚙</span><span>Settings</span></a>
-<a class="nav-item" href="#contactPanel"><span class="nav-icon">✉</span><span>Contact Us</span></a>
+<a class="nav-item" id="contactNavLink" href="#contactPanel"><span class="nav-icon">✉</span><span>Contact Us</span></a>
 <div id="contactNewMessage" class="contact-new-message" style="display:none" aria-hidden="true">NEW MESSAGE</div>
 </aside>
 <main class="content" id="dashboard"><div class="content-inner">
@@ -3141,8 +3142,14 @@ body.landing-info-open{overflow:hidden}
   </div>
 </section>
 
+<section class="panel hidden" id="adminPanelPage">
+  <div class="section-head"><div><h2>Admin</h2><p class="muted" style="margin:0">Manage FundLedger access, promo codes, customer messages, and analytics.</p></div></div>
+  <div id="adminAccessHost"></div>
+</section>
+
 <section class="panel hidden fundledger-analytics-page" id="analyticsPanel">
 <div class="analytics-topline"><div><h2>Analytics</h2><p class="muted">Visitors, accounts, subscriptions and growth.</p></div><button id="analyticsRefreshBtn" class="secondary" onclick="loadFundLedgerAnalytics()">↻ Refresh</button></div>
+<button class="secondary admin-return-button" type="button" onclick="showAdminHome()">← Back to Admin</button>
 <div id="analyticsStatus" class="analytics-status" role="status" aria-live="polite">Loading analytics…</div>
 <div class="analytics-periods">
 <button onclick="setAnalyticsPeriod('today',this)">Today</button><button onclick="setAnalyticsPeriod('7',this)">7 Days</button><button class="active" onclick="setAnalyticsPeriod('30',this)">30 Days</button><button onclick="setAnalyticsPeriod('month',this)">This Month</button><button onclick="setAnalyticsPeriod('last_month',this)">Last Month</button><button onclick="setAnalyticsPeriod('year',this)">This Year</button><button onclick="setAnalyticsPeriod('custom',this)">Custom</button>
@@ -3259,7 +3266,7 @@ body.landing-info-open{overflow:hidden}
 
 <section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><p id="planAccessDetail" class="muted" style="margin-top:9px">Free plan access.</p><h3 style="margin-top:16px">FundLedger Pro — $9.99/month</h3><ul class="plan-features"><li>Unlimited contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Secure checkout must be connected before live subscriptions can be charged.</p></div><div class="promo-redeem-card"><h3>Have a Promo Code?</h3><p class="muted">Enter your code to activate free FundLedger Pro time. No credit card is required.</p><div class="promo-code-row"><input id="fundLedgerPromoCode" type="text" maxlength="32" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Example: FUNDLEDGER6" onkeydown="if(event.key==='Enter'){event.preventDefault();redeemFundLedgerPromoCode()}"><button id="redeemPromoCodeBtn" class="primary-btn" type="button" onclick="redeemFundLedgerPromoCode()">Redeem Code</button></div><p id="promoRedeemStatus" class="promo-status" role="status"></p></div></section>
 <section class="panel hidden" id="contactPanel">
-  <div class="section-head"><div><h2>Contact Us</h2><p class="muted" style="margin:0">Send a message to the administrator.</p></div></div>
+  <div class="section-head"><div><h2 id="contactPanelTitle">Contact Us</h2><p class="muted" id="contactPanelSubtitle" style="margin:0">Send a message to the administrator.</p></div><button id="contactAdminBackBtn" class="secondary hidden" type="button" onclick="showAdminHome()">← Back to Admin</button></div>
   <div id="adminAccessArea" class="admin-access-area hidden">
     <div id="adminPinGate" class="admin-pin-gate">
       <h3 id="adminPinTitle">Admin Dashboard Locked</h3>
@@ -3275,12 +3282,12 @@ body.landing-info-open{overflow:hidden}
       <div class="admin-panel-head"><h2>Admin Dashboard</h2><div class="admin-panel-actions"><button id="adminChangePinBtn" class="secondary" type="button">Change PIN</button><button id="adminLockBtn" class="secondary" type="button">Lock Dashboard</button></div></div>
       <p class="muted">Master account view. Regular users only see their own data.</p><div class="plan-card" id="adminProAccessCard"><h3>Pro Access Management</h3><p class="muted">Give a user a custom-length Pro trial, complimentary Pro access for friends/family, or return the account to Free. This does not change their contracts or payments.</p><div class="row" style="align-items:end"><div class="field" style="flex:2;min-width:220px"><label>User email</label><input id="adminProEmail" type="email" placeholder="user@example.com"></div><div class="field" style="flex:1;min-width:180px"><label>Trial ends</label><input id="adminProTrialEnd" type="date"></div></div><div class="row" style="margin-top:10px;flex-wrap:wrap"><button class="primary-btn" type="button" onclick="adminSetProAccess('trial')">Give Custom Trial</button><button class="secondary" type="button" onclick="adminSetProAccess('complimentary')">Give Free Pro Access</button><button class="secondary" type="button" onclick="adminSetProAccess('free')">Return to Free</button><button class="secondary" type="button" onclick="adminCheckProAccess()">Check Access</button></div><div id="adminProAccessStatus" class="muted" style="margin-top:10px">Enter a registered user's email.</div></div>
       <div class="plan-card admin-promo-card" id="adminPromoCodesCard"><h3>Promo Code Management</h3><p class="muted">Create a reusable code that gives each eligible account a set number of free Pro months. Codes are checked securely by Supabase.</p><div class="admin-promo-grid"><div class="field"><label>Promo code</label><input id="adminPromoCode" type="text" maxlength="32" autocapitalize="characters" spellcheck="false" placeholder="FUNDLEDGER6"></div><div class="field"><label>Free months</label><input id="adminPromoMonths" type="number" min="1" max="120" step="1" value="6"></div><div class="field"><label>Maximum uses</label><input id="adminPromoMaxUses" type="number" min="1" step="1" placeholder="Unlimited"></div><div class="field"><label>Code expires</label><input id="adminPromoExpires" type="date"></div></div><div class="admin-promo-actions"><button class="primary-btn" type="button" onclick="createFundLedgerPromoCode()">Create Promo Code</button><button class="secondary" type="button" onclick="loadAdminPromoCodes()">Refresh Codes</button></div><div id="adminPromoStatus" class="muted" style="margin-top:10px">Create a code or refresh to view existing codes.</div><div id="adminPromoList" class="admin-promo-list"></div></div>
-      <div id="adminAnalytics" class="admin-analytics"><div class="admin-privacy-note"><strong>Analytics</strong><p class="muted" style="margin:6px 0 10px">Visitor, account, subscription, and growth analytics are available on the dedicated Analytics page.</p><button class="secondary" type="button" onclick="document.querySelector('.nav-item[href=&quot;#analyticsPanel&quot;]')?.click()">Open Analytics</button></div></div>
+      <div id="adminAnalytics" class="admin-analytics"><div class="admin-tool-grid"><div class="admin-tool-card"><strong>Contact Messages</strong><p class="muted">Read, reply to, save, restore, or delete customer conversations.</p><button class="primary-btn" type="button" onclick="openAdminWorkspacePanel('contactPanel')">Open Contact Inbox</button></div><div class="admin-tool-card"><strong>Analytics</strong><p class="muted">View visitors, accounts, subscriptions, conversion, and growth.</p><button class="primary-btn" type="button" onclick="openAdminWorkspacePanel('analyticsPanel')">Open Analytics</button></div></div></div>
       <div class="admin-privacy-note"><strong>Privacy Protected</strong><p class="muted" style="margin:6px 0 0">Analytics shows aggregate usage only. The administrator cannot open another user's contracts, payments, financial data, or account contents.</p></div></div>
     </div>
   </div>
   <div id="contactMessagingRoot">
-<div class="form-card" style="max-width:760px">
+<div class="form-card" id="contactComposeCard" style="max-width:760px">
     <div class="field"><label for="contactEmail">Your email</label><input id="contactEmail" type="email" placeholder="you@example.com" autocomplete="email"></div>
     <div class="field"><label for="contactMessage">Message</label><textarea id="contactMessage" rows="7" maxlength="2000" placeholder="Type your message..."></textarea></div>
     <button class="primary-btn" id="sendContactMessageBtn" type="button" onclick="submitContactMessage()">Send Message</button>
@@ -3505,10 +3512,12 @@ async function hashAdminPin(pin){
  const digest=await crypto.subtle.digest("SHA-256",bytes);
  return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("");
 }
-function adminContactIsSelected(){return document.querySelector('.nav-item.active')?.getAttribute("href")==="#contactPanel"}
+function adminContactIsSelected(){return document.querySelector('.nav-item.active')?.getAttribute("href")==="#adminPanelPage"}
 async function updateAdminContactVisibility(){
  const area=$("adminAccessArea"),gate=$("adminPinGate"),panel=$("adminPanel");
  if(!area||!gate||!panel)return;
+ const host=$("adminAccessHost");
+ if(host&&!host.contains(area))host.appendChild(area);
  const showArea=!!isAdmin&&adminContactIsSelected();
  area.classList.toggle("hidden",!showArea);
  if(!showArea){panel.classList.add("hidden");gate.classList.add("hidden");return}
@@ -3517,7 +3526,7 @@ async function updateAdminContactVisibility(){
  $("adminPinHelp").textContent=hasPin?"Enter your four-digit PIN to continue.":"Create a four-digit PIN for the Admin Dashboard on this device.";
  $("adminPinConfirmField").classList.toggle("hidden",hasPin);
  $("adminPinUnlockBtn").textContent=hasPin?"Unlock Admin Dashboard":"Create PIN";
- if(adminPinUnlocked){gate.classList.add("hidden");panel.classList.remove("hidden");if(window.loadFundLedgerAnalytics)window.loadFundLedgerAnalytics();if(window.loadAdminPromoCodes)window.loadAdminPromoCodes()}
+ if(adminPinUnlocked){gate.classList.add("hidden");panel.classList.remove("hidden");if(window.loadAdminPromoCodes)window.loadAdminPromoCodes()}
  else{gate.classList.remove("hidden");panel.classList.add("hidden");setTimeout(()=>$("adminPinInput")?.focus(),0)}
 }
 async function submitAdminPin(){
@@ -3538,6 +3547,30 @@ function changeAdminPin(){
  if(!isAdmin||!adminPinUnlocked)return;
  if(!confirm("Change the Admin Dashboard PIN? You will create a new four-digit PIN now."))return;
  localStorage.removeItem(adminPinStorageKey());setContactMessagingMounted(false);adminPinUnlocked=false;updateAdminContactVisibility();
+}
+function showAdminHome(){
+ const link=$("adminNavLink");
+ if(link)link.click();
+}
+function openAdminWorkspacePanel(panelId){
+ if(!isAdmin||!adminPinUnlocked){showAdminHome();return}
+ const target=$(panelId);if(!target)return;
+ document.querySelectorAll(".panel").forEach(panel=>panel.classList.add("hidden"));
+ target.classList.remove("hidden");
+ document.querySelectorAll(".nav-item").forEach(item=>item.classList.toggle("active",item.id==="adminNavLink"));
+ const appScreen=$("appScreen");if(appScreen)appScreen.dataset.mobileRoute=panelId;
+ if(panelId==="contactPanel"){
+   setContactMessagingMounted(true);
+   $("contactPanelTitle").textContent="Contact Messages";
+   $("contactPanelSubtitle").textContent="Manage conversations sent by FundLedger users.";
+   $("contactAdminBackBtn")?.classList.remove("hidden");
+   $("contactComposeCard")?.classList.add("hidden");
+   loadMyContactMessages();
+ }else if(panelId==="analyticsPanel"){
+   setContactMessagingMounted(false);
+   loadFundLedgerAnalytics();
+ }
+ window.scrollTo(0,0);
 }
 const DASHBOARD_CARD_KEYS=["invested","received","remainingReceivable","profit","previousWeekProfit","previousMonthProfit","active","all","paid","default","defaultLoss"];
 const DASHBOARD_CARD_LABELS={invested:"Total Funded & Upfront Fees",received:"Total Payments Received",remainingReceivable:"Total Remaining Receivable",profit:"Realized Profit",previousWeekProfit:"Previous Week Profit",previousMonthProfit:"Previous Month Profit",active:"Active Contracts",all:"Total Contracts",paid:"Completed Contracts",default:"Defaulted Contracts",defaultLoss:"Default Loss"};
@@ -3822,11 +3855,11 @@ function setupNavScrolling(){
         /* Mobile: exactly one sidebar destination at a time. */
         const appScreen=document.getElementById("appScreen");
         const routeId=id==="#dashboard"?"dashboard":id.slice(1);
-  const allRoutePanels=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","trashPanel","reportsPanel","analyticsPanel","planPanel","accountPanel","settingsPanel","contactPanel"];
+  const allRoutePanels=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","trashPanel","reportsPanel","adminPanelPage","analyticsPanel","planPanel","accountPanel","settingsPanel","contactPanel"];
   allRoutePanels.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.add("hidden")});
   if(routeId!=="dashboard"&&target)target.classList.remove("hidden");
         if(appScreen) appScreen.dataset.mobileRoute=routeId;
-        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","trashPanel","reportsPanel","analyticsPanel","planPanel","accountPanel","settingsPanel","contactPanel"];
+        const mobileRouteIds=["checkPanel","newContractPanel","contractsPanel","completedPanel","historyPanel","trashPanel","reportsPanel","adminPanelPage","analyticsPanel","planPanel","accountPanel","settingsPanel","contactPanel"];
         mobileRouteIds.forEach(route=>{const el=document.getElementById(route);if(el)el.classList.toggle("hidden",route!==routeId)});
         if(routeId!=="dashboard") target.classList.remove("hidden");
         const content=document.querySelector(".content");
@@ -3843,15 +3876,20 @@ function setupNavScrolling(){
       item.classList.add("active");
       if(id==="#dashboard")applyDashboardSections();
       setContactMessagingMounted(id==="#contactPanel");
-      if(id!=="#contactPanel")adminPinUnlocked=false;
+      if(id!=="#adminPanelPage")adminPinUnlocked=false;
       updateAdminContactVisibility();
       if(id==="#reportsPanel") renderReports();
       if(id==="#trashPanel") renderTrash();
-      if(id==="#analyticsPanel") loadFundLedgerAnalytics();
       if(id!=="#settingsPanel") collapseSettingsSections();
       if(id==="#settingsPanel"){ collapseSettingsSections(); updateSettingsPanel(); }
       if(id==="#accountPanel") updateMyAccountPanel();
-      if(id==="#contactPanel") loadMyContactMessages();
+      if(id==="#contactPanel"){
+        if($("contactPanelTitle"))$("contactPanelTitle").textContent="Contact Us";
+        if($("contactPanelSubtitle"))$("contactPanelSubtitle").textContent="Send a message to the administrator.";
+        $("contactAdminBackBtn")?.classList.add("hidden");
+        $("contactComposeCard")?.classList.remove("hidden");
+        loadMyContactMessages();
+      }
     });
   });
 }
@@ -3977,7 +4015,14 @@ async function enforceAccountAccess(){
  applyMessagingRestriction();
  return true;
 }
-function applyAdminAnalyticsVisibility(){const l=document.getElementById("analyticsNavLink"),p=document.getElementById("analyticsPanel");if(l)l.classList.toggle("hidden",!isAdmin);if(!isAdmin&&p)p.classList.add("hidden")}
+function applyAdminAnalyticsVisibility(){
+ const adminLink=$("adminNavLink"),contactLink=$("contactNavLink"),adminPage=$("adminPanelPage"),analyticsPage=$("analyticsPanel"),messageBadge=$("contactNewMessage");
+ if(adminLink)adminLink.classList.toggle("hidden",!isAdmin);
+ if(contactLink)contactLink.classList.toggle("hidden",isAdmin);
+ const badgeAnchor=isAdmin?adminLink:contactLink;
+ if(badgeAnchor&&messageBadge&&badgeAnchor.nextElementSibling!==messageBadge)badgeAnchor.insertAdjacentElement("afterend",messageBadge);
+ if(!isAdmin){adminPage?.classList.add("hidden");analyticsPage?.classList.add("hidden")}
+}
 function setAnalyticsPeriod(v,b){const p=document.getElementById("analyticsPeriod");if(p)p.value=v;document.querySelectorAll(".analytics-periods>button").forEach(x=>x.classList.toggle("active",x===b));document.getElementById("analyticsCustomRange")?.classList.toggle("hidden",v!=="custom");if(v!=="custom")loadFundLedgerAnalytics()}
 async function initAdmin(){
  isAdmin=!!(currentUser&&currentUser.app_metadata&&currentUser.app_metadata.role==="admin");applyAdminAnalyticsVisibility();
