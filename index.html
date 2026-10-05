@@ -3008,6 +3008,10 @@ body.landing-info-open{overflow:hidden}
 .landing-info-legal button{border:0;background:transparent;padding:0;color:#147be8;font:inherit;font-weight:800;text-decoration:underline;cursor:pointer}
 @media(max-width:760px){#landingScreen .landing-explore-btn{display:block!important;width:42px!important;min-width:42px!important;padding:0!important;font-size:22px!important}.landing-info-modal{padding:10px}.landing-info-card{max-height:calc(100vh - 20px);border-radius:14px}.landing-info-head{padding:16px 18px}.landing-info-head h2{font-size:23px}.landing-info-body{padding:18px}.landing-info-body .landing-features,.landing-info-body .landing-plans{grid-template-columns:1fr}}
 </style>
+<style id="fundledger-referral-promotion-styles">
+.landing-referral-offer{max-width:1120px;margin:0 auto 64px;padding:0 28px}.landing-referral-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;padding:28px 30px;border:1px solid #b9d8ff;border-radius:18px;background:linear-gradient(135deg,#0b3155 0%,#126fc7 58%,#2f91ef 100%);box-shadow:0 16px 38px rgba(11,49,85,.18);color:#fff}.landing-referral-copy{display:flex;align-items:flex-start;gap:16px}.landing-referral-icon{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.16);font-size:24px}.landing-referral-card h2{margin:0 0 8px;font-size:28px;color:#fff}.landing-referral-card p{max-width:740px;margin:0;color:#e8f4ff;line-height:1.6}.landing-referral-card .landing-cta{min-width:180px;background:#fff;border-color:#fff;color:#126fc7;box-shadow:0 8px 20px rgba(0,0,0,.12)}.landing-info-body .landing-referral-offer{margin:24px 0 0;padding:0}.landing-info-body .landing-referral-card{padding:24px}.dashboard-referral-banner{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:22px;margin:18px 0;padding:20px 22px;border:1px solid #b9d8ff;border-radius:14px;background:linear-gradient(135deg,#f7fbff,#e9f4ff);box-shadow:0 8px 22px rgba(20,123,232,.09)}.dashboard-referral-copy{display:flex;align-items:center;gap:14px;min-width:0}.dashboard-referral-icon{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border-radius:12px;background:#147be8;color:#fff;font-size:21px}.dashboard-referral-banner h2{margin:0 0 4px;color:#17365f;font-size:20px}.dashboard-referral-banner p{margin:0;color:#52657d;line-height:1.45}.dashboard-referral-banner .primary-btn{white-space:nowrap}
+@media(max-width:760px){.landing-referral-offer{margin:0 auto 48px;padding:0 20px}.landing-referral-card,.dashboard-referral-banner{grid-template-columns:1fr}.landing-referral-card{padding:22px}.landing-referral-card h2{font-size:24px}.landing-referral-card .landing-cta,.dashboard-referral-banner .primary-btn{width:100%}.dashboard-referral-banner{padding:18px}.dashboard-referral-copy{align-items:flex-start}}
+</style>
 </head>
 <body>
 
@@ -3024,6 +3028,7 @@ body.landing-info-open{overflow:hidden}
     <div class="landing-plan"><h3>FundLedger Free</h3><div class="landing-price">$0 <small>with ads</small></div><ul><li>Manage up to 3 contracts</li><li>Contract status changes do not free additional slots</li><li>Core contract and payment tracking</li><li>Dashboard summaries</li><li>Advertisements displayed</li><li>Reports not included</li></ul><button class="landing-cta primary public-create-account" type="button">Create Free Account</button></div>
     <div class="landing-plan pro"><h3>FundLedger Pro</h3><div class="landing-price">$9.99 <small>/ month</small></div><ul><li>Unlimited contracts</li><li>Full contract and payment tracking</li><li>Reports section</li><li>Ad-free experience</li><li>All dashboard features</li></ul><button class="landing-cta primary public-create-account" type="button">Get FundLedger Pro</button></div>
   </div></section>
+  <section class="landing-referral-offer" aria-labelledby="publicReferralTitle"><div class="landing-referral-card"><div class="landing-referral-copy"><div class="landing-referral-icon" aria-hidden="true">↗</div><div><h2 id="publicReferralTitle">Give 50%, Get One Month Free</h2><p>Refer a friend to FundLedger. They receive 50% off their first month of FundLedger Pro, and you receive one month free after their first paid month is completed.</p></div></div><button class="landing-cta public-create-account" type="button">Create Free Account</button></div></section>
   <footer class="landing-footer">© 2026 FundLedger &nbsp; • &nbsp; Contract investing made easy.<div class="landing-legal-links"><button type="button" onclick="openFundLedgerLegal('terms')">Terms of Service</button><span>•</span><button type="button" onclick="openFundLedgerLegal('privacy')">Privacy Policy</button></div></footer>
 </div>
 <div id="landingInfoModal" class="landing-info-modal hidden" role="dialog" aria-modal="true" aria-labelledby="landingInfoTitle" aria-hidden="true">
@@ -3115,6 +3120,7 @@ body.landing-info-open{overflow:hidden}
 <div class="summary-card default" data-summary-key="default"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Defaulted Contracts</div><div class="summary-value" id="defaultContracts">0</div></div></div></div>
 <div class="summary-card default-loss" data-summary-key="defaultLoss"><div class="summary-top"><div class="summary-icon">−</div><div><div class="summary-label">Default Loss</div><div class="summary-value" id="defaultLoss">$0.00</div></div></div></div>
 </div>
+<section id="dashboardReferralBanner" class="dashboard-referral-banner" aria-labelledby="dashboardReferralTitle"><div class="dashboard-referral-copy"><div class="dashboard-referral-icon" aria-hidden="true">↗</div><div><h2 id="dashboardReferralTitle">Give 50%, Get One Month Free</h2><p>Your friend gets 50% off their first Pro month. You get one month free after their first paid month is completed.</p></div></div><button class="primary-btn" type="button" onclick="openMyReferralCode()">Get My Referral Code</button></section>
 <section id="dashboardQuickTips" class="dashboard-quick-tips" aria-labelledby="dashboardQuickTipsTitle"><div class="dashboard-tips-head"><div class="dashboard-tips-icon" aria-hidden="true">✦</div><div><h2 id="dashboardQuickTipsTitle">Dashboard Quick Tips</h2><p>Your FundLedger Dashboard is fully customizable.</p></div><button type="button" class="secondary dashboard-customize-btn" onclick="document.querySelector('.nav-item[href=&quot;#settingsPanel&quot;]')?.click()">Customize in Settings</button></div><div class="dashboard-tips-grid"><div><strong>Choose what you see</strong><span>Go to Settings → App Appearance &amp; Layout → Dashboard Sections to show Add Payment, Add Contract, contracts, Payment History, Reports, and more.</span></div><div><strong>Rearrange summary boxes</strong><span>Drag the summary boxes into the order that works best for you.</span></div><div><strong>Hide or restore boxes</strong><span>Use the X to close a summary box. Re-enable it anytime under Settings → Summary Boxes.</span></div><div><strong>Saved automatically</strong><span>Your contracts, payments, Dashboard choices, and layout changes are saved automatically.</span></div></div></section>
 <div id="dashboardAdSlot" class="fundledger-ad-slot hidden"><div><strong>Advertisement</strong><span>Ad space for the FundLedger Free plan</span></div></div>
 <section class="panel" id="checkPanel"><h2>Add Payment / Check</h2><div class="row"><div class="field"><label>Payment Amount <span class="required-star" id="amountRequiredStar" aria-hidden="true">*</span></label><input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="$0.00" oninput="clearPaymentRequiredError('amount');updateBreakdown()" onchange="checkForDuplicateCheck(true)"></div><div class="field"><label>Payment Date <span class="required-star" id="dateRequiredStar" aria-hidden="true">*</span></label><input id="date" type="date" data-auto-today="1" onchange="this.dataset.autoToday='0';clearPaymentRequiredError('date');checkForDuplicateCheck(true)"></div><div class="field"><label>Date Received</label><input id="dateReceived" type="text" placeholder="Optional" onfocus="activateOptionalDate(this)" onblur="resetOptionalDate(this)"></div><div class="field"><label>Check #</label><input id="checkno" inputmode="numeric" placeholder="Optional" onchange="checkForDuplicateCheck(true)"></div></div><h3>Select Contract(s) for This Payment</h3><div class="choices" id="contractChoices"></div><h3>Manual Payment Breakdown</h3><div class="manual-box" id="manualBreakdown"></div><div class="check-form-actions"><button class="secondary" type="button" onclick="clearCheckEntry()">Cancel / Clear</button><button class="primary-btn save-check" id="saveCheckBtn" type="button" onclick="addCheck()" disabled>Save Payment</button></div></section>
@@ -3831,6 +3837,8 @@ function setupNavScrolling(){
       if(dashboardSummary) dashboardSummary.classList.toggle("hidden",id!=="#dashboard");
       const dashboardQuickTips=$("dashboardQuickTips");
       if(dashboardQuickTips) dashboardQuickTips.classList.toggle("hidden",id!=="#dashboard");
+      const dashboardReferralBanner=$("dashboardReferralBanner");
+      if(dashboardReferralBanner) dashboardReferralBanner.classList.toggle("hidden",id!=="#dashboard");
       if(window.matchMedia("(max-width:700px)").matches){
         /* Mobile: exactly one sidebar destination at a time. */
         const appScreen=document.getElementById("appScreen");
@@ -3871,6 +3879,11 @@ function setupNavScrolling(){
       }
     });
   });
+}
+
+function openMyReferralCode(){
+  document.querySelector('.nav-item[href="#accountPanel"]')?.click();
+  setTimeout(()=>document.querySelector(".account-referral-card")?.scrollIntoView({behavior:"smooth",block:"start"}),220);
 }
 
 let lastForegroundRefreshAt=0;
@@ -5223,7 +5236,7 @@ function landingInfoMarkup(section){
  if(section==="menu")return '<div class="landing-popup-menu"><button type="button" data-popup-section="about">About FundLedger</button><button type="button" data-popup-section="features">Features</button><button type="button" data-popup-section="pricing">Pricing and Plans</button></div>';
  if(section==="about")return `<p>${$("aboutPublic")?.querySelector(":scope>p")?.innerHTML||""}</p><div class="landing-info-legal"><span>© 2026 FundLedger</span><span>•</span><button type="button" onclick="closeLandingInfo();openFundLedgerLegal('terms')">Terms of Service</button><span>•</span><button type="button" onclick="closeLandingInfo();openFundLedgerLegal('privacy')">Privacy Policy</button></div>`;
  if(section==="features")return `<div class="landing-features">${$("featuresPublic")?.innerHTML||""}</div>`;
- if(section==="pricing")return `<div class="landing-plans">${$("pricingPublic")?.querySelector(".landing-plans")?.innerHTML||""}</div>`;
+ if(section==="pricing"){const referralOffer=(document.querySelector(".landing-referral-offer")?.outerHTML||"").replace('aria-labelledby="publicReferralTitle"','aria-label="Referral offer"').replace(' id='+String.fromCharCode(34)+'publicReferralTitle'+String.fromCharCode(34),'');return `<div class="landing-plans">${$("pricingPublic")?.querySelector(".landing-plans")?.innerHTML||""}</div>${referralOffer}`;}
  return "";
 }
 function openLandingInfo(section){
