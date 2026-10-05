@@ -2445,6 +2445,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 
 <style id="fundledger-admin-analytics-design">
 .fundledger-analytics-page{padding:20px;background:#f7faff}.analytics-topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.analytics-topline h2{margin:0;color:#173b67}.analytics-topline p{margin:4px 0 0}.analytics-periods{display:flex;flex-wrap:wrap;align-items:center;margin-bottom:14px}.analytics-periods>button{background:#fff;border:1px solid #d5e1ed;padding:9px 13px;font-weight:700;color:#173b67}.analytics-periods>button.active{background:#1677e8;color:#fff}.analytics-custom-range{display:flex;gap:7px;align-items:center;margin-left:10px}.analytics-custom-range input{padding:7px;border:1px solid #d4e0eb;border-radius:7px}.analytics-three{display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:12px}.analytics-bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.an-card{background:#fff;border:1px solid #dce6ef;border-radius:11px;padding:16px;box-shadow:0 2px 8px rgba(15,48,82,.05);min-width:0}.an-card header{border-bottom:1px solid #e7edf4;padding-bottom:10px}.an-card header b,.an-card header small{display:block}.an-card header b{color:#16375e}.an-card header small{color:#76889b;margin-top:3px}.an-hero{padding:22px 0}.an-hero span,.an-convert span{display:block;color:#607388}.an-hero strong{display:block;font-size:46px;color:#12345e}.an-row{display:flex;justify-content:space-between;margin-top:13px}.an-meter{height:9px;background:#e5edf5;border-radius:20px;overflow:hidden;margin-top:6px}.an-meter i{display:block;height:100%;width:0;background:#1677e8}.an-chart{height:245px;display:flex;align-items:flex-end;gap:4px;padding:18px 3px 5px;border-bottom:1px solid #e6edf4}.an-chart i,.an-bars i{display:block;background:#1677e8;border-radius:3px 3px 0 0}.an-chart i{flex:1;min-width:4px}.an-mini{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.an-mini>div,.an-convert{background:#f8fbff;border:1px solid #e3ebf3;border-radius:9px;padding:11px}.an-mini span{font-size:12px;color:#65778a;display:block}.an-mini strong,.an-convert strong{font-size:25px;color:#15385f;display:block;margin-top:3px}.an-mini small,.an-convert small{color:#0b8b43}.an-bars{height:160px;display:flex;align-items:flex-end;gap:5px;padding-top:14px}.an-bars i{flex:1;min-width:4px}.an-bars i.alt{background:#75b9f7}
+.analytics-status{margin:-4px 0 14px;padding:10px 12px;border:1px solid #cfe0f2;border-radius:9px;background:#eef6ff;color:#315c89;font-size:13px;font-weight:700}.analytics-status.success{border-color:#bfe4cc;background:#effaf3;color:#187443}.analytics-status.error{border-color:#f1c5c5;background:#fff2f2;color:#a12626}.analytics-status.loading{opacity:.85}.analytics-empty{align-self:center;margin:auto;color:#718399;font-size:13px}.an-bars .bar-current{background:#1677e8}.an-bars .bar-previous{background:#9bc9f5}.an-bars .bar-paid{background:#1677e8}.an-bars .bar-free{background:#75b9f7}.an-bars .bar-trial{background:#f0ad35}
 @media(max-width:1050px){.analytics-three,.analytics-bottom{grid-template-columns:1fr}}@media(max-width:700px){.fundledger-analytics-page{padding:12px}.analytics-periods{gap:5px}.analytics-periods>button{border-radius:7px}.analytics-custom-range{width:100%;margin:8px 0}.an-mini{grid-template-columns:1fr 1fr}}
 </style>
 
@@ -3141,7 +3142,8 @@ body.landing-info-open{overflow:hidden}
 </section>
 
 <section class="panel hidden fundledger-analytics-page" id="analyticsPanel">
-<div class="analytics-topline"><div><h2>Analytics</h2><p class="muted">Visitors, accounts, subscriptions and growth.</p></div><button class="secondary" onclick="loadFundLedgerAnalytics()">↻ Refresh</button></div>
+<div class="analytics-topline"><div><h2>Analytics</h2><p class="muted">Visitors, accounts, subscriptions and growth.</p></div><button id="analyticsRefreshBtn" class="secondary" onclick="loadFundLedgerAnalytics()">↻ Refresh</button></div>
+<div id="analyticsStatus" class="analytics-status" role="status" aria-live="polite">Loading analytics…</div>
 <div class="analytics-periods">
 <button onclick="setAnalyticsPeriod('today',this)">Today</button><button onclick="setAnalyticsPeriod('7',this)">7 Days</button><button class="active" onclick="setAnalyticsPeriod('30',this)">30 Days</button><button onclick="setAnalyticsPeriod('month',this)">This Month</button><button onclick="setAnalyticsPeriod('last_month',this)">Last Month</button><button onclick="setAnalyticsPeriod('year',this)">This Year</button><button onclick="setAnalyticsPeriod('custom',this)">Custom</button>
 <input type="hidden" id="analyticsPeriod" value="30"><div id="analyticsCustomRange" class="hidden analytics-custom-range"><input type="date" id="analyticsFrom"><span>to</span><input type="date" id="analyticsTo"><button onclick="loadFundLedgerAnalytics()">Apply</button></div></div>
@@ -3273,19 +3275,7 @@ body.landing-info-open{overflow:hidden}
       <div class="admin-panel-head"><h2>Admin Dashboard</h2><div class="admin-panel-actions"><button id="adminChangePinBtn" class="secondary" type="button">Change PIN</button><button id="adminLockBtn" class="secondary" type="button">Lock Dashboard</button></div></div>
       <p class="muted">Master account view. Regular users only see their own data.</p><div class="plan-card" id="adminProAccessCard"><h3>Pro Access Management</h3><p class="muted">Give a user a custom-length Pro trial, complimentary Pro access for friends/family, or return the account to Free. This does not change their contracts or payments.</p><div class="row" style="align-items:end"><div class="field" style="flex:2;min-width:220px"><label>User email</label><input id="adminProEmail" type="email" placeholder="user@example.com"></div><div class="field" style="flex:1;min-width:180px"><label>Trial ends</label><input id="adminProTrialEnd" type="date"></div></div><div class="row" style="margin-top:10px;flex-wrap:wrap"><button class="primary-btn" type="button" onclick="adminSetProAccess('trial')">Give Custom Trial</button><button class="secondary" type="button" onclick="adminSetProAccess('complimentary')">Give Free Pro Access</button><button class="secondary" type="button" onclick="adminSetProAccess('free')">Return to Free</button><button class="secondary" type="button" onclick="adminCheckProAccess()">Check Access</button></div><div id="adminProAccessStatus" class="muted" style="margin-top:10px">Enter a registered user's email.</div></div>
       <div class="plan-card admin-promo-card" id="adminPromoCodesCard"><h3>Promo Code Management</h3><p class="muted">Create a reusable code that gives each eligible account a set number of free Pro months. Codes are checked securely by Supabase.</p><div class="admin-promo-grid"><div class="field"><label>Promo code</label><input id="adminPromoCode" type="text" maxlength="32" autocapitalize="characters" spellcheck="false" placeholder="FUNDLEDGER6"></div><div class="field"><label>Free months</label><input id="adminPromoMonths" type="number" min="1" max="120" step="1" value="6"></div><div class="field"><label>Maximum uses</label><input id="adminPromoMaxUses" type="number" min="1" step="1" placeholder="Unlimited"></div><div class="field"><label>Code expires</label><input id="adminPromoExpires" type="date"></div></div><div class="admin-promo-actions"><button class="primary-btn" type="button" onclick="createFundLedgerPromoCode()">Create Promo Code</button><button class="secondary" type="button" onclick="loadAdminPromoCodes()">Refresh Codes</button></div><div id="adminPromoStatus" class="muted" style="margin-top:10px">Create a code or refresh to view existing codes.</div><div id="adminPromoList" class="admin-promo-list"></div></div>
-      <div id="adminAnalytics" class="admin-analytics">
-        
-        <div class="analytics-cards">
-          <div class="analytics-card"><span>Unique Visitors</span><strong id="anVisitors">—</strong><small id="anVisitorsCompare">Waiting for data</small></div>
-          <div class="analytics-card"><span>Total Visits</span><strong id="anVisits">—</strong><small id="anVisitsCompare">Waiting for data</small></div>
-          <div class="analytics-card"><span>Registered Users</span><strong id="anUsers">—</strong><small id="anUsersCompare">Waiting for data</small></div>
-          <div class="analytics-card"><span>Active Users</span><strong id="anActive">—</strong><small id="anActiveCompare">Waiting for data</small></div>
-          <div class="analytics-card"><span>Logins</span><strong id="anLogins">—</strong><small id="anLoginsCompare">Waiting for data</small></div>
-          <div class="analytics-card"><span>New Accounts</span><strong id="anNew">—</strong><small id="anNewCompare">Waiting for data</small></div>
-        </div>
-        <div class="analytics-chart-card"><div class="analytics-chart-title"><strong>Activity Trend</strong><span id="analyticsRangeLabel" class="muted"></span></div><div id="analyticsChart" class="analytics-chart"><div class="muted">Analytics begins collecting after the updated SQL is installed.</div></div></div>
-        <div class="admin-privacy-note"><strong>Aggregate Analytics Only</strong><p class="muted" style="margin:6px 0 0">No individual user's contracts, payments, email activity, or financial information is displayed here.</p></div>
-      </div>
+      <div id="adminAnalytics" class="admin-analytics"><div class="admin-privacy-note"><strong>Analytics</strong><p class="muted" style="margin:6px 0 10px">Visitor, account, subscription, and growth analytics are available on the dedicated Analytics page.</p><button class="secondary" type="button" onclick="document.querySelector('.nav-item[href=&quot;#analyticsPanel&quot;]')?.click()">Open Analytics</button></div></div>
       <div class="admin-privacy-note"><strong>Privacy Protected</strong><p class="muted" style="margin:6px 0 0">Analytics shows aggregate usage only. The administrator cannot open another user's contracts, payments, financial data, or account contents.</p></div></div>
     </div>
   </div>
@@ -3857,6 +3847,7 @@ function setupNavScrolling(){
       updateAdminContactVisibility();
       if(id==="#reportsPanel") renderReports();
       if(id==="#trashPanel") renderTrash();
+      if(id==="#analyticsPanel") loadFundLedgerAnalytics();
       if(id!=="#settingsPanel") collapseSettingsSections();
       if(id==="#settingsPanel"){ collapseSettingsSections(); updateSettingsPanel(); }
       if(id==="#accountPanel") updateMyAccountPanel();
@@ -6114,15 +6105,47 @@ async function adminCheckProAccess(){
 (function(){
  const visitorKey="fundledgerVisitorId";
  function visitorId(){let v=localStorage.getItem(visitorKey);if(!v){v=(crypto.randomUUID?crypto.randomUUID():(Date.now()+"-"+Math.random().toString(36).slice(2)));localStorage.setItem(visitorKey,v)}return v}
- async function event(type){
-  if(!window.supabaseClient||!supabaseClient)return;
-  try{await supabaseClient.rpc("track_fundledger_event",{p_event_type:type,p_visitor_id:visitorId(),p_path:location.pathname||"/"})}catch(e){console.warn("Analytics event skipped",e)}
+ async function event(type,attempt=0){
+  if(!supabaseClient){if(attempt<5)setTimeout(()=>event(type,attempt+1),1000);return}
+  try{const {error}=await supabaseClient.rpc("track_fundledger_event",{p_event_type:type,p_visitor_id:visitorId(),p_path:location.pathname||"/"});if(error)throw error}catch(e){console.warn("Analytics event skipped",e)}
  }
+ function analyticsPanel(){return document.getElementById("analyticsPanel")}
+ function analyticsElement(id){return analyticsPanel()?.querySelector(`#${id}`)||null}
+ function setAnalyticsStatus(message,state=""){const e=analyticsElement("analyticsStatus");if(!e)return;e.textContent=message;e.className=`analytics-status ${state}`.trim()}
+ function comparisonText(current,previous){if(!previous)return current?"New this period":"No change";const pct=Math.round((current-previous)/previous*100);return `${pct>=0?'↑':'↓'} ${Math.abs(pct)}% vs previous period`}
+ function simpleBars(values,classes=[]){const max=Math.max(1,...values.map(x=>Number(x.value)||0));return values.map((x,i)=>`<i class="${classes[i]||''}" title="${escape(x.label)}: ${Number(x.value||0).toLocaleString()}" style="height:${Math.max(4,(Number(x.value)||0)/max*100)}%"></i>`).join("")}
  window.trackFundLedgerEvent=event;
  window.addEventListener("load",()=>setTimeout(()=>event("visit"),1200));
- window.addEventListener("focus",()=>{if(window.currentUser||currentUser)event("active")});
- window.loadFundLedgerAnalytics=async function(){if(!isAdmin||!adminPinUnlocked||!supabaseClient)return;const period=document.getElementById("analyticsPeriod")?.value||"30";try{const {data,error}=await supabaseClient.rpc("admin_fundledger_analytics",{p_period:period});if(error)throw error;const d=Array.isArray(data)?data[0]:data;if(!d)return;const ids={visitors:"anVisitors",visits:"anVisits",users:"anUsers",active:"anActive",logins:"anLogins",new_accounts:"anNew"};Object.entries(ids).forEach(([k,id])=>{const e=document.getElementById(id);if(e)e.textContent=Number(d.current?.[k]||0).toLocaleString();const c=document.getElementById(id+"Compare");if(c){const cur=Number(d.current?.[k]||0),prev=Number(d.previous?.[k]||0),pct=prev?Math.round((cur-prev)/prev*100):0;c.textContent=(cur>=prev?"↑ ":"↓ ")+Math.abs(pct)+"% vs previous period"}});const visitors=Number(d.current?.visitors||0),newA=Number(d.current?.new_accounts||0);const cv=document.getElementById("anConversion");if(cv)cv.textContent=(visitors?newA/visitors*100:0).toFixed(1)+"%";const tr=Array.isArray(d.trend)?d.trend:[],mx=Math.max(1,...tr.map(x=>Number(x.visits||0)));const bars=tr.map(x=>`<i title="${Number(x.visits||0)} visits" style="height:${Math.max(5,Number(x.visits||0)/mx*100)}%"></i>`).join("");const ch=document.getElementById("analyticsTrend");if(ch)ch.innerHTML=bars||'<span class="muted">No visits recorded yet.</span>';const vb=document.getElementById("analyticsVisitorBars");if(vb)vb.innerHTML=bars;const paid=Number(d.current?.paid_subscribers||0),free=Number(d.current?.free_subscribers||0),trial=Number(d.current?.trial_subscribers||0),tot=paid+free+trial;[["anPaidSubscribers",paid],["anFreeSubscribers",free],["anTrialSubscribers",trial]].forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.textContent=v.toLocaleString()});[["anPaidBar",paid],["anFreeBar",free],["anTrialBar",trial]].forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.style.width=(tot?v/tot*100:0)+"%"});}catch(e){console.error("Analytics load failed",e);toast("Analytics could not be loaded.")}};
- document.addEventListener("DOMContentLoaded",()=>{document.getElementById("analyticsRefreshBtn")?.addEventListener("click",loadFundLedgerAnalytics);document.getElementById("analyticsPeriod")?.addEventListener("change",loadFundLedgerAnalytics)});
+ window.addEventListener("focus",()=>{if(currentUser)event("active")});
+ window.loadFundLedgerAnalytics=async function(){
+  if(!isAdmin){setAnalyticsStatus("Analytics is available only to the FundLedger administrator.","error");return}
+  if(!supabaseClient){setAnalyticsStatus("The data service is still loading. Try Refresh again in a moment.","error");return}
+  const period=document.getElementById("analyticsPeriod")?.value||"30";let rpcPeriod=period;
+  if(period==="custom"){
+   const from=document.getElementById("analyticsFrom")?.value||"",to=document.getElementById("analyticsTo")?.value||"";
+   if(!from||!to){setAnalyticsStatus("Choose both custom dates, then select Apply.","error");return}
+   if(from>to){setAnalyticsStatus("The custom start date must be before the end date.","error");return}
+   rpcPeriod=`custom|${from}|${to}`;
+  }
+  const refresh=analyticsElement("analyticsRefreshBtn");if(refresh)refresh.disabled=true;setAnalyticsStatus("Loading analytics…","loading");
+  try{
+   const {data,error}=await supabaseClient.rpc("admin_fundledger_analytics",{p_period:rpcPeriod});if(error)throw error;
+   let d=Array.isArray(data)?data[0]:data;if(typeof d==="string")d=JSON.parse(d);if(!d||!d.current)throw new Error("Analytics returned no data");
+   const ids={visitors:"anVisitors",visits:"anVisits",users:"anUsers",active:"anActive",logins:"anLogins",new_accounts:"anNew"};
+   Object.entries(ids).forEach(([key,id])=>{const cur=Number(d.current?.[key]||0),prev=Number(d.previous?.[key]||0),value=analyticsElement(id),compare=analyticsElement(id+"Compare");if(value)value.textContent=cur.toLocaleString();if(compare)compare.textContent=comparisonText(cur,prev)});
+   const visitors=Number(d.current?.visitors||0),newAccounts=Number(d.current?.new_accounts||0),conversion=analyticsElement("anConversion");if(conversion)conversion.textContent=(visitors?newAccounts/visitors*100:0).toFixed(1)+"%";
+   const trend=Array.isArray(d.trend)?d.trend:[],trendValues=trend.map(x=>({label:x.trend_day||x.label||"Visit",value:Number(x.visits||0)})),trendBars=trendValues.length?simpleBars(trendValues):'<span class="analytics-empty">No visits recorded for this period yet.</span>';
+   const trendEl=analyticsElement("analyticsTrend"),visitorBars=analyticsElement("analyticsVisitorBars");if(trendEl)trendEl.innerHTML=trendBars;if(visitorBars)visitorBars.innerHTML=trendBars;
+   const paid=Number(d.current?.paid_subscribers||0),free=Number(d.current?.free_subscribers||0),trial=Number(d.current?.trial_subscribers||0),totalSubscribers=paid+free+trial;
+   [["anPaidSubscribers",paid],["anFreeSubscribers",free],["anTrialSubscribers",trial]].forEach(([id,value])=>{const e=analyticsElement(id);if(e)e.textContent=value.toLocaleString()});
+   [["anPaidBar",paid],["anFreeBar",free],["anTrialBar",trial]].forEach(([id,value])=>{const e=analyticsElement(id);if(e)e.style.width=(totalSubscribers?value/totalSubscribers*100:0)+"%"});
+   const subscriberValues=[{label:"Paid",value:paid},{label:"Free",value:free},{label:"Trial",value:trial}],subscriberBars=simpleBars(subscriberValues,["bar-paid","bar-free","bar-trial"]);const subscriberGrowth=analyticsElement("analyticsSubscriberBars"),subscriberMix=analyticsElement("analyticsSubscriberMix");if(subscriberGrowth)subscriberGrowth.innerHTML=subscriberBars;if(subscriberMix)subscriberMix.innerHTML=subscriberBars;
+   const currentNew=Number(d.current?.new_accounts||0),previousNew=Number(d.previous?.new_accounts||0),accountBars=analyticsElement("analyticsAccountBars");if(accountBars)accountBars.innerHTML=simpleBars([{label:"Previous",value:previousNew},{label:"Current",value:currentNew}],["bar-previous","bar-current"]);
+   setAnalyticsStatus(`Updated ${new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}. Analytics collects activity from this version forward.`,"success");
+  }catch(e){
+   console.error("Analytics load failed",e);const message=String(e?.message||e||"");const setup=/admin_fundledger_analytics|track_fundledger_event|schema cache|function/i.test(message);setAnalyticsStatus(setup?"Analytics setup needs the updated FundLedger Supabase SQL. Run the included SQL file, then refresh this page.":`Analytics could not be loaded: ${message||"Please try again."}`,"error");
+  }finally{if(refresh)refresh.disabled=false}
+ };
 })();
 </script><script id="fundledger-my-account">
 function updateMyAccountPanel(){
