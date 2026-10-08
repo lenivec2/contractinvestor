@@ -236,6 +236,15 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #completedPanel .completed-compact-head span{display:block;font-size:10px;font-weight:500;margin-top:4px;white-space:nowrap}
 @media (max-width:700px){#completedPanel .completed-contracts-head{align-items:flex-start!important}#completedPanel .completed-contract-actions{width:100%!important}#completedPanel .completed-contract-actions button{flex:1 1 auto!important}}
 
+
+/* Drop indicators add no size or spacing; cards move only after a drop. */
+#dashboardSummary .summary-card.summary-drop-before,#dashboardSummary .summary-card.summary-drop-after{background:#edf5ff!important;outline:2px solid #147be8!important;transform:none!important}
+#dashboardSummary .summary-card.summary-drop-before{box-shadow:inset 5px 0 #147be8!important}
+#dashboardSummary .summary-card.summary-drop-after{box-shadow:inset -5px 0 #147be8!important}
+#dashboardSummary .summary-card.summary-drop-before::after,#dashboardSummary .summary-card.summary-drop-after::after{position:absolute;bottom:3px;padding:2px 6px;border-radius:4px;background:#147be8;color:#fff;font-size:10px;font-weight:700;pointer-events:none;z-index:4}
+#dashboardSummary .summary-card.summary-drop-before::after{content:"Place before";left:5px}
+#dashboardSummary .summary-card.summary-drop-after::after{content:"Place after";right:5px}
+#dashboardSummary .summary-card.summary-dragging{cursor:grabbing;transform:none!important}
 </style>
 
 <style id="mobile-sidebar-final-fix">
@@ -3124,9 +3133,9 @@ body.landing-info-open{overflow:hidden}
 <div class="summary-card received" data-summary-key="received"><div class="summary-top"><div class="summary-icon">$</div><div><div class="summary-label">Total Payments Received</div><div class="summary-value" id="received">$0.00</div></div></div></div> <div class="summary-card remaining-receivable" data-summary-key="remainingReceivable"><div class="summary-top"><div class="summary-icon">⇢</div><div><div class="summary-label">Total Remaining Receivable</div><div class="summary-value" id="totalRemainingReceivable">$0.00</div></div></div></div>
 <div class="summary-card profit" data-summary-key="profit"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Realized Profit</div><div class="summary-value" id="profit">$0.00</div></div></div></div> <div class="summary-card profit" data-summary-key="previousWeekProfit"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Previous Week Profit</div><div class="summary-value" id="previousWeekProfit">$0.00</div></div></div></div> <div class="summary-card profit" data-summary-key="previousMonthProfit"><div class="summary-top"><div class="summary-icon">↗</div><div><div class="summary-label">Previous Month Profit</div><div class="summary-value" id="previousMonthProfit">$0.00</div></div></div></div>
 <div class="summary-card active" data-summary-key="active" role="button" tabindex="0" style="cursor:pointer" onclick="document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.querySelector('.nav-item[href=&quot;#contractsPanel&quot;]')?.click()}"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Active Contracts</div><div class="summary-value" id="openContracts">0</div></div></div></div>
-<div class="summary-card awaiting-payment payment-status-card" data-summary-key="awaitingFirstPayment" role="button" tabindex="0" onclick="openPaymentStatusModal('awaiting')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPaymentStatusModal('awaiting')}"><div class="summary-top"><div class="summary-icon">◷</div><div><div class="summary-label">Awaiting First Payment</div><div class="summary-value" id="awaitingFirstPayment">0</div><small class="summary-detail" id="awaitingFirstPaymentAge">No contracts waiting</small></div></div></div>
-<div class="summary-card payment-due payment-status-card" data-summary-key="dueThisWeek" role="button" tabindex="0" onclick="openPaymentStatusModal('due')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPaymentStatusModal('due')}"><div class="summary-top"><div class="summary-icon">7</div><div><div class="summary-label">Payments Due in the Next 7 Days</div><div class="summary-value" id="dueThisWeek">0</div></div></div></div>
-<div class="summary-card payment-overdue payment-status-card" data-summary-key="overduePayments" role="button" tabindex="0" onclick="openPaymentStatusModal('overdue')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPaymentStatusModal('overdue')}"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Overdue Weekly Payments</div><div class="summary-value" id="overduePayments">0</div></div></div></div>
+<div class="summary-card awaiting-payment payment-status-card" data-summary-key="awaitingFirstPayment" role="button" tabindex="0" onclick="openPaymentStatusModal('awaiting')" onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();openPaymentStatusModal('awaiting')}"><div class="summary-top"><div class="summary-icon">◷</div><div><div class="summary-label">Awaiting First Payment</div><div class="summary-value" id="awaitingFirstPayment">0</div><small class="summary-detail" id="awaitingFirstPaymentAge">No contracts waiting</small></div></div></div>
+<div class="summary-card payment-due payment-status-card" data-summary-key="dueThisWeek" role="button" tabindex="0" onclick="openPaymentStatusModal('due')" onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();openPaymentStatusModal('due')}"><div class="summary-top"><div class="summary-icon">7</div><div><div class="summary-label">Payments Due in the Next 7 Days</div><div class="summary-value" id="dueThisWeek">0</div></div></div></div>
+<div class="summary-card payment-overdue payment-status-card" data-summary-key="overduePayments" role="button" tabindex="0" onclick="openPaymentStatusModal('overdue')" onkeydown="if(event.target===this&&(event.key==='Enter'||event.key===' ')){event.preventDefault();openPaymentStatusModal('overdue')}"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Overdue Weekly Payments</div><div class="summary-value" id="overduePayments">0</div></div></div></div>
 <div class="summary-card" data-summary-key="all"><div class="summary-top"><div class="summary-icon">▤</div><div><div class="summary-label">Total Contracts</div><div class="summary-value" id="allContracts">0</div></div></div></div>
 <div class="summary-card" data-summary-key="paid"><div class="summary-top"><div class="summary-icon">✓</div><div><div class="summary-label">Completed Contracts</div><div class="summary-value" id="paidInFull">0</div></div></div></div>
 <div class="summary-card default" data-summary-key="default"><div class="summary-top"><div class="summary-icon">!</div><div><div class="summary-label">Defaulted Contracts</div><div class="summary-value" id="defaultContracts">0</div></div></div></div>
@@ -3627,15 +3636,34 @@ function reorderSummaryCard(draggedKey,targetKey,placeAfter){
  order.splice(to,0,draggedKey);data.preferences.dashboardCardOrder=order;
  applyDashboardCardOrder();updateSummaryGridLayout();save();toast("Summary box order saved");
 }
+function clearSummaryDropIndicators(){
+ document.querySelectorAll("#dashboardSummary [data-summary-key]").forEach(card=>card.classList.remove("summary-drop-before","summary-drop-after"));
+}
 function setupSummaryCardReordering(){
- document.querySelectorAll("[data-summary-key]").forEach(card=>{
+ document.querySelectorAll("#dashboardSummary [data-summary-key]").forEach(card=>{
+  if(card.dataset.summaryDragReady==="1")return;card.dataset.summaryDragReady="1";
   card.draggable=true;card.title="Drag to rearrange";
-  card.addEventListener("dragstart",event=>{draggedSummaryCardKey=card.dataset.summaryKey;card.classList.add("summary-dragging");event.dataTransfer.effectAllowed="move";event.dataTransfer.setData("text/plain",draggedSummaryCardKey)});
-  card.addEventListener("dragend",()=>{draggedSummaryCardKey="";card.classList.remove("summary-dragging")});
-  card.addEventListener("dragover",event=>{event.preventDefault();event.dataTransfer.dropEffect="move"});
-  card.addEventListener("drop",event=>{event.preventDefault();const key=event.dataTransfer.getData("text/plain")||draggedSummaryCardKey,rect=card.getBoundingClientRect(),after=event.clientX>rect.left+rect.width/2;reorderSummaryCard(key,card.dataset.summaryKey,after)});
+  card.addEventListener("dragstart",event=>{
+   if(event.target.closest?.("button,input,select,textarea")){event.preventDefault();return}
+   clearSummaryDropIndicators();draggedSummaryCardKey=card.dataset.summaryKey;card.classList.add("summary-dragging");
+   event.dataTransfer.effectAllowed="move";event.dataTransfer.setData("text/plain",draggedSummaryCardKey);
+  });
+  card.addEventListener("dragend",()=>{draggedSummaryCardKey="";card.classList.remove("summary-dragging");clearSummaryDropIndicators()});
+  card.addEventListener("dragover",event=>{
+   if(!draggedSummaryCardKey||draggedSummaryCardKey===card.dataset.summaryKey){clearSummaryDropIndicators();return}
+   event.preventDefault();event.dataTransfer.dropEffect="move";
+   const rect=card.getBoundingClientRect(),after=event.clientX>rect.left+rect.width/2;
+   clearSummaryDropIndicators();card.classList.add(after?"summary-drop-after":"summary-drop-before");
+  });
+  card.addEventListener("dragleave",event=>{if(!card.contains(event.relatedTarget))card.classList.remove("summary-drop-before","summary-drop-after")});
+  card.addEventListener("drop",event=>{
+   if(!draggedSummaryCardKey)return;
+   event.preventDefault();const key=draggedSummaryCardKey,rect=card.getBoundingClientRect(),after=event.clientX>rect.left+rect.width/2;
+   draggedSummaryCardKey="";clearSummaryDropIndicators();reorderSummaryCard(key,card.dataset.summaryKey,after);
+  });
  });
 }
+
 function dashboardSectionPreferences(){
  if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
  if(!data.preferences.dashboardSections||typeof data.preferences.dashboardSections!=="object")data.preferences.dashboardSections={};
