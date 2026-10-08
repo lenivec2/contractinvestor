@@ -5193,16 +5193,30 @@ function renderActiveContractsTable(){
 }
 
 function fundLedgerLocalDate(value){if(!value)return null;const s=String(value).slice(0,10),m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s);if(!m)return null;const d=new Date(+m[1],+m[2]-1,+m[3]);return Number.isNaN(d.getTime())?null:d}
+// Compare local calendar dates as UTC day numbers to avoid DST hour changes.
+function fundLedgerCalendarDaysBetween(start,end){return (Date.UTC(end.getFullYear(),end.getMonth(),end.getDate())-Date.UTC(start.getFullYear(),start.getMonth(),start.getDate()))/86400000}
+function fundLedgerHasScheduledPaymentsRemaining(contract,payments){
+ const defaulted=contract?.defaulted;
+ if(isFundLedgerContractClosed(contract)||defaulted===true||defaulted===1||String(defaulted).trim().toLowerCase()==="true")return false;
+ const expected=Math.max(0,parseInt(contract.totalExpectedPayments??contract.expectedPayments,10)||0);
+ return expected>uniquePaymentCount(payments);
+}
+function fundLedgerDueCountdown(date){
+ if(!(date instanceof Date)||Number.isNaN(date.getTime()))return "Date unavailable";
+ const days=fundLedgerCalendarDaysBetween(new Date(),date);
+ return days===0?"Due today":days===1?"Due tomorrow":days>1?`Due in ${days} days`:`${Math.abs(days)} day${days===-1?'':'s'} overdue`;
+}
 function fundLedgerWeeklyPaymentStatuses(){
  const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate()),sevenDaysFromToday=new Date(today);sevenDaysFromToday.setDate(today.getDate()+7);
  const counts={awaiting:0,due:0,overdue:0,longestAwaitingDays:0,items:[]};
  (data.contracts||[]).filter(contract=>!isFundLedgerContractClosed(contract)).forEach(contract=>{
   const payments=(data.checks||[]).filter(check=>!isOtherIncomeCheck(check)&&check.contract===contract.name);
+  if(!fundLedgerHasScheduledPaymentsRemaining(contract,payments))return;
   if(!payments.length){
    counts.awaiting++;
    let started=fundLedgerLocalDate(contract.openedDate||contract.date);
    if(!started&&Number(contract.id)>0){const created=new Date(Number(contract.id));if(!Number.isNaN(created.getTime()))started=new Date(created.getFullYear(),created.getMonth(),created.getDate())}
-   const elapsed=started?Math.max(0,Math.floor((today-started)/86400000)):0;counts.longestAwaitingDays=Math.max(counts.longestAwaitingDays,elapsed);
+   const elapsed=started?Math.max(0,fundLedgerCalendarDaysBetween(started,today)):0;counts.longestAwaitingDays=Math.max(counts.longestAwaitingDays,elapsed);
    counts.items.push({status:"awaiting",contract,amount:Math.max(0,parseFloat(contract.paymentAmount)||0),daysWaiting:elapsed,started});
    return;
   }
@@ -5215,7 +5229,7 @@ function fundLedgerWeeklyPaymentStatuses(){
    const baseline=Math.max(0,parseInt(contract.weeklyScheduleAnchorPaymentCount,10)||0),recorded=uniquePaymentCount(payments),weeksAdvanced=Math.max(0,recorded-baseline);
    nextDue=new Date(adjustedAnchor);nextDue.setDate(nextDue.getDate()+(weeksAdvanced*7));customSchedule=true;
   }else{nextDue=new Date(paymentDates[paymentDates.length-1]);nextDue.setDate(nextDue.getDate()+7)}
-  if(nextDue<today){const daysLate=Math.max(1,Math.floor((today-nextDue)/86400000));counts.overdue++;counts.items.push({status:"overdue",contract,amount:Math.max(0,parseFloat(contract.paymentAmount)||0),nextDue,daysLate,customSchedule})}
+  if(nextDue<today){const daysLate=Math.max(1,fundLedgerCalendarDaysBetween(nextDue,today));counts.overdue++;counts.items.push({status:"overdue",contract,amount:Math.max(0,parseFloat(contract.paymentAmount)||0),nextDue,daysLate,customSchedule})}
   else if(nextDue<=sevenDaysFromToday){counts.due++;counts.items.push({status:"due",contract,amount:Math.max(0,parseFloat(contract.paymentAmount)||0),nextDue,daysLate:0,customSchedule})}
  });
  return counts;
@@ -5231,12 +5245,25 @@ function openPaymentStatusModal(status){
   if(status==="awaiting")return `<article class="payment-status-item"><div><span>Contract</span><strong>${name}</strong></div><div><span>Expected Payment</span><b>${amount}</b></div><div><span>Waiting</span><b>${item.daysWaiting} day${item.daysWaiting===1?'':'s'}</b></div><div><span>Status</span><b>First payment pending</b></div></article>`;
   const adjustButton=`<button type="button" class="table-action payment-status-adjust" onclick="openWeeklyScheduleModal('${escape(String(item.contract?.id||''))}')">Adjust Next Expected Date</button>`;
   if(status==="overdue")return `<article class="payment-status-item"><div><span>Contract${item.customSchedule?' • Adjusted schedule':''}</span><strong>${name}</strong>${adjustButton}</div><div><span>Expected Payment</span><b>${amount}</b></div><div><span>Expected Date</span><b>${escape(fundLedgerStatusDate(item.nextDue))}</b></div><div><span>Late</span><b class="late">${item.daysLate} day${item.daysLate===1?'':'s'} overdue</b></div></article>`;
-  return `<article class="payment-status-item"><div><span>Contract${item.customSchedule?' • Adjusted schedule':''}</span><strong>${name}</strong>${adjustButton}</div><div><span>Expected Payment</span><b>${amount}</b></div><div><span>Expected Date</span><b>${escape(fundLedgerStatusDate(item.nextDue))}</b></div><div><span>Status</span><b>Due within 7 days</b></div></article>`;
+  return `<article class="payment-status-item"><div><span>Contract${item.customSchedule?' • Adjusted schedule':''}</span><strong>${name}</strong>${adjustButton}</div><div><span>Expected Payment</span><b>${amount}</b></div><div><span>Expected Date</span><b>${escape(fundLedgerStatusDate(item.nextDue))}</b></div><div><span>Status</span><b>${escape(fundLedgerDueCountdown(item.nextDue))}</b></div></article>`;
  }).join("");
- const modal=document.createElement("div");modal.id="paymentStatusModal";modal.className="edit-modal-overlay";modal.onclick=event=>{if(event.target===modal)closePaymentStatusModal()};
+ const modal=document.createElement("div");modal.id="paymentStatusModal";modal.dataset.paymentStatus=status;modal.className="edit-modal-overlay";modal.onclick=event=>{if(event.target===modal)closePaymentStatusModal()};
  modal.innerHTML=`<div class="edit-modal payment-status-modal" role="dialog" aria-modal="true" aria-labelledby="paymentStatusTitle"><div class="edit-modal-head"><h2 id="paymentStatusTitle">${escape(config.title)}</h2><button type="button" class="edit-modal-close" onclick="closePaymentStatusModal()" aria-label="Close">×</button></div><p class="payment-status-intro">${escape(config.intro)}</p><div class="payment-status-list">${rows||'<div class="payment-status-empty">No contracts are currently in this category.</div>'}</div><div class="edit-modal-actions"><button type="button" class="primary-btn" onclick="closePaymentStatusModal()">Close</button></div></div>`;
  document.body.appendChild(modal);modal.querySelector(".edit-modal-close")?.focus();
 }
+// Keep visible payment counts and an open popup current across local midnight.
+let fundLedgerPaymentStatusDay=new Date().toDateString();
+function fundLedgerRefreshPaymentStatusDay(){
+ const day=new Date().toDateString();if(day===fundLedgerPaymentStatusDay)return;
+ fundLedgerPaymentStatusDay=day;
+ const counts=fundLedgerWeeklyPaymentStatuses();
+ [["awaitingFirstPayment",counts.awaiting],["dueThisWeek",counts.due],["overduePayments",counts.overdue]].forEach(([id,count])=>{const el=document.getElementById(id);if(el)el.textContent=String(count)});
+ const age=document.getElementById("awaitingFirstPaymentAge");if(age)age.textContent=counts.awaiting?`Longest wait: ${counts.longestAwaitingDays} day${counts.longestAwaitingDays===1?'':'s'}`:"No contracts waiting";
+ const status=document.getElementById("paymentStatusModal")?.dataset.paymentStatus;if(status)openPaymentStatusModal(status);
+}
+setInterval(fundLedgerRefreshPaymentStatusDay,30000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)fundLedgerRefreshPaymentStatusDay()});
+window.addEventListener("focus",fundLedgerRefreshPaymentStatusDay);
 function closeWeeklyScheduleModal(){document.getElementById("weeklyScheduleModal")?.remove()}
 function fundLedgerDateInputValue(date){if(!(date instanceof Date)||Number.isNaN(date.getTime()))return "";return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`}
 function openWeeklyScheduleModal(contractId){
