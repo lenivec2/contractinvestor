@@ -236,15 +236,6 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
 #completedPanel .completed-compact-head span{display:block;font-size:10px;font-weight:500;margin-top:4px;white-space:nowrap}
 @media (max-width:700px){#completedPanel .completed-contracts-head{align-items:flex-start!important}#completedPanel .completed-contract-actions{width:100%!important}#completedPanel .completed-contract-actions button{flex:1 1 auto!important}}
 
-
-/* Drop indicators add no size or spacing; cards move only after a drop. */
-#dashboardSummary .summary-card.summary-drop-before,#dashboardSummary .summary-card.summary-drop-after{background:#edf5ff!important;outline:2px solid #147be8!important;transform:none!important}
-#dashboardSummary .summary-card.summary-drop-before{box-shadow:inset 5px 0 #147be8!important}
-#dashboardSummary .summary-card.summary-drop-after{box-shadow:inset -5px 0 #147be8!important}
-#dashboardSummary .summary-card.summary-drop-before::after,#dashboardSummary .summary-card.summary-drop-after::after{position:absolute;bottom:3px;padding:2px 6px;border-radius:4px;background:#147be8;color:#fff;font-size:10px;font-weight:700;pointer-events:none;z-index:4}
-#dashboardSummary .summary-card.summary-drop-before::after{content:"Place before";left:5px}
-#dashboardSummary .summary-card.summary-drop-after::after{content:"Place after";right:5px}
-#dashboardSummary .summary-card.summary-dragging{cursor:grabbing;transform:none!important}
 </style>
 
 <style id="mobile-sidebar-final-fix">
@@ -3636,34 +3627,15 @@ function reorderSummaryCard(draggedKey,targetKey,placeAfter){
  order.splice(to,0,draggedKey);data.preferences.dashboardCardOrder=order;
  applyDashboardCardOrder();updateSummaryGridLayout();save();toast("Summary box order saved");
 }
-function clearSummaryDropIndicators(){
- document.querySelectorAll("#dashboardSummary [data-summary-key]").forEach(card=>card.classList.remove("summary-drop-before","summary-drop-after"));
-}
 function setupSummaryCardReordering(){
- document.querySelectorAll("#dashboardSummary [data-summary-key]").forEach(card=>{
-  if(card.dataset.summaryDragReady==="1")return;card.dataset.summaryDragReady="1";
+ document.querySelectorAll("[data-summary-key]").forEach(card=>{
   card.draggable=true;card.title="Drag to rearrange";
-  card.addEventListener("dragstart",event=>{
-   if(event.target.closest?.("button,input,select,textarea")){event.preventDefault();return}
-   clearSummaryDropIndicators();draggedSummaryCardKey=card.dataset.summaryKey;card.classList.add("summary-dragging");
-   event.dataTransfer.effectAllowed="move";event.dataTransfer.setData("text/plain",draggedSummaryCardKey);
-  });
-  card.addEventListener("dragend",()=>{draggedSummaryCardKey="";card.classList.remove("summary-dragging");clearSummaryDropIndicators()});
-  card.addEventListener("dragover",event=>{
-   if(!draggedSummaryCardKey||draggedSummaryCardKey===card.dataset.summaryKey){clearSummaryDropIndicators();return}
-   event.preventDefault();event.dataTransfer.dropEffect="move";
-   const rect=card.getBoundingClientRect(),after=event.clientX>rect.left+rect.width/2;
-   clearSummaryDropIndicators();card.classList.add(after?"summary-drop-after":"summary-drop-before");
-  });
-  card.addEventListener("dragleave",event=>{if(!card.contains(event.relatedTarget))card.classList.remove("summary-drop-before","summary-drop-after")});
-  card.addEventListener("drop",event=>{
-   if(!draggedSummaryCardKey)return;
-   event.preventDefault();const key=draggedSummaryCardKey,rect=card.getBoundingClientRect(),after=event.clientX>rect.left+rect.width/2;
-   draggedSummaryCardKey="";clearSummaryDropIndicators();reorderSummaryCard(key,card.dataset.summaryKey,after);
-  });
+  card.addEventListener("dragstart",event=>{draggedSummaryCardKey=card.dataset.summaryKey;card.classList.add("summary-dragging");event.dataTransfer.effectAllowed="move";event.dataTransfer.setData("text/plain",draggedSummaryCardKey)});
+  card.addEventListener("dragend",()=>{draggedSummaryCardKey="";card.classList.remove("summary-dragging")});
+  card.addEventListener("dragover",event=>{event.preventDefault();event.dataTransfer.dropEffect="move"});
+  card.addEventListener("drop",event=>{event.preventDefault();const key=event.dataTransfer.getData("text/plain")||draggedSummaryCardKey,rect=card.getBoundingClientRect(),after=event.clientX>rect.left+rect.width/2;reorderSummaryCard(key,card.dataset.summaryKey,after)});
  });
 }
-
 function dashboardSectionPreferences(){
  if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
  if(!data.preferences.dashboardSections||typeof data.preferences.dashboardSections!=="object")data.preferences.dashboardSections={};
