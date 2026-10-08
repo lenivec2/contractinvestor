@@ -121,7 +121,7 @@ table{width:100%;border-collapse:collapse}th{background:#f3f7fb;color:#17365f;fo
   #historyPanel td[data-column-key="dateIssued"]:before{content:'Payment Date'}
   #historyPanel td[data-column-key="dateReceived"]:before{content:'Date Received'}
   #historyPanel td[data-column-key="amount"]:before{content:'Payment Amount'}
-  #historyPanel td[data-column-key="contract"]:before{content:'Contract'}
+  #historyPanel td[data-column-key="contract"]:before{content:'Contract / Type'}
   #historyPanel td[data-column-key="checkno"]:before{content:'Check #'}
   #historyPanel td[data-column-key="actions"]:before{content:'Actions'}
   #contractsPanel td:last-child,#historyPanel td:last-child{padding-bottom:0}
@@ -3015,6 +3015,10 @@ body.landing-info-open{overflow:hidden}
 <style id="fundledger-dashboard-extra-settings-styles">
 .dashboard-extra-settings-note{margin:14px 0 8px;padding-top:12px;border-top:1px solid #dce8f5;color:#52657d;font-size:13px}.appearance-option.pro-locked-option{background:#f7f9fc;color:#718096}.appearance-option.pro-locked-option input{cursor:not-allowed}.appearance-option .dashboard-extra-name{display:flex;align-items:center;gap:7px;min-width:0}.appearance-option .dashboard-extra-name .plan-badge{margin-left:0}
 </style>
+<style id="fundledger-other-income-styles">
+.choice.other-income-choice{border-color:#9dc9f3;background:#eaf5ff;color:#1267b8;font-weight:850}.choice.other-income-choice.selected{border-color:#078f57;background:#078f57;color:#fff}.other-income-breakdown-row{padding:12px;border:1px solid #b9d8ff;border-radius:11px;background:linear-gradient(135deg,#f7fbff,#eef7ff)}.other-income-breakdown-details{display:flex;flex-direction:column;gap:3px;min-width:180px;flex:1}.other-income-breakdown-details strong{color:#17365f}.other-income-breakdown-details span{color:#52657d;font-size:12px;line-height:1.4}.other-income-modal-note{margin:-8px 0 16px;color:#52657d;line-height:1.5}.other-income-description-field{grid-column:1/-1}.other-income-description-field textarea{min-height:84px;resize:vertical}
+@media(max-width:600px){.other-income-description-field{grid-column:auto}.other-income-breakdown-row{align-items:stretch!important}.other-income-breakdown-row .field,.other-income-breakdown-row button{width:100%}}
+</style>
 </head>
 <body>
 
@@ -3143,7 +3147,7 @@ body.landing-info-open{overflow:hidden}
 <section class="panel side-card" id="completedPanel"><div class="section-head completed-contracts-head"><h2>Completed Contracts</h2><div class="completed-contract-actions"><span id="completedSelectedCount" class="active-selected-count">Selected: 0 contracts</span><button id="completedEditBtn" class="table-action" type="button" onclick="runSelectedCompletedAction('edit')" disabled>✎&nbsp; Edit</button><button id="completedRestoreBtn" class="warning" type="button" onclick="runSelectedCompletedAction('restore')" disabled>▰&nbsp; Restore</button><button id="completedDeleteBtn" class="danger" type="button" onclick="runSelectedCompletedAction('delete')" disabled>♜&nbsp; Delete</button></div></div><div class="completed-contract-search"><span>⌕</span><input id="completedContractSearch" type="search" placeholder="Search contracts..." oninput="renderCompletedContracts()" autocomplete="off"></div><div class="scroll"><table><thead><tr><th class="completed-select-col" aria-hidden="true"></th><th data-column-key="contract">Contract Name / ID</th><th data-column-key="dayOpened">Day Opened</th><th data-column-key="dayClosed">Day Closed</th><th data-column-key="invested">Funded</th><th data-column-key="received" class="completed-compact-head">Amount<span>Amount Received</span></th><th data-column-key="remainingPayment" class="completed-compact-head">Payments<span>Remaining Payment</span></th><th data-column-key="gainLoss">Gain / Loss</th></tr></thead><tbody id="completedContracts"></tbody></table></div><div class="completed-contract-footer"><span id="completedContractShowing"></span></div></section>
 <div class="dashboard-grid">
 
-<select id="filter" class="hidden"><option value="">All contracts</option></select><section class="panel" id="historyPanel"><div class="section-head"><h2>Payment History</h2><button class="secondary" onclick="exportCSV()">⇩ Export CSV</button></div><div class="history-search-box"><div class="field"><label>Search Payment History By</label><select id="historySearchType" onchange="updateHistorySearchInput()"><option value="dateIssued">Payment Date</option><option value="dateReceived">Date Received</option><option value="amount">Payment Amount</option><option value="contract">Contract Name / ID</option><option value="checkno">Check Number</option></select></div><div class="field history-search-input"><label id="historySearchLabel">Payment Date</label><input id="historySearch" type="date" oninput="renderCheckHistory()" autocomplete="off"></div><div class="field history-clear-field"><label>&nbsp;</label><button type="button" class="secondary" onclick="clearHistorySearch()">Clear Search</button></div></div><div class="scroll"><table><thead><tr><th data-column-key="sequence">#</th><th data-column-key="dateIssued">Payment Date</th><th data-column-key="dateReceived">Date Received</th><th data-column-key="amount">Payment Amount</th><th data-column-key="contract">Contracts</th><th data-column-key="checkno">Check #</th><th data-column-key="actions">Actions</th></tr></thead><tbody id="history"></tbody></table></div></section>
+<select id="filter" class="hidden"><option value="">All contracts</option></select><section class="panel" id="historyPanel"><div class="section-head"><h2>Payment History</h2><button class="secondary" onclick="exportCSV()">⇩ Export CSV</button></div><div class="history-search-box"><div class="field"><label>Search Payment History By</label><select id="historySearchType" onchange="updateHistorySearchInput()"><option value="dateIssued">Payment Date</option><option value="dateReceived">Date Received</option><option value="amount">Payment Amount</option><option value="contract">Contract / Income Type</option><option value="checkno">Check Number</option></select></div><div class="field history-search-input"><label id="historySearchLabel">Payment Date</label><input id="historySearch" type="date" oninput="renderCheckHistory()" autocomplete="off"></div><div class="field history-clear-field"><label>&nbsp;</label><button type="button" class="secondary" onclick="clearHistorySearch()">Clear Search</button></div></div><div class="scroll"><table><thead><tr><th data-column-key="sequence">#</th><th data-column-key="dateIssued">Payment Date</th><th data-column-key="dateReceived">Date Received</th><th data-column-key="amount">Payment Amount</th><th data-column-key="contract">Contract / Type</th><th data-column-key="checkno">Check #</th><th data-column-key="actions">Actions</th></tr></thead><tbody id="history"></tbody></table></div></section>
 <section class="panel hidden" id="trashPanel"><div class="section-head trash-head"><div><h2>Trash</h2><p class="muted" style="margin:0">Restore items deleted by mistake or permanently empty the Trash.</p></div><button id="emptyTrashBtn" class="danger" type="button" onclick="emptyTrash()">Empty Trash</button></div><div class="trash-summary"><span id="trashCount">0 items</span></div><div class="trash-section"><h3>Deleted Contracts</h3><div id="trashContracts" class="trash-list"></div></div><div class="trash-section"><h3>Deleted Payments</h3><div id="trashChecks" class="trash-list"></div></div></section>
 <section class="panel hidden" id="reportsPanel">
   <div class="section-head report-head"><div><h2>Reports</h2><p class="muted" style="margin:0">View detailed performance, payment activity, and contract results.</p></div><button class="secondary" type="button" onclick="exportFullReport()">⇩ Export Full Report</button></div>
@@ -3269,7 +3273,7 @@ body.landing-info-open{overflow:hidden}
           <label class="appearance-option"><span>Payment Date</span><input type="checkbox" data-history-column-toggle="dateIssued" onchange="updateCheckHistoryColumnAppearance(this)"></label>
           <label class="appearance-option"><span>Date Received</span><input type="checkbox" data-history-column-toggle="dateReceived" onchange="updateCheckHistoryColumnAppearance(this)"></label>
           <label class="appearance-option"><span>Payment Amount</span><input type="checkbox" data-history-column-toggle="amount" onchange="updateCheckHistoryColumnAppearance(this)"></label>
-          <label class="appearance-option"><span>Contracts</span><input type="checkbox" data-history-column-toggle="contract" onchange="updateCheckHistoryColumnAppearance(this)"></label>
+          <label class="appearance-option"><span>Contract / Income Type</span><input type="checkbox" data-history-column-toggle="contract" onchange="updateCheckHistoryColumnAppearance(this)"></label>
           <label class="appearance-option"><span>Check #</span><input type="checkbox" data-history-column-toggle="checkno" onchange="updateCheckHistoryColumnAppearance(this)"></label>
           <label class="appearance-option"><span>Actions</span><input type="checkbox" data-history-column-toggle="actions" onchange="updateCheckHistoryColumnAppearance(this)"></label>
         </div>
@@ -3464,8 +3468,16 @@ function hasFundLedgerRecords(v){return !!(v&&((Array.isArray(v.contracts)&&v.co
 let removedBreakdownContracts=new Set();
 let selectedChoiceIds=[];
 let breakdownRows=[];
+const OTHER_INCOME_LABEL="Other Income";
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n||0);
+function isOtherIncomeCheck(check){return check?.paymentType==="other_income"}
+function otherIncomeDisplayLabel(item){
+ if(!item)return OTHER_INCOME_LABEL;
+ const category=String(item.otherIncomeCategory||item.category||"").trim(),payer=String(item.otherIncomePayer||item.payer||"").trim();
+ return `${OTHER_INCOME_LABEL}${category?` — ${category}`:""}${payer?` (${payer})`:""}`;
+}
+function paymentHistoryContractLabel(check){return isOtherIncomeCheck(check)?otherIncomeDisplayLabel(check):String(check?.contract||"")}
 function updateRemainingPaymentLabels(root=document){
  root.querySelectorAll("label:not(.appearance-option),th,.contract-report-grid span").forEach(element=>{
   if(/^expected payments?$/i.test(element.textContent.trim()))element.textContent="Total Payments";
@@ -4697,7 +4709,26 @@ function addContract(){
  data.contracts.push({id:Date.now(),name,contractType,customContractType,revenueSharePercent,interestRatePercent,maturityDate,paymentFrequency,notes,fundedAmount:inv,referralFee,totalReturn,adminFeePercent:adminFee,adminFeeAmount,netAmount,paymentAmount:preset,totalExpectedPayments:payments,date,checkno,openedDate:date,closedDate:null});save();$("cname").value="";$("cinvest").value="";if($("creferral"))$("creferral").value="";$("ctotalreturn").value="";$("cadminfee").value="";$("cpreset").value="";$("cpayments").value="34";$("cdate").value="";$("ccheckno").value="";if($("ctype"))$("ctype").value="Funding Agreement";if($("cmaturity"))$("cmaturity").value="";if($("cpaymentfreq"))$("cpaymentfreq").value="Weekly";if($("cnotes"))$("cnotes").value="";if($("ccustomtype"))$("ccustomtype").value="";if($("crevenueshare"))$("crevenueshare").value="";if($("cinterestrate"))$("cinterestrate").value="";applyContractTypeFields();updateContractPaymentCalculation();updateAddContractButton();render();toast(`${name} added successfully`);
 }
 function getAllocations(){
- return breakdownRows.map(x=>({contract:x.contract,paymentAmount:parseFloat(x.amount)||0})).filter(x=>x.contract&&x.paymentAmount>0);
+ return breakdownRows.map(x=>({contract:x.type==="other"?"":x.contract,paymentAmount:parseFloat(x.amount)||0,paymentType:x.type==="other"?"other_income":"contract",otherIncomeCategory:x.category||"",otherIncomePayer:x.payer||"",otherIncomeDescription:x.description||""})).filter(x=>x.paymentAmount>0&&(x.paymentType==="other_income"||x.contract));
+}
+function openOtherIncomeModal(){
+ const rowIndex=breakdownRows.findIndex(row=>row.type==="other"),row=rowIndex>=0?breakdownRows[rowIndex]:null;
+ const total=parseFloat($("amount")?.value)||0,allocated=getAllocations().filter(item=>item.paymentType!=="other_income").reduce((sum,item)=>sum+item.paymentAmount,0),suggested=Math.max(0,total-allocated);
+ document.getElementById("otherIncomeModal")?.remove();
+ const modal=document.createElement("div");modal.id="otherIncomeModal";modal.className="edit-modal-overlay";modal.dataset.rowIndex=String(rowIndex);
+ modal.innerHTML=`<div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="otherIncomeTitle"><div class="edit-modal-head"><h2 id="otherIncomeTitle">${row?"Edit":"Add"} Other Income</h2><button type="button" class="edit-modal-close" onclick="closeOtherIncomeModal()" aria-label="Close">×</button></div><p class="other-income-modal-note">Use this for a bonus, rebate, referral payment, or other income that should not reduce a contract balance or its remaining payments.</p><div class="edit-modal-grid"><div class="field"><label>Income Category</label><select id="otherIncomeCategory"><option value="Bonus">Bonus</option><option value="Rebate">Rebate</option><option value="Referral Fee">Referral Fee</option><option value="Incentive">Incentive</option><option value="Other">Other</option></select></div><div class="field"><label>Amount</label><input id="otherIncomeAmount" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="0.00" value="${escape(row?.amount??(suggested>0?suggested.toFixed(2):""))}"></div><div class="field"><label>Company / Payer <span class="muted">(Optional)</span></label><input id="otherIncomePayer" type="text" placeholder="Who sent the payment?" value="${escape(row?.payer||"")}"></div><div class="field other-income-description-field"><label>Description ${row?.category==="Other"?"":"(Optional)"}</label><textarea id="otherIncomeDescription" placeholder="Describe what this payment was for">${escape(row?.description||"")}</textarea></div></div><div class="edit-modal-actions"><button type="button" class="secondary" onclick="closeOtherIncomeModal()">Cancel</button><button type="button" class="primary-btn" onclick="saveOtherIncomeAllocation()">Add to Payment</button></div></div>`;
+ document.body.appendChild(modal);$("otherIncomeCategory").value=row?.category||"Bonus";setTimeout(()=>$("otherIncomeAmount")?.focus(),0);
+}
+function closeOtherIncomeModal(){document.getElementById("otherIncomeModal")?.remove()}
+function saveOtherIncomeAllocation(){
+ const modal=$("otherIncomeModal");if(!modal)return;
+ const category=$("otherIncomeCategory")?.value||"Other",amount=parseFloat($("otherIncomeAmount")?.value||""),payer=($("otherIncomePayer")?.value||"").trim(),description=($("otherIncomeDescription")?.value||"").trim();
+ if(!(amount>0)){toast("Enter the Other Income amount");return}
+ if(category==="Other"&&!description){toast("Describe the Other Income payment");return}
+ const row={type:"other",contract:"",amount:amount.toFixed(2),category,payer,description,manual:true},rowIndex=parseInt(modal.dataset.rowIndex||"-1",10);
+ if(rowIndex>=0&&rowIndex<breakdownRows.length)breakdownRows[rowIndex]=row;else breakdownRows.push(row);
+ if(!((parseFloat($("amount")?.value)||0)>0)){$("amount").value=amount.toFixed(2);clearPaymentRequiredError("amount")}
+ closeOtherIncomeModal();renderContractChoices();renderManualBreakdown();toast("Other Income added to this payment");
 }
 let lastDuplicateCheckWarning="";
 function normalizedCheckNumber(value){
@@ -4723,7 +4754,7 @@ function checkForDuplicateCheck(showWarning=false,saving=false){
  if(!duplicate){lastDuplicateCheckWarning="";return false}
  const warningKey=`${normalizedCheckNumber(checkno)}|${date}|${Math.round(amount*100)}|${duplicate.matchedBy}`;
  if(saving){
-  const saveDuplicate=confirm(`This appears to be a duplicate check.\n\nMatched by: ${duplicate.matchedBy}\nCheck #: ${checkno||duplicate.check.checkno||"Not entered"}\nPayment Date: ${date}\nContract: ${duplicate.check.contract||"Not selected"}\nAmount: ${money(amount)}\n\nAre you sure you want to save this check?`);
+  const saveDuplicate=confirm(`This appears to be a duplicate check.\n\nMatched by: ${duplicate.matchedBy}\nCheck #: ${checkno||duplicate.check.checkno||"Not entered"}\nPayment Date: ${date}\nType / Contract: ${paymentHistoryContractLabel(duplicate.check)||"Not selected"}\nAmount: ${money(amount)}\n\nAre you sure you want to save this check?`);
   return !saveDuplicate;
  }
  if(showWarning&&lastDuplicateCheckWarning!==warningKey){
@@ -4756,17 +4787,17 @@ function addCheck(){
  let date=$("date").value,dateReceived=$("dateReceived").value,amount=parseFloat($("amount").value),checkno=$("checkno").value.trim();
  validatePaymentRequiredFields();
  let allocations=getAllocations();
- if(!data.contracts.length){toast("Add a contract first");return}
  if(!date||!(amount>0)){toast("Enter date and payment received");return}
  if(checkForDuplicateCheck(true,true)){toast("Duplicate check was not saved");return}
  if(dateReceived&&dateReceived<date){toast("Date Received cannot be before Payment Date");return}
- if(!allocations.length){toast("Enter an amount for at least one contract");return}
- if(new Set(allocations.map(x=>x.contract)).size!==allocations.length){toast("Choose different contracts for each allocation");return}
+ if(!allocations.length){toast("Select a contract or add Other Income");return}
+ const contractAllocations=allocations.filter(x=>x.paymentType!=="other_income");
+ if(new Set(contractAllocations.map(x=>x.contract)).size!==contractAllocations.length){toast("Choose different contracts for each allocation");return}
  let allocated=allocations.reduce((sum,x)=>sum+x.paymentAmount,0);
  if(Math.abs(allocated-amount)>.009){toast(allocated<amount?`Allocate the remaining ${money(amount-allocated)} before saving`:`Allocations are ${money(allocated-amount)} over the Payment Amount`);return}
- let now=Date.now(),paymentGroupId=`payment-${now}-${Math.random().toString(36).slice(2,8)}`;allocations.forEach((x,index)=>{data.checks.push({id:now+index,paymentGroupId,contract:x.contract,paymentDate:date,dateReceived:dateReceived||"",paymentAmount:x.paymentAmount,checkno,verified:false});});
+ let now=Date.now(),paymentGroupId=`payment-${now}-${Math.random().toString(36).slice(2,8)}`;allocations.forEach((x,index)=>{data.checks.push({id:now+index,paymentGroupId,contract:x.contract,paymentDate:date,dateReceived:dateReceived||"",paymentAmount:x.paymentAmount,checkno,verified:false,paymentType:x.paymentType||"contract",otherIncomeCategory:x.otherIncomeCategory||"",otherIncomePayer:x.otherIncomePayer||"",otherIncomeDescription:x.otherIncomeDescription||""});});
  // Automatically complete any contract whose final expected payment was just recorded.
- const affectedContracts=new Set(allocations.map(x=>x.contract));
+ const affectedContracts=new Set(contractAllocations.map(x=>x.contract));
  affectedContracts.forEach(contractName=>{
   const contract=data.contracts.find(c=>c.name===contractName);
   if(!contract||contract.closed)return;
@@ -4793,7 +4824,7 @@ function updateBreakdown(){
  const allocations=getAllocations();
  const assigned=allocations.reduce((sum,x)=>sum+x.paymentAmount,0);
  const remaining=total-assigned;
- const parts=breakdownRows.filter(x=>x.contract||x.amount).map(x=>`${x.contract||'Contract'}: ${money(parseFloat(x.amount)||0)} allocated`);
+ const parts=breakdownRows.filter(x=>x.contract||x.amount).map(x=>`${x.type==="other"?otherIncomeDisplayLabel(x):(x.contract||'Contract')}: ${money(parseFloat(x.amount)||0)} allocated`);
  let difference='',label='Unallocated',status='Must allocate full amount',help='The total allocated must equal the Payment Amount to save this payment.',badge='Incomplete',state='problem';
  if(!(total>0)){difference='$0.00';status='Enter Payment Amount';help='Enter the payment total, then allocate it across the selected contracts.';}
  else if(remaining>.009){difference=money(remaining);}
@@ -4819,7 +4850,7 @@ function applyPreset(i){
 }
 function syncBreakdownRows(){
  let open=data.contracts.filter(c=>!c.closed);
- breakdownRows=breakdownRows.filter(r=>!r.contract || open.some(c=>c.name===r.contract));
+ breakdownRows=breakdownRows.filter(r=>r.type==="other"||!r.contract||open.some(c=>c.name===r.contract));
 }
 function syncContractChoiceButtonsFromBreakdown(){
  const selectedNames=new Set(breakdownRows.map(r=>r.contract).filter(Boolean));
@@ -4850,9 +4881,10 @@ function renderManualBreakdown(){
  syncBreakdownRows();
  let open=data.contracts.filter(c=>!c.closed);
  $("manualBreakdown").innerHTML=breakdownRows.length?breakdownRows.map((row,i)=>{
+  if(row.type==="other")return `<div class="row other-income-breakdown-row" style="align-items:end;margin-bottom:8px"><div class="other-income-breakdown-details"><strong>${escape(otherIncomeDisplayLabel(row))}</strong><span>${escape(row.description||"Non-contract income")}</span></div><div class="field"><label>Amount</label><input type="number" inputmode="decimal" min="0.01" step="0.01" value="${escape(row.amount||"")}" placeholder="0.00" oninput="breakdownRows[${i}].amount=this.value;updateBreakdown()"></div><button class="table-action" type="button" onclick="openOtherIncomeModal()">Edit Details</button><button class="table-action" type="button" onclick="removeBreakdownContract(${i})">Remove</button></div>`;
   let opts=open.filter(c=>c.name===row.contract || !breakdownRows.some((r,idx)=>idx!==i&&r.contract===c.name)).map(c=>`<option value="${escape(c.name)}" ${c.name===row.contract?'selected':''}>${escape(c.name)}</option>`).join('');
   return `<div class="row" style="align-items:end;margin-bottom:8px"><div class="field"><label>Contract Name / ID</label><select onchange="changeBreakdownContract(${i},this.value)"><option value="" ${!row.contract?'selected':''}>Select contract</option>${opts}</select></div><div class="field"><label>Amount</label><input type="number" inputmode="decimal" step="0.01" value="${row.amount}" placeholder="0.00" oninput="breakdownRows[${i}].amount=this.value;updateBreakdown()"></div><button class="table-action" type="button" onclick="removeBreakdownContract(${i})">Remove</button></div>`;
- }).join(''):'<p class="muted">No open contracts. Add or reopen a contract to enter a payment.</p>';
+ }).join(''):'<p class="muted">Select a contract above or choose Other Income.</p>';
  updateBreakdown();
 }
 function addBreakdownContract(){
@@ -4867,7 +4899,7 @@ function removeBreakdownContract(i){
  let name=breakdownRows[i].contract;
  removedBreakdownContracts.add(name);
  breakdownRows.splice(i,1);
- renderManualBreakdown();
+ syncContractChoiceButtonsFromBreakdown();renderManualBreakdown();
 }
 function toggleContractChoice(id){
  let contract=data.contracts.find(c=>c.id===id);if(!contract||contract.closed)return;
@@ -4934,20 +4966,22 @@ function restoreContract(id){
 function editCheck(id){
  let check=data.checks.find(x=>x.id===id);if(!check)return;
  let oldModal=document.getElementById('editCheckModal');if(oldModal)oldModal.remove();
- let contractOptions=data.contracts.map(c=>`<option value="${escape(c.name)}" ${c.name===check.contract?'selected':''}>${escape(c.name)}</option>`).join('');
+ const otherIncome=isOtherIncomeCheck(check),contractOptions=data.contracts.map(c=>`<option value="${escape(c.name)}" ${c.name===check.contract?'selected':''}>${escape(c.name)}</option>`).join('');
+ const allocationFields=otherIncome?`<div class="field"><label>Income Category</label><select id="editOtherIncomeCategory"><option value="Bonus">Bonus</option><option value="Rebate">Rebate</option><option value="Referral Fee">Referral Fee</option><option value="Incentive">Incentive</option><option value="Other">Other</option></select></div><div class="field"><label>Company / Payer</label><input id="editOtherIncomePayer" type="text" placeholder="Optional" value="${escape(check.otherIncomePayer||'')}"></div><div class="field other-income-description-field"><label>Description</label><textarea id="editOtherIncomeDescription" placeholder="Describe what this payment was for">${escape(check.otherIncomeDescription||'')}</textarea></div>`:`<div class="field"><label>Contract Name / ID</label><select id="editCheckContract">${contractOptions||'<option value="">No contracts</option>'}</select></div>`;
  let modal=document.createElement('div');modal.id='editCheckModal';modal.className='edit-modal-overlay';
  modal.innerHTML=`<div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="editCheckTitle">
-   <div class="edit-modal-head"><h2 id="editCheckTitle">Edit Check</h2><button type="button" class="edit-modal-close" onclick="closeEditCheck()">×</button></div>
+   <div class="edit-modal-head"><h2 id="editCheckTitle">${otherIncome?'Edit Other Income':'Edit Check'}</h2><button type="button" class="edit-modal-close" onclick="closeEditCheck()">×</button></div>
    <div class="edit-modal-grid">
      <div class="field"><label>Payment Date</label><input id="editCheckDate" type="date" value="${escape(check.paymentDate||'')}"></div>
      <div class="field"><label>Date Received</label><input id="editCheckDateReceived" type="${check.dateReceived?'date':'text'}" placeholder="Optional" onfocus="activateOptionalDate(this)" onblur="resetOptionalDate(this)" value="${escape(check.dateReceived||'')}"></div>
      <div class="field"><label>Payment Amount</label><input id="editCheckAmount" type="number" inputmode="decimal" step="0.01" value="${escape(check.paymentAmount??'')}"></div>
-     <div class="field"><label>Contract Name / ID</label><select id="editCheckContract">${contractOptions||'<option value="">No contracts</option>'}</select></div>
+     ${allocationFields}
      <div class="field"><label>Check #</label><input id="editCheckNumber" inputmode="numeric" placeholder="Optional" value="${escape(check.checkno||'')}"></div>
    </div>
    <div class="edit-modal-actions"><button type="button" class="secondary" onclick="closeEditCheck()">Cancel</button><button type="button" class="primary-btn" onclick="saveEditedCheck(${id})">Save Changes</button></div>
  </div>`;
  document.body.appendChild(modal);
+ if(otherIncome&&document.getElementById('editOtherIncomeCategory'))document.getElementById('editOtherIncomeCategory').value=check.otherIncomeCategory||'Bonus';
  setTimeout(()=>document.getElementById('editCheckDate')?.focus(),0);
 }
 function closeEditCheck(){document.getElementById('editCheckModal')?.remove()}
@@ -4956,14 +4990,15 @@ function saveEditedCheck(id){
  let date=document.getElementById('editCheckDate')?.value||'';
  let dateReceived=document.getElementById('editCheckDateReceived')?.value||'';
  let amount=parseFloat(document.getElementById('editCheckAmount')?.value||'');
- let contract=document.getElementById('editCheckContract')?.value||'';
+ const otherIncome=isOtherIncomeCheck(check);let contract=otherIncome?'':(document.getElementById('editCheckContract')?.value||'');
  let checkno=(document.getElementById('editCheckNumber')?.value||'').trim();
  if(date&&!/^\d{4}-\d{2}-\d{2}$/.test(date)){toast('Enter the date as YYYY-MM-DD');return}
  if(dateReceived&&!/^\d{4}-\d{2}-\d{2}$/.test(dateReceived)){toast('Enter Date Received as YYYY-MM-DD');return}
  if(dateReceived&&dateReceived<date){toast('Date Received cannot be before Payment Date');return}
  if(!(amount>0)){toast('Enter a valid payment received');return}
- if(!contract){toast('Select a contract');return}
- if(!data.contracts.some(c=>c.name===contract)){toast('Select an existing contract');return}
+ if(!otherIncome&&!contract){toast('Select a contract');return}
+ if(!otherIncome&&!data.contracts.some(c=>c.name===contract)){toast('Select an existing contract');return}
+ if(otherIncome){const category=document.getElementById('editOtherIncomeCategory')?.value||'Other',payer=(document.getElementById('editOtherIncomePayer')?.value||'').trim(),description=(document.getElementById('editOtherIncomeDescription')?.value||'').trim();if(category==='Other'&&!description){toast('Describe the Other Income payment');return}check.otherIncomeCategory=category;check.otherIncomePayer=payer;check.otherIncomeDescription=description;check.paymentType='other_income'}
  check.paymentDate=date;check.dateReceived=dateReceived;check.paymentAmount=amount;check.contract=contract;check.checkno=checkno;
  closeEditCheck();save();render();toast('Check updated');
 }
@@ -5032,7 +5067,7 @@ function saveEditedContract(id){
 }
 function deleteCheck(id){
  let check=data.checks.find(c=>c.id===id);if(!check)return;
- if(confirm(`Move this payment of ${money(check.paymentAmount)} for ${check.contract} to Trash? You can restore it later.`)){
+ if(confirm(`Move this payment of ${money(check.paymentAmount)} for ${paymentHistoryContractLabel(check)} to Trash? You can restore it later.`)){
   ensureTrashData().checks.push({...check,deletedAt:new Date().toISOString()});
   data.checks=data.checks.filter(c=>c.id!==id);save();render();toast("Payment moved to Trash");
  }
@@ -5042,7 +5077,7 @@ function renderTrash(){
  if($("trashCount"))$("trashCount").textContent=`${count} item${count===1?'':'s'} in Trash`;
  if($("emptyTrashBtn"))$("emptyTrashBtn").disabled=count===0;
  if(contractsEl)contractsEl.innerHTML=trash.contracts.length?trash.contracts.map(c=>{const related=trash.checks.filter(x=>String(x.trashParentContractId)===String(c.id)).length;return `<article class="trash-item"><div><strong>${escape(c.name||'Unnamed contract')}</strong><span>Contract${related?` • ${related} payment${related===1?'':'s'}`:''}</span><small>Deleted ${escape(c.deletedAt?new Date(c.deletedAt).toLocaleString():'Recently')}</small></div><div class="trash-actions"><button class="table-action" type="button" onclick="restoreTrashedContract('${escape(String(c.id))}')">Restore</button><button class="danger" type="button" onclick="permanentlyDeleteTrashItem('contract','${escape(String(c.id))}')">Delete Permanently</button></div></article>`}).join(''):'<div class="trash-empty">No deleted contracts.</div>';
- if(checksEl)checksEl.innerHTML=trash.checks.length?trash.checks.map(c=>`<article class="trash-item"><div><strong>${money(c.paymentAmount)} • ${escape(c.contract||'Unknown contract')}</strong><span>Payment Date: ${escape(c.paymentDate||'—')} • Check #: ${escape(c.checkno||'—')}</span><small>${c.trashParentContractId?'Stored with deleted contract • ':''}Deleted ${escape(c.deletedAt?new Date(c.deletedAt).toLocaleString():'Recently')}</small></div><div class="trash-actions"><button class="table-action" type="button" onclick="restoreTrashedCheck('${escape(String(c.id))}')">Restore</button><button class="danger" type="button" onclick="permanentlyDeleteTrashItem('check','${escape(String(c.id))}')">Delete Permanently</button></div></article>`).join(''):'<div class="trash-empty">No deleted payments.</div>';
+ if(checksEl)checksEl.innerHTML=trash.checks.length?trash.checks.map(c=>`<article class="trash-item"><div><strong>${money(c.paymentAmount)} • ${escape(paymentHistoryContractLabel(c)||'Unknown payment')}</strong><span>Payment Date: ${escape(c.paymentDate||'—')} • Check #: ${escape(c.checkno||'—')}</span><small>${c.trashParentContractId?'Stored with deleted contract • ':''}Deleted ${escape(c.deletedAt?new Date(c.deletedAt).toLocaleString():'Recently')}</small></div><div class="trash-actions"><button class="table-action" type="button" onclick="restoreTrashedCheck('${escape(String(c.id))}')">Restore</button><button class="danger" type="button" onclick="permanentlyDeleteTrashItem('check','${escape(String(c.id))}')">Delete Permanently</button></div></article>`).join(''):'<div class="trash-empty">No deleted payments.</div>';
 }
 function restoreTrashedContract(id){
  const trash=ensureTrashData(),index=trash.contracts.findIndex(c=>String(c.id)===String(id));if(index<0)return;
@@ -5055,7 +5090,7 @@ function restoreTrashedContract(id){
 function restoreTrashedCheck(id){
  const trash=ensureTrashData(),index=trash.checks.findIndex(c=>String(c.id)===String(id));if(index<0)return;const check=trash.checks[index];
  if(check.trashParentContractId&&trash.contracts.some(c=>String(c.id)===String(check.trashParentContractId))){toast("Restore the contract to restore this payment");return}
- if(!data.contracts.some(c=>c.name===check.contract)){toast("Restore its contract first");return}
+ if(!isOtherIncomeCheck(check)&&!data.contracts.some(c=>c.name===check.contract)){toast("Restore its contract first");return}
  const restored=cleanTrashMetadata(check);if(data.checks.some(c=>String(c.id)===String(restored.id)))restored.id=Date.now();data.checks.push(restored);trash.checks.splice(index,1);save();render();toast("Payment restored");
 }
 function permanentlyDeleteTrashItem(type,id){
@@ -5068,9 +5103,10 @@ function emptyTrash(){
 function verify(id){let x=data.checks.find(c=>c.id===id);x.verified=!x.verified;save();render()}
 function renderContractChoices(){
  let open=data.contracts.filter(c=>!c.closed);
- $("contractChoices").innerHTML=open.length?open.map(c=>`<button type="button" class="choice ${selectedChoiceIds.includes(c.id)?'selected':''}" onclick="toggleContractChoice(${c.id})">${escape(c.name)}</button>`).join(''):'<span class="muted">No open contracts.</span>';
+ const contractButtons=open.map(c=>`<button type="button" class="choice ${selectedChoiceIds.includes(c.id)?'selected':''}" onclick="toggleContractChoice(${c.id})">${escape(c.name)}</button>`).join(''),otherSelected=breakdownRows.some(row=>row.type==="other");
+ $("contractChoices").innerHTML=`${contractButtons}${!open.length?'<span class="muted">No open contracts.</span>':''}<button type="button" class="choice other-income-choice ${otherSelected?'selected':''}" onclick="openOtherIncomeModal()">＋ Other Income</button>`;
 }
-function updateHistorySearchInput(){let type=$("historySearchType")?.value||'dateIssued',input=$("historySearch"),label=$("historySearchLabel");if(!input)return;let config={dateIssued:['Payment Date','date','Search by payment date'],dateReceived:['Date Received','date','Search by date received'],amount:['Payment Amount','number','Search by payment received'],contract:['Contract Name / ID','search','Search by contract name'],checkno:['Check Number','search','Search by check number']}[type]||['Payment Date','date','Search'];label.textContent=config[0];input.type=config[1];input.placeholder=config[2];input.step=config[1]==='number'?'0.01':undefined;if(config[1]!=='number')input.removeAttribute('step');renderCheckHistory()}
+function updateHistorySearchInput(){let type=$("historySearchType")?.value||'dateIssued',input=$("historySearch"),label=$("historySearchLabel");if(!input)return;let config={dateIssued:['Payment Date','date','Search by payment date'],dateReceived:['Date Received','date','Search by date received'],amount:['Payment Amount','number','Search by payment received'],contract:['Contract / Income Type','search','Search contract, category, payer, or description'],checkno:['Check Number','search','Search by check number']}[type]||['Payment Date','date','Search'];label.textContent=config[0];input.type=config[1];input.placeholder=config[2];input.step=config[1]==='number'?'0.01':undefined;if(config[1]!=='number')input.removeAttribute('step');renderCheckHistory()}
 function clearHistorySearch(){let input=$("historySearch");if(input)input.value='';renderCheckHistory()}
 function checkHistoryGroupKey(check){
  if(check?.paymentGroupId)return `group:${check.paymentGroupId}`;
@@ -5087,7 +5123,7 @@ function checkHistorySequence(check){
  ordered.forEach(item=>{const key=checkHistoryGroupKey(item);if(!groups.includes(key))groups.push(key)});
  const index=groups.indexOf(groupKey);return index>=0?index+1:1;
 }
-function renderCheckHistory(){let f=$("filter")?.value||'',historyChecks=data.checks.filter(x=>!f||x.contract===f),historyType=$("historySearchType")?.value||'dateIssued',historyTerm=$("historySearch")?.value||'';if(historyTerm){let term=historyTerm.trim().toLowerCase();historyChecks=historyChecks.filter(x=>{let value=historyType==='dateReceived'?(x.dateReceived||''):historyType==='amount'?String(parseFloat(x.paymentAmount)||0):historyType==='contract'?String(x.contract||''):historyType==='checkno'?String(x.checkno||''):String(x.paymentDate||'');return value.toLowerCase().includes(term)})}const displayedPaymentGroups=new Set();$("history").innerHTML=historyChecks.map(x=>{const groupKey=checkHistoryGroupKey(x),sequence=displayedPaymentGroups.has(groupKey)?'':`<b>#${checkHistorySequence(x)}</b>`;displayedPaymentGroups.add(groupKey);return `<tr><td data-column-key="sequence">${sequence}</td><td data-column-key="dateIssued">${escape(x.paymentDate||"")}</td><td data-column-key="dateReceived">${escape(x.dateReceived||"")||'—'}</td><td data-column-key="amount">${money(x.paymentAmount)}</td><td data-column-key="contract">${escape(x.contract||"")}</td><td data-column-key="checkno">${escape(x.checkno)||'—'}</td><td data-column-key="actions"><div class="actions"><button class="table-action" onclick="editCheck(${x.id})">Edit</button><button class="danger" onclick="deleteCheck(${x.id})">Delete</button></div></td></tr>`}).join('')||'<tr><td colspan="7" class="empty">No checks match your search.</td></tr>';applyCheckHistoryColumns()}
+function renderCheckHistory(){let f=$("filter")?.value||'',historyChecks=data.checks.filter(x=>!f||x.contract===f),historyType=$("historySearchType")?.value||'dateIssued',historyTerm=$("historySearch")?.value||'';if(historyTerm){let term=historyTerm.trim().toLowerCase();historyChecks=historyChecks.filter(x=>{let value=historyType==='dateReceived'?(x.dateReceived||''):historyType==='amount'?String(parseFloat(x.paymentAmount)||0):historyType==='contract'?[paymentHistoryContractLabel(x),x.otherIncomeDescription||''].join(' '):historyType==='checkno'?String(x.checkno||''):String(x.paymentDate||'');return value.toLowerCase().includes(term)})}const displayedPaymentGroups=new Set();$("history").innerHTML=historyChecks.map(x=>{const groupKey=checkHistoryGroupKey(x),sequence=displayedPaymentGroups.has(groupKey)?'':`<b>#${checkHistorySequence(x)}</b>`;displayedPaymentGroups.add(groupKey);return `<tr><td data-column-key="sequence">${sequence}</td><td data-column-key="dateIssued">${escape(x.paymentDate||"")}</td><td data-column-key="dateReceived">${escape(x.dateReceived||"")||'—'}</td><td data-column-key="amount">${money(x.paymentAmount)}</td><td data-column-key="contract">${escape(paymentHistoryContractLabel(x))}</td><td data-column-key="checkno">${escape(x.checkno)||'—'}</td><td data-column-key="actions"><div class="actions"><button class="table-action" onclick="editCheck(${x.id})">Edit</button><button class="danger" onclick="deleteCheck(${x.id})">Delete</button></div></td></tr>`}).join('')||'<tr><td colspan="7" class="empty">No checks match your search.</td></tr>';applyCheckHistoryColumns()}
 let selectedActiveContractId=null;
 function updateActiveContractActionButtons(){
  const valid=(data.contracts||[]).some(c=>!c.closed&&String(c.id)===String(selectedActiveContractId));
@@ -5150,6 +5186,7 @@ function renderActiveContractsTable(){
 
 function fundLedgerLocalDate(value){if(!value)return null;const s=String(value).slice(0,10),m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s);if(!m)return null;const d=new Date(+m[1],+m[2]-1,+m[3]);return Number.isNaN(d.getTime())?null:d}
 function fundLedgerPaymentProfit(check){
+ if(isOtherIncomeCheck(check))return Math.max(0,parseFloat(check.paymentAmount)||0);
  const c=data.contracts.find(x=>x.name===check.contract);if(!c)return 0;
  const expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),amount=Math.max(0,parseFloat(check.paymentAmount)||0);
  if(!expected||!amount)return 0;
@@ -5172,7 +5209,7 @@ function render(){
  updateContractNumberPlaceholder();
  let open=data.contracts.filter(c=>!isFundLedgerContractClosed(c)),filterOpts=open.map(c=>`<option>${escape(c.name)}</option>`).join("");
  selectedChoiceIds=selectedChoiceIds.filter(id=>open.some(c=>c.id===id));
- breakdownRows=breakdownRows.map(r=>open.some(c=>c.name===r.contract)?r:{contract:"",amount:""});
+ breakdownRows=breakdownRows.map(r=>r.type==="other"?r:(open.some(c=>c.name===r.contract)?r:{contract:"",amount:""}));
  renderManualBreakdown();
  let current=$("filter")?$("filter").value:"";
  if($("filter")){ $("filter").innerHTML='<option value="">All contracts</option>'+filterOpts; $("filter").value=current; }
@@ -5244,11 +5281,11 @@ function runPaymentReport(){let from=$('paymentFrom')?.value||'',to=$('paymentTo
 function renderPaymentReport(){let today=localDateString(new Date());if(!$('paymentFrom').value||!$('paymentTo').value){let d=new Date();d=new Date(d.getFullYear(),d.getMonth(),1);$('paymentFrom').value=localDateString(d);$('paymentTo').value=today}runPaymentReport()}
 function renderReports(){let open=data.contracts.filter(c=>!c.closed),received=data.checks.reduce((a,x)=>a+(parseFloat(x.paymentAmount)||0),0),invested=data.contracts.reduce((a,c)=>a+(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0),0),profit=received-invested,defaults=data.contracts.filter(c=>c.closed&&c.defaulted),defaultLoss=defaults.reduce((sum,c)=>sum+Math.max(0,(parseFloat(c.fundedAmount)||0)-data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.paymentAmount)||0),0)),0),completed=data.contracts.filter(c=>c.closed&&!c.defaulted),owed=data.contracts.filter(c=>!c.closed&&Math.max(0,(parseFloat(c.fundedAmount)||0)-data.checks.filter(x=>x.contract===c.name).reduce((a,x)=>a+(parseFloat(x.paymentAmount)||0),0))>.009);$('reportInvested').textContent=money(invested);$('reportReceived').textContent=money(received);$('reportProfit').textContent=money(profit);$('reportProfit').classList.toggle('gain',profit>0);$('reportProfit').classList.toggle('loss',profit<0);$('reportAllContracts').textContent=data.contracts.length;$('reportOpenContracts').textContent=open.length;$('reportPaidInFull').textContent=completed.length;$('reportDefaultContracts').textContent=defaults.length;$('reportDefaultLoss').textContent=money(defaultLoss);$('flowInvested').textContent=money(invested);$('flowReceived').textContent=money(received);$('flowOutstanding').textContent=money(Math.max(0,invested-received));$('flowProfit').textContent=money(profit);$('flowProfit').classList.toggle('gain',profit>0);$('flowProfit').classList.toggle('loss',profit<0);$('perfAll').textContent=data.contracts.length;$('perfActive').textContent=open.length;$('perfCompleted').textContent=completed.length;$('perfDefault').textContent=defaults.length;$('perfDefaultLoss').textContent=money(defaultLoss);$('perfOwed').textContent=owed.length;renderPaymentReport();updateReportContractOptions();if(!$('reportFrom').value||!$('reportTo').value){let today=localDateString(new Date());$('reportFrom').value=today.slice(0,8)+'01';$('reportTo').value=today}runDateReport()}
 function exportContractsCSV(){let rows=[['Contract Name / ID','Opened','Closed','Total Cost','Amount Received','Remaining Receivable','Profit/Loss','Status']];data.contracts.forEach(c=>{let xs=data.checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+(parseFloat(x.paymentAmount)||0),0),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),left=Math.max(0,expected-uniquePaymentCount(xs)),remaining=left*(parseFloat(c.paymentAmount)||0),cost=(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',cost,rec,remaining,rec-cost,c.closed?(c.defaulted?'Default':'Completed'):'Active'])});downloadCSV(rows,'contracts-report.csv')}
-function exportFullReport(){let rows=[['FundLedger Full Report'],[],['Metric','Value'],['Total Funded',$('reportInvested')?.textContent||''],['Total Payments Received',$('reportReceived')?.textContent||''],['Realized Profit/Loss',$('reportProfit')?.textContent||''],['Active Contracts',$('reportOpenContracts')?.textContent||''],['Total Contracts',$('reportAllContracts')?.textContent||''],['Completed Contracts',$('reportPaidInFull')?.textContent||''],['Defaulted Contracts',$('reportDefaultContracts')?.textContent||''],['Default Loss',$('reportDefaultLoss')?.textContent||''],[],['Contracts'],['Contract Name / ID','Opened','Closed','Total Cost','Amount Received','Remaining Receivable','Profit/Loss','Status']];data.contracts.forEach(c=>{let xs=data.checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+(parseFloat(x.paymentAmount)||0),0),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),left=Math.max(0,expected-uniquePaymentCount(xs)),remaining=left*(parseFloat(c.paymentAmount)||0),cost=(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',cost,rec,remaining,rec-cost,c.closed?(c.defaulted?'Default':'Completed'):'Active'])});rows.push([],['Payments'],['#','Payment Date','Date Received','Contract','Check #','Amount','Verified']);data.checks.forEach(x=>rows.push([`#${checkHistorySequence(x)}`,x.paymentDate||'',x.dateReceived||'',x.contract||'',x.checkno||'',x.paymentAmount||0,x.verified?'Yes':'No']));downloadCSV(rows,'fundledger-full-report.csv')}
+function exportFullReport(){const otherIncomeTotal=data.checks.filter(isOtherIncomeCheck).reduce((sum,x)=>sum+(parseFloat(x.paymentAmount)||0),0);let rows=[['FundLedger Full Report'],[],['Metric','Value'],['Total Funded',$('reportInvested')?.textContent||''],['Total Payments Received',$('reportReceived')?.textContent||''],['Other Income',otherIncomeTotal],['Realized Profit/Loss',$('reportProfit')?.textContent||''],['Active Contracts',$('reportOpenContracts')?.textContent||''],['Total Contracts',$('reportAllContracts')?.textContent||''],['Completed Contracts',$('reportPaidInFull')?.textContent||''],['Defaulted Contracts',$('reportDefaultContracts')?.textContent||''],['Default Loss',$('reportDefaultLoss')?.textContent||''],[],['Contracts'],['Contract Name / ID','Opened','Closed','Total Cost','Amount Received','Remaining Receivable','Profit/Loss','Status']];data.contracts.forEach(c=>{let xs=data.checks.filter(x=>x.contract===c.name),rec=xs.reduce((a,x)=>a+(parseFloat(x.paymentAmount)||0),0),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),left=Math.max(0,expected-uniquePaymentCount(xs)),remaining=left*(parseFloat(c.paymentAmount)||0),cost=(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0);rows.push([c.name,c.openedDate||c.date||'',c.closedDate||'',cost,rec,remaining,rec-cost,c.closed?(c.defaulted?'Default':'Completed'):'Active'])});rows.push([],['Payments'],['#','Payment Date','Date Received','Type / Contract','Category','Company / Payer','Description','Check #','Amount','Verified']);data.checks.forEach(x=>rows.push([`#${checkHistorySequence(x)}`,x.paymentDate||'',x.dateReceived||'',paymentHistoryContractLabel(x),x.otherIncomeCategory||'',x.otherIncomePayer||'',x.otherIncomeDescription||'',x.checkno||'',x.paymentAmount||0,x.verified?'Yes':'No']));downloadCSV(rows,'fundledger-full-report.csv')}
 function downloadCSV(rows,name){let csv=rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function exportCSV(){
- let rows=[["#","Payment Date","Date Received","Contract","Check #","Payment Amount","Verified"]];
- data.checks.forEach(x=>rows.push([`#${checkHistorySequence(x)}`,x.paymentDate,x.dateReceived||"",x.contract,x.checkno,x.paymentAmount,x.verified?"Yes":"No"]));
+ let rows=[["#","Payment Date","Date Received","Type / Contract","Category","Company / Payer","Description","Check #","Payment Amount","Verified"]];
+ data.checks.forEach(x=>rows.push([`#${checkHistorySequence(x)}`,x.paymentDate,x.dateReceived||"",paymentHistoryContractLabel(x),x.otherIncomeCategory||"",x.otherIncomePayer||"",x.otherIncomeDescription||"",x.checkno,x.paymentAmount,x.verified?"Yes":"No"]));
  let csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n");
  let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="received-checks.csv";a.click();
 }
@@ -5423,7 +5460,7 @@ initCloud();
   const side=document.querySelector('#checkPanel .page-summary-side');
   if(!side||side.querySelector('.payment-quick-tips'))return;
   const tips=document.createElement('section');tips.className='payment-quick-tips';
-  tips.innerHTML='<h3>Quick Tips</h3><ul><li>Enter the payment amount.</li><li>Select one or more contracts.</li><li>Adjust the allocation amounts if needed.</li><li>Total allocated must equal the payment amount before saving.</li><li>If you are over or under, the Payment Summary shows the unallocated or overallocated amount.</li><li>Check # and Date Received are optional.</li><li>You can edit or delete the payment later from Payment History.</li></ul>';
+  tips.innerHTML='<h3>Quick Tips</h3><ul><li>Enter the payment amount.</li><li>Select one or more contracts, or choose Other Income for a bonus, rebate, or incentive.</li><li>Adjust the allocation amounts if needed.</li><li>Total allocated must equal the payment amount before saving.</li><li>Other Income increases received income and profit without changing a contract balance or remaining payments.</li><li>Check # and Date Received are optional.</li><li>You can edit or delete the payment later from Payment History.</li></ul>';
   side.appendChild(tips);
  }
  function labelDifference(){
@@ -5730,22 +5767,22 @@ document.addEventListener('DOMContentLoaded',applyContractTypeFields);
 <script id="page-specific-summary-panels-js">
 (function(){
  const specs={
-  checkPanel:{title:'Payment Summary',rows:[['Payment Amount','psPayAmount'],['Total Allocated','psAllocated'],['Unallocated Amount','psUnallocated'],['Contracts Selected','psSelected'],['Status','psPayStatus']]},
+  checkPanel:{title:'Payment Summary',rows:[['Payment Amount','psPayAmount'],['Total Allocated','psAllocated'],['Unallocated Amount','psUnallocated'],['Allocations Selected','psSelected'],['Status','psPayStatus']]},
   contractsPanel:{title:'Active Contracts Summary',rows:[['Active Contracts','psActiveCount'],['Total Cost','psActiveFunded'],['Administrative Fees','psActiveAdmin'],['Amount Received','psActiveReceived'],['Remaining Receivable','psActiveRemaining'],['Projected Profit','psActiveProfit']]},
   completedPanel:{title:'Completed Contracts Summary',rows:[['Completed Contracts','psCompletedCount'],['Total Funded','psCompletedFunded'],['Administrative Fees','psCompletedAdminFees'],['Amount Received','psCompletedReceived'],['Profit / Loss','psCompletedProfit'],['Defaulted','psCompletedDefaulted']]},
   historyPanel:{title:'Payment History Summary',rows:[['Payments Shown','psHistoryCount'],['Amount Shown','psHistoryAmount'],['Total Checks','psHistoryTotalChecks'],['All Payments','psHistoryAllCount'],['Total Payments Received','psHistoryAllAmount'],['Contracts Paid','psHistoryContracts']]},
-  reportsPanel:{title:'Report Summary',rows:[['Total Funded','psReportFunded'],['Upfront Fees','psReportUpfrontFees'],['Payments Received','psReportReceived'],['Realized Profit / Loss','psReportProfit'],['Active Contracts','psReportActive'],['Completed Contracts','psReportCompleted'],['Defaulted Contracts','psReportDefaulted']]}
+  reportsPanel:{title:'Report Summary',rows:[['Total Funded','psReportFunded'],['Upfront Fees','psReportUpfrontFees'],['Payments Received','psReportReceived'],['Other Income','psReportOtherIncome'],['Realized Profit / Loss','psReportProfit'],['Active Contracts','psReportActive'],['Completed Contracts','psReportCompleted'],['Defaulted Contracts','psReportDefaulted']]}
  };
  function m(n){return (Number(n)||0).toLocaleString(undefined,{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2})}
  function wrapPanel(id,spec){const p=document.getElementById(id);if(!p||p.classList.contains('page-summary-layout'))return;const main=document.createElement('div');main.className='page-main-content';while(p.firstChild)main.appendChild(p.firstChild);const side=document.createElement('aside');side.className='page-summary-side';side.innerHTML='<section class="page-summary-card"><h3>'+spec.title+'</h3><div class="page-summary-list">'+spec.rows.map(r=>'<div class="page-summary-row"><span>'+r[0]+'</span><strong id="'+r[1]+'">—</strong></div>').join('')+'</div></section>';p.append(main,side);p.classList.add('page-summary-layout')}
  function set(id,v,cls){const e=document.getElementById(id);if(!e)return;e.textContent=v;const r=e.closest('.page-summary-row');if(r){r.classList.remove('good','warn');if(cls)r.classList.add(cls)}}
  function receivedFor(name){return (data.checks||[]).filter(x=>x.contract===name).reduce((s,x)=>s+(parseFloat(x.paymentAmount)||0),0)}
  function update(){if(typeof data!=='object')return;
-  const pay=parseFloat(document.getElementById('amount')?.value)||0;let allocated=0;document.querySelectorAll('#manualBreakdown input[type="number"]').forEach(i=>allocated+=parseFloat(i.value)||0);if(!allocated){const sa=parseFloat(document.getElementById('summaryAllocated')?.textContent?.replace(/[^0-9.-]/g,''));if(Number.isFinite(sa))allocated=sa}const diff=pay-allocated;set('psPayAmount',m(pay));set('psAllocated',m(allocated));set('psUnallocated',m(Math.max(0,diff)),Math.abs(diff)<.005?'good':(diff>0?'warn':''));set('psSelected',String((typeof breakdownRows!=='undefined'?breakdownRows.filter(r=>r.contract).length:document.querySelectorAll('#contractChoices input:checked').length)||0));set('psPayStatus',pay<=0?'Enter payment':(Math.abs(diff)<.005?'Ready to save':(diff<-.005?'Over allocated':'Under allocated')),pay<=0?'':(Math.abs(diff)<.005?'good':'warn'));
+  const pay=parseFloat(document.getElementById('amount')?.value)||0;let allocated=0;document.querySelectorAll('#manualBreakdown input[type="number"]').forEach(i=>allocated+=parseFloat(i.value)||0);if(!allocated){const sa=parseFloat(document.getElementById('summaryAllocated')?.textContent?.replace(/[^0-9.-]/g,''));if(Number.isFinite(sa))allocated=sa}const diff=pay-allocated;set('psPayAmount',m(pay));set('psAllocated',m(allocated));set('psUnallocated',m(Math.max(0,diff)),Math.abs(diff)<.005?'good':(diff>0?'warn':''));set('psSelected',String((typeof breakdownRows!=='undefined'?breakdownRows.filter(r=>r.contract||r.type==='other').length:document.querySelectorAll('#contractChoices .choice.selected').length)||0));set('psPayStatus',pay<=0?'Enter payment':(Math.abs(diff)<.005?'Ready to save':(diff<-.005?'Over allocated':'Under allocated')),pay<=0?'':(Math.abs(diff)<.005?'good':'warn'));
   const active=(data.contracts||[]).filter(c=>!c.closed);let af=0,arf=0,aadm=0,ar=0,arem=0,ap=0;active.forEach(c=>{const base=parseFloat(c.fundedAmount)||0,fee=parseFloat(c.referralFee)||0,totalCost=base+fee,r=receivedFor(c.name),expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0),cnt=(data.checks||[]).filter(x=>x.contract===c.name).length,left=Math.max(0,expected-cnt),rem=left*(parseFloat(c.paymentAmount)||0),projected=(r+rem)-totalCost,gross=parseFloat(c.totalReturn)||0,adminStored=parseFloat(c.adminFeeAmount),adminPct=parseFloat(c.adminFeePercent)||0,admin=Number.isFinite(adminStored)?adminStored:gross*(adminPct/100);af+=totalCost;arf+=fee;aadm+=admin;ar+=r;arem+=rem;ap+=projected});set('psActiveCount',String(active.length));set('psActiveFunded',m(af));set('psActiveReferral',m(arf),'warn');set('psActiveAdmin',m(aadm),'warn');set('psActiveReceived',m(ar));set('psActiveRemaining',m(arem));set('psActiveProfit',m(ap),ap>=0?'good':'warn');
   const completed=(data.contracts||[]).filter(c=>c.closed);let cf=0,cr=0,caf=0;completed.forEach(c=>{cf+=(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0);cr+=receivedFor(c.name);const gross=parseFloat(c.grossReturn)||0,rate=parseFloat(c.adminFee)||parseFloat(c.administrativeFee)||0;caf+=gross*(rate/100)});const cp=cr-cf;set('psCompletedCount',String(completed.length));set('psCompletedFunded',m(cf));set('psCompletedAdminFees',m(caf),'warn');set('psCompletedReceived',m(cr));set('psCompletedProfit',m(cp),cp>=0?'good':'warn');set('psCompletedDefaulted',String(completed.filter(c=>c.defaulted).length));
-  const histRows=[...document.querySelectorAll('#history tr')].filter(r=>r.querySelector('td[data-column-key="amount"]'));let ha=0;histRows.forEach(r=>ha+=parseFloat(r.querySelector('td[data-column-key="amount"]')?.textContent.replace(/[^0-9.-]/g,''))||0);const allAmt=(data.checks||[]).reduce((s,x)=>s+(parseFloat(x.paymentAmount)||0),0),totalChecks=new Set((data.checks||[]).map(x=>typeof checkHistoryGroupKey==='function'?checkHistoryGroupKey(x):String(x.id??''))).size;set('psHistoryCount',String(histRows.length));set('psHistoryAmount',m(ha));set('psHistoryTotalChecks',String(totalChecks));set('psHistoryAllCount',String((data.checks||[]).length));set('psHistoryAllAmount',m(allAmt));set('psHistoryContracts',String(new Set((data.checks||[]).map(x=>x.contract).filter(Boolean)).size));
-  const totalFunded=(data.contracts||[]).reduce((s,c)=>s+(parseFloat(c.fundedAmount)||0),0),totalUpfrontFees=(data.contracts||[]).reduce((s,c)=>s+(parseFloat(c.referralFee)||0),0),profit=allAmt-totalFunded-totalUpfrontFees;set('psReportFunded',m(totalFunded));set('psReportUpfrontFees',m(totalUpfrontFees));set('psReportReceived',m(allAmt));set('psReportProfit',m(profit),profit>=0?'good':'warn');set('psReportActive',String(active.length));set('psReportCompleted',String(completed.filter(c=>!c.defaulted).length));set('psReportDefaulted',String(completed.filter(c=>c.defaulted).length));
+  const histRows=[...document.querySelectorAll('#history tr')].filter(r=>r.querySelector('td[data-column-key="amount"]'));let ha=0;histRows.forEach(r=>ha+=parseFloat(r.querySelector('td[data-column-key="amount"]')?.textContent.replace(/[^0-9.-]/g,''))||0);const allAmt=(data.checks||[]).reduce((s,x)=>s+(parseFloat(x.paymentAmount)||0),0),totalChecks=new Set((data.checks||[]).map(x=>typeof checkHistoryGroupKey==='function'?checkHistoryGroupKey(x):String(x.id??''))).size;set('psHistoryCount',String(histRows.length));set('psHistoryAmount',m(ha));set('psHistoryTotalChecks',String(totalChecks));set('psHistoryAllCount',String((data.checks||[]).length));set('psHistoryAllAmount',m(allAmt));set('psHistoryContracts',String(new Set((data.checks||[]).filter(x=>!isOtherIncomeCheck(x)).map(x=>x.contract).filter(Boolean)).size));
+  const totalFunded=(data.contracts||[]).reduce((s,c)=>s+(parseFloat(c.fundedAmount)||0),0),totalUpfrontFees=(data.contracts||[]).reduce((s,c)=>s+(parseFloat(c.referralFee)||0),0),otherIncomeTotal=(data.checks||[]).filter(isOtherIncomeCheck).reduce((s,x)=>s+(parseFloat(x.paymentAmount)||0),0),profit=allAmt-totalFunded-totalUpfrontFees;set('psReportFunded',m(totalFunded));set('psReportUpfrontFees',m(totalUpfrontFees));set('psReportReceived',m(allAmt));set('psReportOtherIncome',m(otherIncomeTotal),'good');set('psReportProfit',m(profit),profit>=0?'good':'warn');set('psReportActive',String(active.length));set('psReportCompleted',String(completed.filter(c=>!c.defaulted).length));set('psReportDefaulted',String(completed.filter(c=>c.defaulted).length));
  }
  Object.entries(specs).forEach(([id,s])=>wrapPanel(id,s));document.addEventListener('input',()=>setTimeout(update,0));document.addEventListener('change',()=>setTimeout(update,0));document.addEventListener('click',()=>setTimeout(update,30));
  const oldRender=window.render;if(typeof oldRender==='function')window.render=function(){const r=oldRender.apply(this,arguments);setTimeout(update,0);return r};setTimeout(update,0);
