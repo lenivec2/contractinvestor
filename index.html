@@ -4968,6 +4968,7 @@ function restoreContract(id){
  if(!contract.closed)return;
  if(!confirm(`Restore ${contract.name} to active Contracts?`))return;
  contract.closed=false;
+ contract.defaulted=false;
  contract.closedDate=null;
  save();render();toast("Contract restored to Contracts");
 }
@@ -5197,7 +5198,8 @@ function fundLedgerLocalDate(value){if(!value)return null;const s=String(value).
 function fundLedgerCalendarDaysBetween(start,end){return (Date.UTC(end.getFullYear(),end.getMonth(),end.getDate())-Date.UTC(start.getFullYear(),start.getMonth(),start.getDate()))/86400000}
 function fundLedgerHasScheduledPaymentsRemaining(contract,payments){
  const defaulted=contract?.defaulted;
- if(isFundLedgerContractClosed(contract)||defaulted===true||defaulted===1||String(defaulted).trim().toLowerCase()==="true")return false;
+ // Older restores explicitly reopened contracts but left the default flag behind.
+ if(isFundLedgerContractClosed(contract)||(contract.closed!==false&&(defaulted===true||defaulted===1||String(defaulted).trim().toLowerCase()==="true")))return false;
  const expected=Math.max(0,parseInt(contract.totalExpectedPayments??contract.expectedPayments,10)||0);
  return expected>uniquePaymentCount(payments);
 }
