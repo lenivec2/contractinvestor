@@ -3012,6 +3012,9 @@ body.landing-info-open{overflow:hidden}
 .landing-referral-offer{max-width:1120px;margin:0 auto 64px;padding:0 28px}.landing-referral-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;padding:28px 30px;border:1px solid #b9d8ff;border-radius:18px;background:linear-gradient(135deg,#0b3155 0%,#126fc7 58%,#2f91ef 100%);box-shadow:0 16px 38px rgba(11,49,85,.18);color:#fff}.landing-referral-copy{display:flex;align-items:flex-start;gap:16px}.landing-referral-icon{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.16);font-size:24px}.landing-referral-card h2{margin:0 0 8px;font-size:28px;color:#fff}.landing-referral-card p{max-width:740px;margin:0;color:#e8f4ff;line-height:1.6}.landing-referral-card .landing-cta{min-width:180px;background:#fff;border-color:#fff;color:#126fc7;box-shadow:0 8px 20px rgba(0,0,0,.12)}.landing-info-body .landing-referral-offer{margin:24px 0 0;padding:0}.landing-info-body .landing-referral-card{padding:24px}.dashboard-referral-banner{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:22px;margin:18px 0;padding:20px 22px;border:1px solid #b9d8ff;border-radius:14px;background:linear-gradient(135deg,#f7fbff,#e9f4ff);box-shadow:0 8px 22px rgba(20,123,232,.09)}.dashboard-referral-copy{display:flex;align-items:center;gap:14px;min-width:0}.dashboard-referral-icon{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border-radius:12px;background:#147be8;color:#fff;font-size:21px}.dashboard-referral-banner h2{margin:0 0 4px;color:#17365f;font-size:20px}.dashboard-referral-banner p{margin:0;color:#52657d;line-height:1.45}.dashboard-referral-banner .primary-btn{white-space:nowrap}
 @media(max-width:760px){.landing-referral-offer{margin:0 auto 48px;padding:0 20px}.landing-referral-card,.dashboard-referral-banner{grid-template-columns:1fr}.landing-referral-card{padding:22px}.landing-referral-card h2{font-size:24px}.landing-referral-card .landing-cta,.dashboard-referral-banner .primary-btn{width:100%}.dashboard-referral-banner{padding:18px}.dashboard-referral-copy{align-items:flex-start}}
 </style>
+<style id="fundledger-dashboard-extra-settings-styles">
+.dashboard-extra-settings-note{margin:14px 0 8px;padding-top:12px;border-top:1px solid #dce8f5;color:#52657d;font-size:13px}.appearance-option.pro-locked-option{background:#f7f9fc;color:#718096}.appearance-option.pro-locked-option input{cursor:not-allowed}.appearance-option .dashboard-extra-name{display:flex;align-items:center;gap:7px;min-width:0}.appearance-option .dashboard-extra-name .plan-badge{margin-left:0}
+</style>
 </head>
 <body>
 
@@ -3211,6 +3214,9 @@ body.landing-info-open{overflow:hidden}
           <label class="appearance-option"><span>Completed Contracts</span><input type="checkbox" data-section-toggle="completedContracts" onchange="updateDashboardSectionAppearance(this)"></label>
           <label class="appearance-option"><span>Payment History</span><input type="checkbox" data-section-toggle="checkHistory" onchange="updateDashboardSectionAppearance(this)"></label>
           <label class="appearance-option"><span>Reports</span><input type="checkbox" data-section-toggle="reports" onchange="updateDashboardSectionAppearance(this)"></label>
+          <p class="dashboard-extra-settings-note">FundLedger Pro members can also choose whether these Dashboard messages are shown.</p>
+          <label class="appearance-option" data-dashboard-extra-option="quickTips"><span class="dashboard-extra-name">Dashboard Quick Tips <span class="plan-badge pro">PRO</span></span><input type="checkbox" data-dashboard-extra-toggle="quickTips" onchange="updateDashboardExtraAppearance(this)"></label>
+          <label class="appearance-option" data-dashboard-extra-option="referralOffer"><span class="dashboard-extra-name">Give 50%, Get One Month Free <span class="plan-badge pro">PRO</span></span><input type="checkbox" data-dashboard-extra-toggle="referralOffer" onchange="updateDashboardExtraAppearance(this)"></label>
         </div>
       </div></details>
       <details class="appearance-group settings-native-dropdown"><summary>Summary Boxes</summary><div class="settings-native-dropdown-content">
@@ -3368,7 +3374,7 @@ let cloudSaveTimer=null;
 let cloudSaveInFlight=false;
 let cloudSyncQueued=false;
 let cloudLoadInFlight=false; let fundLedgerRealtimeChannel=null; let realtimeApplyInFlight=false;
-const EMPTY_DATA={contracts:[],checks:[],trash:{contracts:[],checks:[]},preferences:{automaticDataRefresh:true,dashboardCards:{invested:true,received:true,profit:true,active:true,all:true,paid:true,default:true,defaultLoss:true},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{summary:true,payments:false,addContract:false,activeContracts:false,completedContracts:false,checkHistory:false,reports:false},activeContractColumns:{name:true,dayOpened:true,invested:true,paid:true,breakEven:true,remainingBalance:true,amountPerCheck:true,expectedPayments:true,paymentsLeft:true,actions:true},completedContractColumns:{contract:true,dayOpened:true,dayClosed:true,invested:true,received:true,remainingPayment:true,gainLoss:true,status:true,action:true},checkHistoryColumns:{sequence:true,dateIssued:true,dateReceived:true,amount:true,contract:true,checkno:true,actions:true},activeContractColumnOrder:[],completedContractColumnOrder:[],checkHistoryColumnOrder:[],projectedResultsOrder:[]}};
+const EMPTY_DATA={contracts:[],checks:[],trash:{contracts:[],checks:[]},preferences:{automaticDataRefresh:true,dashboardCards:{invested:true,received:true,profit:true,active:true,all:true,paid:true,default:true,defaultLoss:true},dashboardCardOrder:["invested","received","profit","active","all","paid","default","defaultLoss"],dashboardSections:{summary:true,payments:false,addContract:false,activeContracts:false,completedContracts:false,checkHistory:false,reports:false},dashboardExtras:{quickTips:true,referralOffer:true},activeContractColumns:{name:true,dayOpened:true,invested:true,paid:true,breakEven:true,remainingBalance:true,amountPerCheck:true,expectedPayments:true,paymentsLeft:true,actions:true},completedContractColumns:{contract:true,dayOpened:true,dayClosed:true,invested:true,received:true,remainingPayment:true,gainLoss:true,status:true,action:true},checkHistoryColumns:{sequence:true,dateIssued:true,dateReceived:true,amount:true,contract:true,checkno:true,actions:true},activeContractColumnOrder:[],completedContractColumnOrder:[],checkHistoryColumnOrder:[],projectedResultsOrder:[]}};
 let data={contracts:[],checks:[],trash:{contracts:[],checks:[]}};
 // Data-model compatibility layer: converts legacy FundLedger field names to the
 // current terminology when old local/cloud records are loaded. New saves use
@@ -3562,6 +3568,8 @@ const DASHBOARD_CARD_KEYS=["invested","received","remainingReceivable","profit",
 const DASHBOARD_CARD_LABELS={invested:"Total Funded & Upfront Fees",received:"Total Payments Received",remainingReceivable:"Total Remaining Receivable",profit:"Realized Profit",previousWeekProfit:"Previous Week Profit",previousMonthProfit:"Previous Month Profit",active:"Active Contracts",all:"Total Contracts",paid:"Completed Contracts",default:"Defaulted Contracts",defaultLoss:"Default Loss"};
 const DASHBOARD_SECTION_IDS={payments:"checkPanel",addContract:"newContractPanel",activeContracts:"contractsPanel",completedContracts:"completedPanel",checkHistory:"historyPanel",reports:"reportsPanel"};
 const DASHBOARD_SECTION_KEYS=["summary",...Object.keys(DASHBOARD_SECTION_IDS)];
+const DASHBOARD_EXTRA_IDS={quickTips:"dashboardQuickTips",referralOffer:"dashboardReferralBanner"};
+const DASHBOARD_EXTRA_KEYS=Object.keys(DASHBOARD_EXTRA_IDS);
 const ACTIVE_CONTRACT_COLUMN_KEYS=["name","dayOpened","invested","paid","breakEven","remainingBalance","amountPerCheck","expectedPayments","paymentsLeft","actions"];
 const COMPLETED_CONTRACT_COLUMN_KEYS=["contract","dayOpened","dayClosed","invested","received","remainingPayment","gainLoss","status","action"];
 const CHECK_HISTORY_COLUMN_KEYS=["sequence","dateIssued","dateReceived","amount","contract","checkno","actions"];
@@ -3612,6 +3620,11 @@ function dashboardSectionPreferences(){
  if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
  if(!data.preferences.dashboardSections||typeof data.preferences.dashboardSections!=="object")data.preferences.dashboardSections={};
  return data.preferences.dashboardSections;
+}
+function dashboardExtraPreferences(){
+ if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
+ if(!data.preferences.dashboardExtras||typeof data.preferences.dashboardExtras!=="object")data.preferences.dashboardExtras={};
+ return data.preferences.dashboardExtras;
 }
 function activeContractColumnPreferences(){
  if(!data.preferences||typeof data.preferences!=="object")data.preferences={};
@@ -3714,6 +3727,12 @@ function applyDashboardSections(){
  if(!dashboardIsSelected())return;
  const summary=$("dashboardSummary");if(summary)summary.classList.toggle("hidden",preferences.summary===false);
  Object.entries(DASHBOARD_SECTION_IDS).forEach(([key,id])=>{const panel=$(id);if(panel)panel.classList.toggle("hidden",preferences[key]===false)});
+ applyDashboardExtras(true);
+}
+function applyDashboardExtras(showDashboard=dashboardIsSelected()){
+ const preferences=dashboardExtraPreferences(),pro=typeof fundLedgerIsPro==="function"&&fundLedgerIsPro();
+ Object.entries(DASHBOARD_EXTRA_IDS).forEach(([key,id])=>{const element=$(id);if(element)element.classList.toggle("hidden",!showDashboard||(pro&&preferences[key]===false))});
+ document.querySelectorAll("[data-dashboard-extra-toggle]").forEach(input=>{const key=input.dataset.dashboardExtraToggle;input.checked=pro?preferences[key]!==false:true;input.disabled=!pro;input.title=pro?"":"Available with FundLedger Pro";input.closest(".appearance-option")?.classList.toggle("pro-locked-option",!pro)});
 }
 function updateSummaryGridLayout(){
  const grid=$("dashboardSummary");if(!grid)return;
@@ -3738,6 +3757,7 @@ function applyDashboardAppearance(){
  applyDashboardCardOrder();
  updateSummaryGridLayout();
  if(dashboardIsSelected())applyDashboardSections();
+ else applyDashboardExtras(false);
 }
 function setupSummaryCloseButtons(){
  document.querySelectorAll("#dashboardSummary [data-summary-key]").forEach(card=>{
@@ -3757,6 +3777,11 @@ function updateDashboardAppearance(input){
 function updateDashboardSectionAppearance(input){
  const key=input?.dataset?.sectionToggle;if(!DASHBOARD_SECTION_KEYS.includes(key))return;
  dashboardSectionPreferences()[key]=!!input.checked;applyDashboardSections();save();
+}
+function updateDashboardExtraAppearance(input){
+ const key=input?.dataset?.dashboardExtraToggle;if(!DASHBOARD_EXTRA_KEYS.includes(key))return;
+ if(typeof fundLedgerIsPro!=="function"||!fundLedgerIsPro()){input.checked=true;toast("Dashboard message controls are available with FundLedger Pro.");if(typeof showFundLedgerPlan==="function")showFundLedgerPlan();return}
+ dashboardExtraPreferences()[key]=!!input.checked;applyDashboardExtras();save();toast(input.checked?"Dashboard message shown.":"Dashboard message hidden.");
 }
 function updateActiveContractColumnAppearance(input){
  const key=input?.dataset?.activeColumnToggle;if(!ACTIVE_CONTRACT_COLUMN_KEYS.includes(key))return;
@@ -3781,6 +3806,7 @@ function restoreDefaultLayout(){
  data.preferences.dashboardCards={};
  data.preferences.dashboardCardOrder=["invested","received","profit","active","all","paid","default","defaultLoss"];
  data.preferences.dashboardSections={};
+ data.preferences.dashboardExtras={};
  data.preferences.activeContractColumns={};
  data.preferences.completedContractColumns={};
  data.preferences.checkHistoryColumns={};
@@ -3788,7 +3814,7 @@ function restoreDefaultLayout(){
  data.preferences.completedContractColumnOrder=[];
  data.preferences.checkHistoryColumnOrder=[];
  data.preferences.projectedResultsOrder=[];
- applyDashboardAppearance();applyActiveContractColumns();applyCompletedContractColumns();applyCheckHistoryColumns();
+ applyDashboardAppearance();applyDashboardExtras();applyActiveContractColumns();applyCompletedContractColumns();applyCheckHistoryColumns();
  applyContractTableColumnOrder("active");applyContractTableColumnOrder("completed");applyContractTableColumnOrder("history");
  updateSettingsPanel();save();toast("Default layout restored");
 }
@@ -3805,6 +3831,7 @@ function updateSettingsPanel(){
  if(refreshHelp)refreshHelp.textContent=refreshEnabled?"FundLedger checks for updated data whenever you return to the app.":"Automatic refresh is off. Use the Refresh button whenever you want to check for updated data.";
  applyDashboardAppearance();
  applyDashboardSections();
+ applyDashboardExtras();
  applyActiveContractColumns();
  applyCompletedContractColumns();
  applyCheckHistoryColumns();
@@ -3835,10 +3862,7 @@ function setupNavScrolling(){
       document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
       const dashboardSummary=$("dashboardSummary");
       if(dashboardSummary) dashboardSummary.classList.toggle("hidden",id!=="#dashboard");
-      const dashboardQuickTips=$("dashboardQuickTips");
-      if(dashboardQuickTips) dashboardQuickTips.classList.toggle("hidden",id!=="#dashboard");
-      const dashboardReferralBanner=$("dashboardReferralBanner");
-      if(dashboardReferralBanner) dashboardReferralBanner.classList.toggle("hidden",id!=="#dashboard");
+      applyDashboardExtras(id==="#dashboard");
       if(window.matchMedia("(max-width:700px)").matches){
         /* Mobile: exactly one sidebar destination at a time. */
         const appScreen=document.getElementById("appScreen");
@@ -6131,6 +6155,7 @@ async function adminCheckProAccess(){
   const btn=document.getElementById("upgradeProBtn"); if(btn){btn.classList.toggle("hidden",pro);btn.disabled=pro}
   const detail=document.getElementById("planAccessDetail"),info=window.fundLedgerPlanDetails||{};
   if(detail){if(isAdmin)detail.textContent="Administrator Pro access.";else if(pro&&info.expires_at)detail.textContent=`Pro access active through ${new Date(info.expires_at).toLocaleDateString()}${info.source==="promo"?" through a promo code":""}.`;else if(pro)detail.textContent="FundLedger Pro access is active.";else detail.textContent="Free plan access."}
+  if(typeof applyDashboardExtras==="function")applyDashboardExtras();
   if(typeof updateMyAccountPanel==="function")updateMyAccountPanel();
  };
  window.showFundLedgerPlan=function(){const link=document.querySelector('.nav-item[href="#planPanel"]');if(link)link.click()};
