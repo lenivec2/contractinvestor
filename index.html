@@ -3322,7 +3322,7 @@ body.landing-info-open{overflow:hidden}
   </div>
 </section>
 
-<section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><p id="planAccessDetail" class="muted" style="margin-top:9px">Free plan access.</p><h3 style="margin-top:16px">FundLedger Pro — $9.99/month</h3><ul class="plan-features"><li>Unlimited contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Secure checkout must be connected before live subscriptions can be charged.</p></div><div class="promo-redeem-card"><h3>Have a Promo or Referral Code?</h3><p class="muted">Promo codes add free Pro time. Referral codes give a new subscriber 50% off their first paid month.</p><div class="promo-code-row"><input id="fundLedgerPromoCode" type="text" maxlength="32" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Enter promo or referral code" onkeydown="if(event.key==='Enter'){event.preventDefault();redeemFundLedgerPromoCode()}"><button id="redeemPromoCodeBtn" class="primary-btn" type="button" onclick="redeemFundLedgerPromoCode()">Apply Code</button></div><p id="promoRedeemStatus" class="promo-status" role="status"></p></div></section>
+<section class="panel hidden" id="planPanel"><h2>FundLedger Plan</h2><div class="plan-card"><div><strong>Current plan:</strong> <span id="currentPlanName">Free</span><span id="currentPlanBadge" class="plan-badge">FREE</span></div><p id="planAccessDetail" class="muted" style="margin-top:9px">Free plan access.</p><h3 style="margin-top:16px">FundLedger Pro — $9.99/month</h3><ul class="plan-features"><li>Unlimited contracts</li><li>Full Reports section</li><li>No advertisements</li></ul><button id="upgradeProBtn" class="primary-btn" type="button" style="margin-top:12px" onclick="startFundLedgerProCheckout()">Upgrade to Pro</button><p id="planBillingNote" class="muted" style="margin-top:9px">Stripe sandbox checkout — test payments only until live billing is configured.</p></div><div class="promo-redeem-card"><h3>Have a Promo or Referral Code?</h3><p class="muted">Promo codes add free Pro time. Referral codes give a new subscriber 50% off their first paid month.</p><div class="promo-code-row"><input id="fundLedgerPromoCode" type="text" maxlength="32" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Enter promo or referral code" onkeydown="if(event.key==='Enter'){event.preventDefault();redeemFundLedgerPromoCode()}"><button id="redeemPromoCodeBtn" class="primary-btn" type="button" onclick="redeemFundLedgerPromoCode()">Apply Code</button></div><p id="promoRedeemStatus" class="promo-status" role="status"></p></div></section>
 <section class="panel hidden" id="contactPanel">
   <div class="section-head"><div><h2 id="contactPanelTitle">Contact Us</h2><p class="muted" id="contactPanelSubtitle" style="margin:0">Send a message to the administrator.</p></div><button id="contactAdminBackBtn" class="secondary hidden" type="button" onclick="showAdminHome()">← Back to Admin</button></div>
   <div id="adminAccessArea" class="admin-access-area hidden">
@@ -6338,7 +6338,16 @@ async function adminCheckProAccess(){
   if(typeof updateMyAccountPanel==="function")updateMyAccountPanel();
  };
  window.showFundLedgerPlan=function(){const link=document.querySelector('.nav-item[href="#planPanel"]');if(link)link.click()};
- window.startFundLedgerProCheckout=function(){toast("FundLedger Pro checkout is ready to connect. Add your payment provider before accepting live $9.99 subscriptions.")};
+ window.startFundLedgerProCheckout=async function(){
+  if(!supabaseClient||!currentUser){toast("Please sign in to subscribe");return}
+  const btn=document.getElementById("upgradeProBtn");if(btn)btn.disabled=true;
+  try{
+    const {data,error}=await supabaseClient.functions.invoke("fundledger-stripe-checkout",{body:{return_url:location.origin+location.pathname}});
+    if(error)throw error;
+    if(!data?.url||!/^https:\/\/checkout\.stripe\.com\//.test(data.url))throw new Error(data?.error||"Checkout unavailable");
+    location.assign(data.url);
+  }catch(e){console.error("Stripe checkout",e);toast("Checkout is not available yet. Check Stripe server setup.");if(btn)btn.disabled=false}
+};
  document.addEventListener("DOMContentLoaded",applyFundLedgerPlan);
  document.addEventListener("visibilitychange",()=>{if(!document.hidden&&currentUser)window.loadFundLedgerPlan()});
 })();
