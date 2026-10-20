@@ -5340,7 +5340,7 @@ function render(){
  if($("filter")){ $("filter").innerHTML='<option value="">All contracts</option>'+filterOpts; $("filter").value=current; }
  renderActiveContractsTable();
  let received=data.checks.reduce((a,x)=>a+x.paymentAmount,0), invested=data.contracts.reduce((a,c)=>a+(parseFloat(c.fundedAmount)||0)+(parseFloat(c.referralFee)||0),0);
- const overallProfit=received-invested;$("invested").textContent=money(invested);$("received").textContent=money(received);
+ const overallProfit=data.checks.reduce((sum,check)=>sum+fundLedgerPaymentProfit(check),0);$("invested").textContent=money(invested);$("received").textContent=money(received);
 const totalRemainingReceivable=open.reduce((sum,c)=>{
 const xs=data.checks.filter(x=>x.contract===c.name);
 const expected=Math.max(0,parseInt(c.totalExpectedPayments,10)||0);
